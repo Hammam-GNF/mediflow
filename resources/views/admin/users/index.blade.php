@@ -7,32 +7,65 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="flex justify-end mb-4">
+                <a
+                    href="{{ route('admin.users.create') }}"
+                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
+                >
+                    Create User
+                </a>
+            </div>
+            
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <div class="p-6 overflow-x-auto">
 
-            <div class="bg-white shadow rounded-lg p-6">
-
-                <table class="min-w-full">
-                    <thead>
-                        <tr>
-                            <th class="text-left">No</th>
-                            <th class="text-left">Name</th>
-                            <th class="text-left">Email</th>
-                            <th class="text-left">Role</th>
-                        </tr>
-                    </thead>
-
-                    <tbody>
-                        @foreach ($users as $user)
+                    <table class="w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
                             <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $user->name }}</td>
-                                <td>{{ $user->email }}</td>
-                                <td>{{ $user->role }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                                <th >
+                                    No
+                                </th>
 
-                <div class="mt-4">
+                                <th >
+                                    Name
+                                </th>
+
+                                <th >
+                                    Email
+                                </th>
+
+                                <th >
+                                    Role
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            @foreach ($users as $user)
+                                <tr>
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {{ $users->firstItem() + $loop->index }}
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {{ $user->name }}
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {{ $user->email }}
+                                    </td>
+
+                                    <td class="px-6 py-4 whitespace-nowrap">
+                                        {{ $user->role }}
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div class="px-6 py-4 border-t">
                     {{ $users->links() }}
                 </div>
 
