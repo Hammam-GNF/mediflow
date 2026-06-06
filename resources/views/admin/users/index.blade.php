@@ -63,13 +63,29 @@
                                         {{ $user->role }}
                                     </td>
 
-                                    <td class="center px-6 py-4 whitespace-nowrap">
+                                    <td class="px-6 py-4 whitespace-nowrap flex gap-2">
                                         <a
                                             href="{{ route('admin.users.edit', $user) }}"
                                             class="inline-flex items-center px-3 py-1 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-500"
                                         >
                                             Edit
                                         </a>
+
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.users.destroy', $user) }}"
+                                        >
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button
+                                                type="submit"
+                                                class="inline-flex items-center px-3 py-1 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500"
+                                                onclick="return confirm('Are you sure you want to delete this user?');"
+                                            >
+                                                Delete
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                             @endforeach
