@@ -19,7 +19,7 @@ Route::middleware('auth')->group(function () {
 
 Route::prefix('admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('admin.dashboard');
     })->name('admin.dashboard');
 });
 
