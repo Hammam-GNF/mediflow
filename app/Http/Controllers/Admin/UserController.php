@@ -88,11 +88,15 @@ class UserController extends Controller
 
     public function changePassword(User $user)
     {
+        $this->authorize('update', $user);
+
         return view('admin.users.change-password', compact('user'));
     }
 
     public function updatePassword(UpdateUserPasswordRequest $request, User $user)
     {
+        $this->authorize('update', $user);
+        
         $user->update([
             'password' => Hash::make($request->validated()['password']),
         ]);
