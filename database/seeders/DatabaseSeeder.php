@@ -19,5 +19,23 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             AdminSeeder::class,
         ]);
+
+        User::factory()
+            ->count(3)
+            ->create([
+                'role' => 'admin',
+            ])
+            ->each(function ($user) {
+                $user->assignRole('admin');
+            });
+
+        User::factory()
+            ->count(50)
+            ->create([
+                'role' => 'user',
+            ])
+            ->each(function ($user) {
+                $user->assignRole('user');
+            });
     }
 }
