@@ -84,6 +84,10 @@ class UserController extends Controller
             return back()->with('error', 'You cannot delete your own account.');
         }
 
+        if ($user->role === 'admin' && User::where('role', 'admin')->count() === 1) {
+            return back()->with('error', 'You cannot delete the last admin account.');
+        }
+
         $user->delete();
 
         return redirect()

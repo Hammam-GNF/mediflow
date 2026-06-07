@@ -88,21 +88,23 @@
                                             Password
                                         </a>
 
-                                        <form
-                                            method="POST"
-                                            action="{{ route('admin.users.destroy', $user) }}"
-                                        >
-                                            @csrf
-                                            @method('DELETE')
-
-                                            <button
-                                                type="submit"
-                                                class="inline-flex items-center px-3 py-1 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500"
-                                                onclick="return confirm('Are you sure you want to delete this user?');"
+                                        @if(auth()->id() !== $user->id)
+                                            <form
+                                                method="POST"
+                                                action="{{ route('admin.users.destroy', $user) }}"
                                             >
-                                                Delete
-                                            </button>
-                                        </form>
+                                                @csrf
+                                                @method('DELETE')
+
+                                                <button
+                                                    type="submit"
+                                                    class="inline-flex items-center px-3 py-1 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500"
+                                                    onclick="return confirm('Are you sure you want to delete this user?');"
+                                                >
+                                                    Delete
+                                                </button>
+                                            </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
