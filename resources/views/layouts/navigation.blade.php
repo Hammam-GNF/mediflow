@@ -4,7 +4,7 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                @if(auth()->user()->role === 'admin')
+                @if(auth()->user()->hasRole('admin'))
                     <div class="shrink-0 flex items-center">
                         <a href="{{ route('admin.dashboard') }}">
                             <x-application-logo class="block h-9 w-auto" />
@@ -20,7 +20,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    @if(auth()->user()->role === 'admin')
+                    @if(auth()->user()->hasRole('admin'))
                         <x-nav-link
                             :href="route('admin.dashboard')"
                             :active="request()->routeIs('admin.dashboard')"
@@ -36,7 +36,7 @@
                         </x-nav-link>
                     @endif
 
-                    @if(auth()->user()->role === 'admin')
+                    @if(auth()->user()->hasRole('admin'))
                         <x-nav-link
                             :href="route('admin.users.index')"
                             :active="request()->routeIs('admin.users.*')"
@@ -96,7 +96,7 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            @if(auth()->user()->role === 'admin')
+            @if(auth()->user()->hasRole('admin'))
                 <x-responsive-nav-link
                     :href="route('admin.dashboard')"
                     :active="request()->routeIs('admin.dashboard')"
@@ -112,7 +112,7 @@
                 </x-responsive-nav-link>
             @endif
 
-            @if(auth()->user()->role === 'admin')
+            @if(auth()->user()->hasRole('admin'))
                 <x-responsive-nav-link
                     :href="route('admin.users.index')"
                     :active="request()->routeIs('admin.users.*')"
