@@ -7,7 +7,31 @@
 
     <div class="py-6">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex justify-end mb-4">
+            <div class="flex justify-between items-center mb-4">
+
+                <form method="GET" action="{{ route('admin.users.index') }}">
+                    <div class="flex gap-2">
+
+                        <x-text-input
+                            name="search"
+                            type="text"
+                            :value="$search"
+                            placeholder="Search name or email..."
+                        />
+
+                        <x-primary-button>
+                            Search
+                        </x-primary-button>
+
+                        <a
+                            href="{{ route('admin.users.index') }}"
+                            class="inline-flex items-center px-4 py-2 bg-gray-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-500"
+                        >
+                            Reset
+                        </a>
+                    </div>
+                </form>
+
                 <a
                     href="{{ route('admin.users.create') }}"
                     class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
@@ -22,25 +46,11 @@
                     <table class="w-full divide-y divide-gray-200">
                         <thead class="bg-gray-50">
                             <tr>
-                                <th>
-                                    No
-                                </th>
-
-                                <th>
-                                    Name
-                                </th>
-
-                                <th>
-                                    Email
-                                </th>
-
-                                <th>
-                                    Role
-                                </th>
-
-                                <th>
-                                    Action
-                                </th>
+                                <th>No</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
 
