@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\StoreUserRequest;
+use App\Http\Requests\Admin\UpdateUserPasswordRequest;
+use App\Http\Requests\Admin\UpdateUserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -23,20 +26,13 @@ class UserController extends Controller
         return view('admin.users.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreUserRequest $request)
     {
-        $validated = $request->validate([
-        'name' => ['required', 'string', 'max:255'],
-        'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-        'password' => ['required', Password::defaults()],
-        'role' => ['required', 'in:admin,user'],
-    ]);
+        User::create($request->validated());
 
-    User::create($validated);
-
-    return redirect()
-        ->route('admin.users.index')
-        ->with('success', 'User created successfully.');
+        return redirect()
+            ->route('admin.users.index')
+            ->with('success', 'User created successfully.');
     }
 
     public function show(User $user)
@@ -49,15 +45,9 @@ class UserController extends Controller
         return view('admin.users.edit', compact('user'));
     }
 
-    public function update(Request $request, User $user)
+    public function update(UpdateUserRequest $request, User $user)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'role' => ['required', 'in:admin,user'],
-        ]);
-
-        $user->update($validated);
+        $user->update($request->validated());
 
         return redirect()
             ->route('admin.users.index')
@@ -69,14 +59,10 @@ class UserController extends Controller
         return view('admin.users.change-password', compact('user'));
     }
 
-    public function updatePassword(Request $request, User $user)
+    public function updatePassword(UpdateUserPasswordRequest $request, User $user)
     {
-        $validated = $request->validate([
-            'password' => ['required', Password::defaults()],
-        ]);
-
         $user->update([
-            'password' => Hash::make($validated['password']),
+            'password' => Hash::make($request->validated()['password']),
         ]);
 
         return redirect()

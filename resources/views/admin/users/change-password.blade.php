@@ -31,6 +31,23 @@
                             />
                         </div>
 
+                        <div class="mb-4">
+                            <x-input-label for="password_confirmation" value="Confirm New Password" />
+
+                            <x-text-input
+                                id="password_confirmation"
+                                name="password_confirmation"
+                                type="password"
+                                class="mt-1 block w-full"
+                                required
+                            />
+
+                            <x-input-error
+                                :messages="$errors->get('password_confirmation')"
+                                class="mt-2"
+                            />
+                        </div>
+
                         <div class="flex justify-end">
                             <x-primary-button>
                                 Update Password
