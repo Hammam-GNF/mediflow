@@ -79,21 +79,21 @@
 
                             <option
                                 value="admin"
-                                @selected(old('role') === 'admin')
+                                @selected($user->hasRole('admin'))
                             >
                                 Admin
                             </option>
 
                             <option
                                 value="user"
-                                @selected(old('role') === 'user')
+                                @selected($user->hasRole('user'))
                             >
                                 User
                             </option>
                         </select>
 
                         <x-input-error
-                            :messages="$errors->get('role')"
+                            :messages="$errors->get($user->hasRole('admin') ? 'admin' : 'user')"
                             class="mt-2"
                         />
                     </div>

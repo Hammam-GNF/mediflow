@@ -23,7 +23,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('/dashboard', function () {
         return view('admin.dashboard', [
             'totalUsers' => User::count(),
-            'totalAdmins' => User::where('role', 'admin')->count(),
+            'totalAdmins' => User::whereHas('roles', function ($query) {
+                $query->where('name', 'admin');
+            })->count(),
         ]);
     })->name('dashboard');
 

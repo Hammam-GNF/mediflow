@@ -60,8 +60,8 @@
                             class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                             required
                         >
-                            <option value="admin" {{ old('role', $user->role) === 'admin' ? 'selected' : '' }}>Admin</option>
-                            <option value="user" {{ old('role', $user->role) === 'user' ? 'selected' : '' }}>User</option>
+                            <option value="admin" {{ $user->hasRole('admin') ? 'selected' : '' }}>Admin</option>
+                            <option value="user" {{ $user->hasRole('user') ? 'selected' : '' }}>User</option>
                         </select>
 
                         <x-input-error

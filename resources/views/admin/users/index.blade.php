@@ -93,7 +93,7 @@
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        {{ $user->role }}
+                                        {{ $user->getRoleNames()->first() }}
                                     </td>
 
                                     <td class="px-6 py-4 whitespace-nowrap flex gap-2">

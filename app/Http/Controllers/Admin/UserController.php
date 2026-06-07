@@ -28,7 +28,7 @@ class UserController extends Controller
                 });
             })
             ->when($role, function ($query) use ($role) {
-                $query->where('role', $role);
+                $query->role($role);
             })
             ->latest()
             ->paginate(10)
@@ -48,7 +48,11 @@ class UserController extends Controller
     {
         $this->authorize('create', User::class);
         
-        User::create($request->validated());
+        $data = $request->safe()->except('role');
+
+        $user = User::create($data);
+
+        $user->assignRole($request->role);
 
         return redirect()
             ->route('admin.users.index')
@@ -71,7 +75,11 @@ class UserController extends Controller
     {
         $this->authorize('update', $user);
 
-        $user->update($request->validated());
+        $data = $request->safe()->except('role');
+
+        $user->update($data);
+
+        $user->syncRoles($request->role);
 
         return redirect()
             ->route('admin.users.index')
@@ -102,7 +110,9 @@ class UserController extends Controller
             return back()->with('error', 'You cannot delete your own account.');
         }
 
-        if ($user->role === 'admin' && User::where('role', 'admin')->count() === 1) {
+        if ($user->hasRole('admin') && User::whereHas('roles', function ($query) {
+                $query->where('name', 'admin');
+            })->count() === 1) {
             return back()->with('error', 'You cannot delete the last admin account.');
         }
 

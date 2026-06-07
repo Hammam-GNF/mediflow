@@ -22,18 +22,14 @@ class DatabaseSeeder extends Seeder
 
         User::factory()
             ->count(3)
-            ->create([
-                'role' => 'admin',
-            ])
+            ->create()
             ->each(function ($user) {
                 $user->assignRole('admin');
             });
 
         User::factory()
             ->count(50)
-            ->create([
-                'role' => 'user',
-            ])
+            ->create()
             ->each(function ($user) {
                 $user->assignRole('user');
             });
