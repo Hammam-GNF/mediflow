@@ -44,6 +44,15 @@
                             Users
                         </x-nav-link>
                     @endif
+
+                    @if(auth()->user()->hasRole('admin'))
+                        <x-nav-link
+                            :href="route('admin.activity-logs.index')"
+                            :active="request()->routeIs('admin.activity-logs.*')"
+                        >
+                            Activity Logs
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -118,6 +127,15 @@
                     :active="request()->routeIs('admin.users.*')"
                 >
                     Users
+                </x-responsive-nav-link>
+            @endif
+
+            @if(auth()->user()->hasRole('admin'))
+                <x-responsive-nav-link
+                    :href="route('admin.activity-logs.index')"
+                    :active="request()->routeIs('admin.activity-logs.*')"
+                >
+                    Activity Logs
                 </x-responsive-nav-link>
             @endif
         </div>
