@@ -62,6 +62,15 @@
                             Settings
                         </x-nav-link>
                     @endif
+
+                    @if(auth()->user()->hasRole('admin'))
+                        <x-nav-link
+                            :href="route('admin.media.index')"
+                            :active="request()->routeIs('admin.media.*')"
+                        >
+                            Media Library
+                        </x-nav-link>
+                    @endif
                 </div>
             </div>
 
@@ -154,6 +163,15 @@
                     :active="request()->routeIs('admin.settings.*')"
                 >
                     Settings
+                </x-responsive-nav-link>
+            @endif
+
+            @if(auth()->user()->hasRole('admin'))
+                <x-responsive-nav-link
+                    :href="route('admin.media.index')"
+                    :active="request()->routeIs('admin.media.*')"
+                >
+                    Media Library
                 </x-responsive-nav-link>
             @endif
         </div>
