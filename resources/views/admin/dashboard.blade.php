@@ -31,6 +31,16 @@
                             </p>
                         </div>
 
+                        <div class="bg-white rounded-lg shadow p-6">
+                            <h3 class="text-sm font-medium text-gray-500">
+                                Total Activities
+                            </h3>
+
+                            <p class="mt-2 text-3xl font-bold text-gray-900">
+                                {{ $totalActivities }}
+                            </p>
+                        </div>
+
                     </div>
                 </div>
             </div>
