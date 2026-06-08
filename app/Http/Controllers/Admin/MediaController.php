@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreMediaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class MediaController extends Controller
 {
@@ -27,5 +28,13 @@ class MediaController extends Controller
             ->toMediaCollection('uploads');
 
         return back()->with('success', 'File uploaded successfully.');
+    }
+
+    public function destroy(Media $media)
+    {
+        abort_if($media->model_id !== Auth::id(), 403);
+        $media->delete();
+
+        return back()->with('success', 'File deleted successfully.');
     }
 }

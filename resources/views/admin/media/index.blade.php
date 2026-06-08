@@ -20,7 +20,19 @@
                         @foreach($media as $item)
                             <div class="border rounded p-4">
                                 <p class="text-sm text-gray-500">{{ $item->file_name }}</p>
+                                @if(str_starts_with($item->mime_type, 'image/'))
+                                    <img
+                                        src="{{ $item->getUrl() }}"
+                                        alt=""
+                                        class="w-full h-40 object-cover rounded mb-2"
+                                    >
+                                @endif
                                 <a href="{{ $item->getUrl() }}" target="_blank" class="text-blue-500 hover:underline">View File</a>
+                                <form action="{{ route('admin.media.destroy', $item) }}" method="POST" class="mt-2">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Delete this file?')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
+                                </form>
                             </div>
                         @endforeach
                     </div>
