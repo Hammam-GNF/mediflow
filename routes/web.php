@@ -36,6 +36,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
     Route::get('/media', [MediaController::class, 'index'])->name('media.index');
+    Route::post('/media', [MediaController::class, 'store'])->name('media.store');
 });
 
 require __DIR__.'/auth.php';
