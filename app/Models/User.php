@@ -32,4 +32,9 @@ class User extends Authenticatable implements HasMedia
             'password' => 'hashed',
         ];
     }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('avatar')->singleFile();
+    }
 }
