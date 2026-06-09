@@ -9,6 +9,14 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="flex justify-between items-center mb-4">
 
+                <div>
+                    <select id="role-filter" name="role" class="form-select block w-full mt-1">
+                        <option value="">All Roles</option>
+                        <option value="admin">Admin</option>
+                        <option value="user">User</option>
+                    </select>
+                </div>
+
                 @can('create', App\Models\User::class)
                 <a
                     href="{{ route('admin.users.create') }}"
@@ -53,11 +61,16 @@
         <script>
             $(function () {
 
-                $('#users-table').DataTable({
+                let table = $('#users-table').DataTable({
                     processing: true,
                     serverSide: true,
 
-                    ajax: '{{ route("admin.users.index") }}',
+                    ajax: {
+                        url: '{{ route("admin.users.index") }}',
+                        data: function (d) {
+                            d.role = $('#role-filter').val();
+                        }
+                    },
 
                     columns: [
                         {
@@ -87,6 +100,9 @@
                     ]
                 });
 
+                $('#role-filter').change(function () {
+                    table.draw();
+                });
             });
         </script>
     @endpush

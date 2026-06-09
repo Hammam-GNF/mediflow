@@ -21,29 +21,58 @@ class UserController extends Controller
         if ($request->ajax()) {
 
             $users = User::query()->with('roles');
+            if ($request->filled('role')) {
+                $users->role($request->role);
+            }
 
             return DataTables::of($users)
                 ->addIndexColumn()
 
                 ->addColumn('role', function ($user) {
-                    return $user->getRoleNames()->first() ?? 'N/A';
+                    return $user->roles->first()?->name ?? '-';
                 })
 
                 ->addColumn('action', function ($user) {
-                    $buttons = '';
+                    $buttons = '
+                        <div class="flex gap-2">
+                    ';
 
-                    $buttons = $buttons . '<a href="' . route('admin.users.edit', $user) . '" class="inline-flex items-center px-3 py-1 bg-blue-600 rounded-md text-xs text-white">Edit</a> ';
+                    $buttons .= '
+                        <a href="'.route('admin.users.edit', $user).'"
+                            class="px-3 py-1 bg-blue-600 text-white rounded">
+                            Edit
+                        </a>
+                    ';
 
-                    $buttons = $buttons . '<a href="' . route('admin.users.change-password', $user) . '" class="inline-flex items-center px-3 py-1 bg-green-600 rounded-md text-xs text-white ms-1">Change Password</a> ';
+                    $buttons .= '
+                        <a href="'.route('admin.users.change-password', $user).'"
+                            class="px-3 py-1 bg-green-600 text-white rounded">
+                            Password
+                        </a>
+                    ';
 
-                    if ($user->id !== Auth::id() && !($user->hasRole('admin') && User::whereHas('roles', function ($query) {
-                        $query->where('name', 'admin');
-                    })->count() === 1)) {
-                        $buttons = $buttons . '<form action="' . route('admin.users.destroy', $user) . '" method="POST" class="inline-block ms-1" onsubmit="return confirm(\'Are you sure you want to delete this user?\');">
-                            ' . csrf_field() . method_field('DELETE') . '
-                            <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 rounded-md text-xs text-white">Delete</button>
-                        </form>';
+                    if (Auth::id() !== $user->id) {
+
+                        $buttons .= '
+                            <form
+                                method="POST"
+                                action="'.route('admin.users.destroy', $user).'"
+                                onsubmit="return confirm(\'Delete this user?\')"
+                            >
+                                '.csrf_field().'
+                                '.method_field('DELETE').'
+
+                                <button
+                                    type="submit"
+                                    class="px-3 py-1 bg-red-600 text-white rounded"
+                                >
+                                    Delete
+                                </button>
+                            </form>
+                        ';
                     }
+
+                    $buttons .= '</div>';
 
                     return $buttons;
                 })
