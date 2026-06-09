@@ -10,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Yajra\DataTables\Facades\DataTables;
 
 class UserController extends Controller
 {
@@ -17,24 +18,41 @@ class UserController extends Controller
     {
         $this->authorize('viewAny', User::class);
 
-        $search = $request->search;
-        $role = $request->role;
+        if ($request->ajax()) {
 
-        $users = User::query()
-            ->when($search, function ($query) use ($search) {
-                $query->where(function ($query) use ($search) {
-                    $query->where('name', 'like', "%{$search}%")
-                        ->orWhere('email', 'like', "%{$search}%");
-                });
-            })
-            ->when($role, function ($query) use ($role) {
-                $query->role($role);
-            })
-            ->latest()
-            ->paginate(10)
-            ->withQueryString();
+            $users = User::query()->with('roles');
 
-        return view('admin.users.index', compact('users', 'search', 'role'));
+            return DataTables::of($users)
+                ->addIndexColumn()
+
+                ->addColumn('role', function ($user) {
+                    return $user->getRoleNames()->first() ?? 'N/A';
+                })
+
+                ->addColumn('action', function ($user) {
+                    $buttons = '';
+
+                    $buttons = $buttons . '<a href="' . route('admin.users.edit', $user) . '" class="inline-flex items-center px-3 py-1 bg-blue-600 rounded-md text-xs text-white">Edit</a> ';
+
+                    $buttons = $buttons . '<a href="' . route('admin.users.change-password', $user) . '" class="inline-flex items-center px-3 py-1 bg-green-600 rounded-md text-xs text-white ms-1">Change Password</a> ';
+
+                    if ($user->id !== Auth::id() && !($user->hasRole('admin') && User::whereHas('roles', function ($query) {
+                        $query->where('name', 'admin');
+                    })->count() === 1)) {
+                        $buttons = $buttons . '<form action="' . route('admin.users.destroy', $user) . '" method="POST" class="inline-block ms-1" onsubmit="return confirm(\'Are you sure you want to delete this user?\');">
+                            ' . csrf_field() . method_field('DELETE') . '
+                            <button type="submit" class="inline-flex items-center px-3 py-1 bg-red-600 rounded-md text-xs text-white">Delete</button>
+                        </form>';
+                    }
+
+                    return $buttons;
+                })
+
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('admin.users.index');
     }
 
     public function create()
