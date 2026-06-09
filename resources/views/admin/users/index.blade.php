@@ -17,14 +17,24 @@
                     </select>
                 </div>
 
-                @can('create', App\Models\User::class)
-                <a
-                    href="{{ route('admin.users.create') }}"
-                    class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
-                >
-                    Create User
-                </a>
-                @endcan
+                <div class="flex gap-2">
+                    <a
+                        href="{{ route('admin.users.export') }}"
+                        class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500"
+                    >
+                        Export Excel
+                    </a>
+
+                    @can('create', App\Models\User::class)
+                        <a
+                            href="{{ route('admin.users.create') }}"
+                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
+                        >
+                            Create User
+                        </a>
+                    @endcan
+                </div>
+
             </div>
             
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
