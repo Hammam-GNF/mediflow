@@ -181,6 +181,107 @@ class UserController extends Controller
         return Excel::download(new UsersExport(), 'users.xlsx');
     }
 
+    public function trash(Request $request)
+    {
+        $this->authorize('viewAny', User::class);
+
+        if ($request->ajax()) {
+            $users = User::onlyTrashed()->with('roles')->latest();
+
+            return DataTables::of($users)
+                ->addIndexColumn()
+
+                ->addColumn('role', function ($user) {
+                    return $user->roles->first()?->name ?? 'N/A';
+                })
+
+                ->editColumn('deleted_at', function ($user) {
+                    return $user->deleted_at->format('Y-m-d H:i:s');
+                })
+
+                ->addColumn('action', function ($user) {
+                    $buttons = '
+                        <div class="flex gap-2">
+                    ';
+
+                    $buttons .= '
+                        <form
+                            method="POST"
+                            action="'.route('admin.users.restore', $user).'"
+                            onsubmit="return confirm(\'Restore this user?\')"
+                        >
+                            '.csrf_field().'
+                            '.method_field('PUT').'
+
+                            <button
+                                type="submit"
+                                class="px-3 py-1 bg-green-600 text-white rounded"
+                            >
+                                Restore
+                            </button>
+                        </form>
+                    ';
+
+                    $buttons .= '
+                        <form
+                            method="POST"
+                            action="'.route('admin.users.force-delete', $user).'"
+                            onsubmit="return confirm(\'Force delete this user?\')"
+                        >
+                            '.csrf_field().'
+                            '.method_field('DELETE').'
+
+                            <button
+                                type="submit"
+                                class="px-3 py-1 bg-red-600 text-white rounded"
+                            >
+                                Force Delete
+                            </button>
+                        </form>
+                    ';
+
+                    $buttons .= '</div>';
+
+                    return $buttons;
+                })
+
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        return view('admin.users.trash');
+    }
+
+    public function restore($id)
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        $user->restore();
+
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($user)
+            ->event('restored')
+            ->log('User has been restored.');
+
+        return back()->with('success', 'User restored successfully.');
+    }
+
+    public function forceDelete($id)
+    {
+        $user = User::onlyTrashed()->findOrFail($id);
+
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($user)
+            ->event('force deleted')
+            ->log('User has been force deleted.');
+
+        $user->forceDelete();
+
+        return back()->with('success', 'User force deleted successfully.');
+    }
+
     public function destroy(User $user)
     {
         $this->authorize('delete', $user);

@@ -41,6 +41,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::delete('/media/{media}', [MediaController::class, 'destroy'])->name('media.destroy');
 
     Route::get('users-export', [UserController::class, 'export'])->name('users.export');
+
+    Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash');
+    Route::put('users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::delete('users/{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
 });
 
 require __DIR__.'/auth.php';
