@@ -56,21 +56,13 @@ class UserController extends Controller
                     if (Auth::id() !== $user->id) {
 
                         $buttons .= '
-                            <form
-                                method="POST"
-                                action="'.route('admin.users.destroy', $user).'"
-                                onsubmit="return confirm(\'Delete this user?\')"
+                            <button
+                                type="button"
+                                class="delete-user-btn px-3 py-1 bg-red-600 text-white rounded"
+                                data-url="'.route('admin.users.destroy', $user).'"
                             >
-                                '.csrf_field().'
-                                '.method_field('DELETE').'
-
-                                <button
-                                    type="submit"
-                                    class="px-3 py-1 bg-red-600 text-white rounded"
-                                >
-                                    Delete
-                                </button>
-                            </form>
+                                Delete
+                            </button>
                         ';
                     }
 
@@ -205,39 +197,23 @@ class UserController extends Controller
                     ';
 
                     $buttons .= '
-                        <form
-                            method="POST"
-                            action="'.route('admin.users.restore', $user).'"
-                            onsubmit="return confirm(\'Restore this user?\')"
+                        <button
+                            type="button"
+                            class="restore-user-btn px-3 py-1 bg-green-600 text-white rounded"
+                            data-url="'.route('admin.users.restore', $user).'"
                         >
-                            '.csrf_field().'
-                            '.method_field('PUT').'
-
-                            <button
-                                type="submit"
-                                class="px-3 py-1 bg-green-600 text-white rounded"
-                            >
-                                Restore
-                            </button>
-                        </form>
+                            Restore
+                        </button>
                     ';
 
                     $buttons .= '
-                        <form
-                            method="POST"
-                            action="'.route('admin.users.force-delete', $user).'"
-                            onsubmit="return confirm(\'Force delete this user?\')"
+                        <button
+                            type="button"
+                            class="force-delete-btn px-3 py-1 bg-red-600 text-white rounded"
+                            data-url="'.route('admin.users.force-delete', $user).'"
                         >
-                            '.csrf_field().'
-                            '.method_field('DELETE').'
-
-                            <button
-                                type="submit"
-                                class="px-3 py-1 bg-red-600 text-white rounded"
-                            >
-                                Force Delete
-                            </button>
-                        </form>
+                            Force Delete
+                        </button>
                     ';
 
                     $buttons .= '</div>';

@@ -28,11 +28,13 @@
                                     >
                                 @endif
                                 <a href="{{ $item->getUrl() }}" target="_blank" class="text-blue-500 hover:underline">View File</a>
-                                <form action="{{ route('admin.media.destroy', $item) }}" method="POST" class="mt-2">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" onclick="return confirm('Delete this file?')" class="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded focus:outline-none focus:shadow-outline">Delete</button>
-                                </form>
+                                <button
+                                    type="button"
+                                    data-url="{{ route('admin.media.destroy', $item) }}"
+                                    class="delete-media-btn bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                                >
+                                    Delete
+                                </button>
                             </div>
                         @endforeach
                     </div>
@@ -41,4 +43,54 @@
             </div>
         </div>
     </div>
+
+    <x-modal name="confirm-delete-media" focusable>
+        <form
+            id="delete-media-form"
+            method="POST"
+            class="p-6"
+        >
+            @csrf
+            @method('DELETE')
+
+            <h2 class="text-lg font-medium text-gray-900">
+                Delete Media
+            </h2>
+
+            <p class="mt-2 text-sm text-gray-600">
+                Are you sure you want to delete this media?
+            </p>
+
+            <div class="mt-6 flex justify-end gap-2">
+                <x-secondary-button
+                    x-on:click="$dispatch('close')"
+                    type="button"
+                >
+                    Cancel
+                </x-secondary-button>
+
+                <x-danger-button>
+                    Delete
+                </x-danger-button>
+            </div>
+        </form>
+    </x-modal>
+
+    @push('scripts')
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).on('click', '.delete-media-btn', function () {
+
+            let action = $(this).data('url');
+
+            $('#delete-media-form').attr('action', action);
+
+            window.dispatchEvent(
+                new CustomEvent('open-modal', {
+                    detail: 'confirm-delete-media'
+                })
+            );
+        });
+    </script>
+    @endpush
 </x-app-layout>
