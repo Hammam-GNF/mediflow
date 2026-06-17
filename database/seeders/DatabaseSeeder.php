@@ -29,10 +29,10 @@ class DatabaseSeeder extends Seeder
             });
 
         User::factory()
-            ->count(50)
+            ->count(10)
             ->create()
             ->each(function ($user) {
-                $user->assignRole('user');
+                $user->assignRole('doctor');
             });
     }
 }

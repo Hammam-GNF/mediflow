@@ -61,7 +61,7 @@
                             required
                         >
                             <option value="admin" {{ $user->hasRole('admin') ? 'selected' : '' }}>Admin</option>
-                            <option value="user" {{ $user->hasRole('user') ? 'selected' : '' }}>User</option>
+                            <option value="user" {{ $user->hasRole('doctor') ? 'selected' : '' }}>User</option>
                         </select>
 
                         <x-input-error
