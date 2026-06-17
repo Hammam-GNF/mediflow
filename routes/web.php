@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\PolyclinicController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
@@ -44,6 +45,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('users-trash', [UserController::class, 'trash'])->name('users.trash');
     Route::put('users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
     Route::delete('users/{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
+
+    Route::resource('polyclinics', PolyclinicController::class);
+    Route::get('polyclinics-trash', [PolyclinicController::class, 'trash'])->name('polyclinics.trash');
+    Route::put('polyclinics/{polyclinic}/restore', [PolyclinicController::class, 'restore'])->name('polyclinics.restore');
+    Route::delete('polyclinics/{polyclinic}/force-delete', [PolyclinicController::class, 'forceDelete'])->name('polyclinics.force-delete');
 });
 
 require __DIR__.'/auth.php';

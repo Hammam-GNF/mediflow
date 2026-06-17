@@ -13,7 +13,7 @@
                     <select id="role-filter" name="role" class="form-select block w-full mt-1">
                         <option value="">All Roles</option>
                         <option value="admin">Admin</option>
-                        <option value="user">User</option>
+                        <option value="doctor">Doctor</option>
                     </select>
                 </div>
 

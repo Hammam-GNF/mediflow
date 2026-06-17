@@ -47,6 +47,15 @@
 
                     @if(auth()->user()->hasRole('admin'))
                         <x-nav-link
+                            :href="route('admin.polyclinics.index')"
+                            :active="request()->routeIs('admin.polyclinics.*')"
+                        >
+                            Polyclinics
+                        </x-nav-link>
+                    @endif
+
+                    @if(auth()->user()->hasRole('admin'))
+                        <x-nav-link
                             :href="route('admin.activity-logs.index')"
                             :active="request()->routeIs('admin.activity-logs.*')"
                         >
@@ -157,6 +166,15 @@
                     :active="request()->routeIs('admin.users.*')"
                 >
                     Users
+                </x-responsive-nav-link>
+            @endif
+
+            @if(auth()->user()->hasRole('admin'))
+                <x-responsive-nav-link
+                    :href="route('admin.polyclinics.index')"
+                    :active="request()->routeIs('admin.polyclinics.*')"
+                >
+                    Polyclinics
                 </x-responsive-nav-link>
             @endif
 

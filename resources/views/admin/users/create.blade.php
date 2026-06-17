@@ -81,8 +81,8 @@
                                 Admin
                             </option>
 
-                            <option value="user">
-                                User
+                            <option value="doctor">
+                                Doctor
                             </option>
                         </select>
 

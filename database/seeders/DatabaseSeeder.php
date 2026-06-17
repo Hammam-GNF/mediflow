@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
             AdminSeeder::class,
             SettingSeeder::class,
+            PolyclinicSeeder::class,
         ]);
 
         User::factory()
