@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PolyclinicController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
@@ -56,6 +57,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('doctors-trash', [DoctorController::class, 'trash'])->name('doctors.trash');
     Route::put('doctors/{doctor}/restore', [DoctorController::class, 'restore'])->name('doctors.restore');
     Route::delete('doctors/{doctor}/force-delete', [DoctorController::class, 'forceDelete'])->name('doctors.force-delete');
+
+    Route::resource('patients', PatientController::class);
+    Route::get('patients-trash', [PatientController::class, 'trash'])->name('patients.trash');
+    Route::put('patients/{patient}/restore', [PatientController::class, 'restore'])->name('patients.restore');
+    Route::delete('patients/{patient}/force-delete', [PatientController::class, 'forceDelete'])->name('patients.force-delete');
+
 });
 
 require __DIR__.'/auth.php';
