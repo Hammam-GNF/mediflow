@@ -12,4 +12,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Polyclinic extends Model
 {
     use SoftDeletes;
+
+    public function doctors()
+    {
+        return $this->hasMany(Doctor::class);
+    }
 }

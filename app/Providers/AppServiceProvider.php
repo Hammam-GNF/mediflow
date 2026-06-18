@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Doctor;
 use App\Models\Polyclinic;
 use App\Models\User;
+use App\Policies\DoctorPolicy;
 use App\Policies\PolyclinicPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -26,5 +28,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Gate::policy(User::class, UserPolicy::class);
         Gate::policy(Polyclinic::class, PolyclinicPolicy::class);
+        Gate::policy(Doctor::class, DoctorPolicy::class);
     }
 }

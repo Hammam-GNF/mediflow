@@ -30,10 +30,14 @@ class DatabaseSeeder extends Seeder
             });
 
         User::factory()
-            ->count(10)
+            ->count(15)
             ->create()
             ->each(function ($user) {
                 $user->assignRole('doctor');
             });
+
+        $this->call([
+            DoctorSeeder::class
+        ]);
     }
 }

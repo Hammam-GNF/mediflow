@@ -95,10 +95,8 @@ class PolyclinicController extends Controller
         );
     }
 
-    public function update(
-        UpdatePolyclinicRequest $request,
-        Polyclinic $polyclinic
-    ) {
+    public function update(UpdatePolyclinicRequest $request, Polyclinic $polyclinic)
+    {
         $this->authorize('update', $polyclinic);
 
         $polyclinic->update(

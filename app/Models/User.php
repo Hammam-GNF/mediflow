@@ -38,4 +38,9 @@ class User extends Authenticatable implements HasMedia
     {
         $this->addMediaCollection('avatar')->singleFile();
     }
+
+    public function doctor()
+    {
+        return $this->hasOne(Doctor::class);
+    }
 }
