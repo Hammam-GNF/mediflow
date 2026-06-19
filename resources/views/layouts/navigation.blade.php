@@ -3,20 +3,6 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
-                <!-- Logo -->
-                @if(auth()->user()->hasRole('admin'))
-                    <div class="shrink-0 flex items-center">
-                        <a href="{{ route('admin.dashboard') }}">
-                            <x-application-logo class="block h-9 w-auto" />
-                        </a>
-                    </div>
-                @else
-                    <div class="shrink-0 flex items-center">
-                        <a href="{{ route('dashboard') }}">
-                            <x-application-logo class="block h-9 w-auto" />
-                        </a>
-                    </div>
-                @endif
 
                 <div class="hidden sm:flex sm:items-center">
                     <span
@@ -28,93 +14,7 @@
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
-                    @if(auth()->user()->hasRole('admin'))
-                        <x-nav-link
-                            :href="route('admin.dashboard')"
-                            :active="request()->routeIs('admin.dashboard')"
-                        >
-                            Dashboard
-                        </x-nav-link>
-                    @else
-                        <x-nav-link
-                            :href="route('dashboard')"
-                            :active="request()->routeIs('dashboard')"
-                        >
-                            Dashboard
-                        </x-nav-link>
-                    @endif
-
-                    @if(auth()->user()->hasRole('admin'))
-                        <x-nav-link
-                            :href="route('admin.users.index')"
-                            :active="request()->routeIs('admin.users.*')"
-                        >
-                            Users
-                        </x-nav-link>
-                    @endif
-
-                    @if(auth()->user()->hasRole('admin'))
-                        <x-nav-link
-                            :href="route('admin.polyclinics.index')"
-                            :active="request()->routeIs('admin.polyclinics.*')"
-                        >
-                            Polyclinics
-                        </x-nav-link>
-                    @endif
-
-                    @if(auth()->user()->hasRole('admin'))
-                        <x-nav-link
-                            :href="route('admin.doctors.index')"
-                            :active="request()->routeIs('admin.doctors.*')"
-                        >
-                            Doctors
-                        </x-nav-link>
-                    @endif
-
-                    @if(auth()->user()->hasRole('admin'))
-                        <x-nav-link
-                            :href="route('admin.patients.index')"
-                            :active="request()->routeIs('admin.patients.*')"
-                        >
-                            Patients
-                        </x-nav-link>
-                    @endif
-
-                    @if(auth()->user()->hasRole('admin'))
-                        <x-nav-link
-                            :href="route('admin.registrations.index')"
-                            :active="request()->routeIs('admin.registrations.*')"
-                        >
-                            Registrations
-                        </x-nav-link>
-                    @endif
-
-                    @if(auth()->user()->hasRole('admin'))
-                        <x-nav-link
-                            :href="route('admin.activity-logs.index')"
-                            :active="request()->routeIs('admin.activity-logs.*')"
-                        >
-                            Activity Logs
-                        </x-nav-link>
-                    @endif
-
-                    @if(auth()->user()->hasRole('admin'))
-                        <x-nav-link
-                            :href="route('admin.settings.index')"
-                            :active="request()->routeIs('admin.settings.*')"
-                        >
-                            Settings
-                        </x-nav-link>
-                    @endif
-
-                    @if(auth()->user()->hasRole('admin'))
-                        <x-nav-link
-                            :href="route('admin.media.index')"
-                            :active="request()->routeIs('admin.media.*')"
-                        >
-                            Media Library
-                        </x-nav-link>
-                    @endif
+                    
                 </div>
             </div>
 
