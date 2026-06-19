@@ -18,6 +18,14 @@
                     </div>
                 @endif
 
+                <div class="hidden sm:flex sm:items-center">
+                    <span
+                        id="current-datetime"
+                        class="text-sm text-gray-600 font-medium"
+                    >
+                    </span>
+                </div>
+
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     @if(auth()->user()->hasRole('admin'))
@@ -69,6 +77,15 @@
                             :active="request()->routeIs('admin.patients.*')"
                         >
                             Patients
+                        </x-nav-link>
+                    @endif
+
+                    @if(auth()->user()->hasRole('admin'))
+                        <x-nav-link
+                            :href="route('admin.registrations.index')"
+                            :active="request()->routeIs('admin.registrations.*')"
+                        >
+                            Registrations
                         </x-nav-link>
                     @endif
 
@@ -216,6 +233,15 @@
 
             @if(auth()->user()->hasRole('admin'))
                 <x-responsive-nav-link
+                    :href="route('admin.registrations.index')"
+                    :active="request()->routeIs('admin.registrations.*')"
+                >
+                    Registrations
+                </x-responsive-nav-link>
+            @endif
+
+            @if(auth()->user()->hasRole('admin'))
+                <x-responsive-nav-link
                     :href="route('admin.activity-logs.index')"
                     :active="request()->routeIs('admin.activity-logs.*')"
                 >
@@ -278,4 +304,30 @@
             </div>
         </div>
     </div>
+    <script>
+        function updateDateTime() {
+
+            const now = new Date();
+
+            const formatted =
+                now.toLocaleString(
+                    'id-ID',
+                    {
+                        dateStyle: 'full',
+                        timeStyle: 'medium'
+                    }
+                );
+
+            document.getElementById(
+                'current-datetime'
+            ).textContent = formatted;
+        }
+
+        updateDateTime();
+
+        setInterval(
+            updateDateTime,
+            1000
+        );
+    </script>
 </nav>

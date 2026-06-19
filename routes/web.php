@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PolyclinicController;
+use App\Http\Controllers\Admin\RegistrationController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ProfileController;
@@ -62,6 +63,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('patients-trash', [PatientController::class, 'trash'])->name('patients.trash');
     Route::put('patients/{patient}/restore', [PatientController::class, 'restore'])->name('patients.restore');
     Route::delete('patients/{patient}/force-delete', [PatientController::class, 'forceDelete'])->name('patients.force-delete');
+
+    Route::resource('registrations', RegistrationController::class);
+    Route::get('registrations-trash', [RegistrationController::class, 'trash'])->name('registrations.trash');
+    Route::put('registrations/{registration}/restore', [RegistrationController::class, 'restore'])->name('registrations.restore');
+    Route::delete('registrations/{registration}/force-delete', [RegistrationController::class, 'forceDelete'])->name('registrations.force-delete');
 
 });
 

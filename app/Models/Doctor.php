@@ -37,4 +37,9 @@ class Doctor extends Model
             'is_active' => 'boolean',
         ];
     }
+
+    public function registrations()
+    {
+        return $this->hasMany(Registration::class);
+    }
 }
