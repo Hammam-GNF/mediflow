@@ -41,4 +41,9 @@ class Registration extends Model
     {
         return $this->belongsTo(Polyclinic::class);
     }
+
+    public function queue()
+    {
+        return $this->hasOne(Queue::class);
+    }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Requests\Admin;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateRegistrationRequest extends FormRequest
+class StoreQueueRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,19 +23,9 @@ class UpdateRegistrationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'patient_id' => [
+            'status' => [
                 'required',
-                'exists:patients,id',
-            ],
-
-            'doctor_id' => [
-                'required',
-                'exists:doctors,id',
-            ],
-
-            'complaint' => [
-                'nullable',
-                'string',
+                'in:waiting,called,in_progress,done,cancelled',
             ],
         ];
     }

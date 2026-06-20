@@ -1,5 +1,5 @@
 <aside class="w-64 bg-gray-900 text-white min-h-screen sticky top-0">
-    
+
     <div class="px-6 py-4 border-b border-gray-700">
         <h1 class="text-xl font-bold">
             MediFlow
@@ -104,6 +104,18 @@
                     "
                 >
                     📝 Registrations
+                </a>
+
+                <a
+                    href="{{ route('admin.queues.index') }}"
+                    class="block px-4 py-2 rounded hover:bg-gray-800
+                        {{ request()->routeIs('admin.queues.*')
+                            ? 'bg-blue-600 text-white'
+                            : ''
+                        }}
+                    "
+                >
+                    📝 Queues
                 </a>
             </div>
         </div>

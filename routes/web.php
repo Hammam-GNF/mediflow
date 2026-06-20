@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PolyclinicController;
+use App\Http\Controllers\Admin\QueueController;
 use App\Http\Controllers\Admin\RegistrationController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
@@ -68,6 +69,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('registrations-trash', [RegistrationController::class, 'trash'])->name('registrations.trash');
     Route::put('registrations/{registration}/restore', [RegistrationController::class, 'restore'])->name('registrations.restore');
     Route::delete('registrations/{registration}/force-delete', [RegistrationController::class, 'forceDelete'])->name('registrations.force-delete');
+
+    Route::resource('queues', QueueController::class)->except(['create', 'store']);
+    Route::get('queues-trash', [QueueController::class, 'trash'])->name('queues.trash');
+    Route::put('queues/{queue}/restore', [QueueController::class, 'restore'])->name('queues.restore');
+    Route::delete('queues/{queue}/force-delete', [QueueController::class, 'forceDelete'])->name('queues.force-delete');
+    Route::patch('queues/{queue}/call', [QueueController::class, 'call'])->name('queues.call');
+    Route::patch('queues/{queue}/start', [QueueController::class, 'start'])->name('queues.start');
+    Route::patch('queues/{queue}/finish', [QueueController::class, 'finish'])->name('queues.finish');
+    Route::patch('queues/{queue}/cancel', [QueueController::class, 'cancel'])->name('queues.cancel');
 
 });
 

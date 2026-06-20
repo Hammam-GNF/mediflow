@@ -7,6 +7,7 @@ use App\Http\Requests\Admin\StoreRegistrationRequest;
 use App\Http\Requests\Admin\UpdateRegistrationRequest;
 use App\Models\Doctor;
 use App\Models\Patient;
+use App\Models\Queue;
 use App\Models\Registration;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,30 @@ class RegistrationController extends Controller
             '0',
             STR_PAD_LEFT
         );
+    }
+
+    private function generateQueueNumber(): string
+    {
+        $today = now()->format('Ymd');
+
+        $countToday = Queue::withTrashed()
+            ->whereDate(
+                'queue_date',
+                today()
+            )
+            ->count();
+
+        $nextNumber = $countToday + 1;
+
+        return 'Q'
+            . $today
+            . '-'
+            . str_pad(
+                $nextNumber,
+                3,
+                '0',
+                STR_PAD_LEFT
+            );
     }
 
     public function index(Request $request)
@@ -64,6 +89,10 @@ class RegistrationController extends Controller
                     return $registration->registration_date
                         ? $registration->registration_date->format('d-m-Y H:i')
                         : '-';
+                })
+
+                ->editColumn('status', function ($registration) {
+                    return $registration->status;
                 })
 
                 ->addColumn('action', function ($registration) {
@@ -143,6 +172,20 @@ class RegistrationController extends Controller
             'registration_date' => now(),
             
             'status' => 'registered',
+        ]);
+
+        Queue::create([
+            'registration_id' =>
+                $registration->id,
+
+            'queue_number' =>
+                $this->generateQueueNumber(),
+
+            'queue_date' =>
+                $registration->registration_date,
+
+            'status' =>
+                'waiting',
         ]);
 
         activity()

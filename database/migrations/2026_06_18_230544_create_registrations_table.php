@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreignId('polyclinic_id')->constrained()->cascadeOnUpdate()->restrictOnDelete();
             $table->dateTime('registration_date');
             $table->text('complaint')->nullable();
-            $table->enum('status', ['registered','queued','examined','completed','cancelled'])->default('registered');
+            $table->enum('status', ['registered', 'completed', 'cancelled'])->default('registered');
             $table->softDeletes();
             $table->timestamps();
         });

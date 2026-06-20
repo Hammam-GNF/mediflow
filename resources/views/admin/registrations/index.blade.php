@@ -118,7 +118,35 @@
                         },
                         {
                             data: 'status',
-                            name: 'status'
+                            name: 'status',
+                            render: function(data) {
+
+                                if (data === 'registered') {
+                                    return `
+                                        <span class="px-2 py-1 rounded bg-blue-200 text-blue-800">
+                                            Registered
+                                        </span>
+                                    `;
+                                }
+
+                                if (data === 'completed') {
+                                    return `
+                                        <span class="px-2 py-1 rounded bg-green-200 text-green-800">
+                                            Completed
+                                        </span>
+                                    `;
+                                }
+
+                                if (data === 'cancelled') {
+                                    return `
+                                        <span class="px-2 py-1 rounded bg-red-200 text-red-800">
+                                            Cancelled
+                                        </span>
+                                    `;
+                                }
+
+                                return data;
+                            }
                         },
                         {
                             data: 'action',
