@@ -46,4 +46,9 @@ class Registration extends Model
     {
         return $this->hasOne(Queue::class);
     }
+
+    public function medicalRecord()
+    {
+        return $this->hasOne(MedicalRecord::class);
+    }
 }
