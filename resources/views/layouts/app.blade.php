@@ -20,9 +20,7 @@
         <div class="flex min-h-screen bg-gray-100">
 
             @auth
-                @if(auth()->user()->hasRole('admin'))
-                    @include('layouts.sidebar')
-                @endif
+                @include('layouts.sidebar')
             @endauth
 
             <div class="flex-1">

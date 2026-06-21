@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Doctor\StoreMedicalRecordRequest;
 use App\Models\MedicalRecord;
 use App\Models\Queue;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Yajra\DataTables\Facades\DataTables;
 
 class ExaminationController extends Controller
 {
@@ -21,37 +23,96 @@ class ExaminationController extends Controller
             abort(403);
         }
     }
-    public function index()
+    public function index(Request $request)
     {
         $doctor = Auth::user()->doctor;
 
-        $queues = Queue::query()
-            ->with([
-                'registration.patient',
-            ])
-            ->whereIn(
-                'status',
-                [
-                    'called',
-                    'in_progress',
-                ]
-            )
-            ->whereHas(
-                'registration',
-                function ($query) use ($doctor) {
+        if ($request->ajax()) {
 
-                    $query->where(
-                        'doctor_id',
-                        $doctor->id
-                    );
-                }
+            return DataTables::of(
+                Queue::query()
+                    ->with([
+                        'registration.patient',
+                    ])
+                    ->whereIn(
+                        'status',
+                        [
+                            'called',
+                            'in_progress',
+                        ]
+                    )
+                    ->whereHas(
+                        'registration',
+                        function ($query) use ($doctor) {
+                            $query->where(
+                                'doctor_id',
+                                $doctor->id
+                            );
+                        }
+                    )
             )
-            ->latest('queue_date')
-            ->get();
+            ->addIndexColumn()
+
+            ->addColumn(
+                'queue_number',
+                fn ($queue) => $queue->queue_number
+            )
+
+            ->addColumn(
+                'patient_name',
+                fn ($queue) =>
+                    $queue->registration?->patient?->name
+            )
+
+            ->editColumn(
+                'status',
+                fn ($queue) => $queue->status
+            )
+
+            ->addColumn('action', function ($queue) {
+
+                if ($queue->status === 'called') {
+
+                    return '
+                        <form
+                            action="' . route(
+                                'doctor.examinations.start',
+                                $queue
+                            ) . '"
+                            method="POST"
+                        >
+                            ' . csrf_field() . '
+                            ' . method_field('PATCH') . '
+
+                            <button
+                                type="submit"
+                                class="px-3 py-1 bg-green-600 text-white rounded"
+                            >
+                                Start Examination
+                            </button>
+                        </form>
+                    ';
+                }
+
+                return '
+                    <a
+                        href="' . route(
+                            'doctor.examinations.create',
+                            $queue
+                        ) . '"
+                        class="px-3 py-1 bg-blue-600 text-white rounded"
+                    >
+                        Open Examination
+                    </a>
+                ';
+            })
+
+            ->rawColumns(['action'])
+            ->make(true);
+        }
 
         return view(
-            'doctor.examinations.index',
-            compact('queues')
+            'doctor.examinations.index'
         );
     }
 
