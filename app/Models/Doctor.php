@@ -42,4 +42,12 @@ class Doctor extends Model
     {
         return $this->hasMany(Registration::class);
     }
+
+    public function medicalRecords()
+    {
+        return $this->hasManyThrough(
+            MedicalRecord::class,
+            Registration::class
+        );
+    }
 }

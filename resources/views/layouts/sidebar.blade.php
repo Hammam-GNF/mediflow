@@ -210,6 +210,21 @@
                         🩺 Examination Queue
                     </a>
 
+                    <a
+                        href="{{ route('doctor.medical-records.index') }}"
+                        class="block px-4 py-2 rounded hover:bg-gray-800
+                            {{
+                                request()->routeIs(
+                                    'doctor.medical-records.*'
+                                )
+                                    ? 'bg-blue-600 text-white'
+                                    : ''
+                            }}
+                        "
+                    >
+                        📋 Medical Records
+                    </a>
+
                 </div>
 
             </div>

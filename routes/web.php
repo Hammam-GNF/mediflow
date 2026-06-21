@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\RegistrationController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Doctor\ExaminationController;
+use App\Http\Controllers\Doctor\MedicalRecordController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -86,6 +87,8 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->g
     Route::patch('examinations/{queue}/start',[ExaminationController::class, 'start'])->name('examinations.start');
     Route::post('examinations/{queue}',[ExaminationController::class, 'store'])->name('examinations.store');
 
+    Route::get('medical-records',[MedicalRecordController::class, 'index'])->name('medical-records.index');
+    Route::get('medical-records/{medicalRecord}',[MedicalRecordController::class, 'show'])->name('medical-records.show');
 });
 
 require __DIR__.'/auth.php';
