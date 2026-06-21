@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Doctor\StoreMedicalRecordRequest;
+use App\Models\Invoice;
 use App\Models\MedicalRecord;
 use App\Models\Queue;
 use Illuminate\Http\Request;
@@ -12,6 +13,23 @@ use Yajra\DataTables\Facades\DataTables;
 
 class ExaminationController extends Controller
 {
+    private function generateInvoiceNumber(): string
+    {
+        $lastInvoice = Invoice::withTrashed()
+            ->latest('id')
+            ->first();
+
+        $nextNumber = $lastInvoice
+            ? $lastInvoice->id + 1
+            : 1;
+
+        return 'INV-' . str_pad(
+            $nextNumber,
+            6,
+            '0',
+            STR_PAD_LEFT
+        );
+    }
 
     private function ensureDoctorOwnsQueue(Queue $queue): void
     {
@@ -130,7 +148,7 @@ class ExaminationController extends Controller
     {
         $this->ensureDoctorOwnsQueue($queue);
 
-        MedicalRecord::create([
+        $medicalRecord = MedicalRecord::create([
 
             ...$request->validated(),
 
@@ -139,6 +157,19 @@ class ExaminationController extends Controller
 
             'examined_at' =>
                 now(),
+        ]);
+
+        Invoice::create([
+            'invoice_date' => now(),
+            'registration_id' =>
+                $queue->registration_id,
+
+            'invoice_number' =>
+                $this->generateInvoiceNumber(),
+
+            'total_amount' => 0,
+
+            'status' => 'unpaid',
         ]);
 
         $queue->update([
@@ -151,7 +182,7 @@ class ExaminationController extends Controller
 
         activity()
             ->causedBy(Auth::user())
-            ->performedOn($queue)
+            ->performedOn($medicalRecord)
             ->event('examined')
             ->log(
                 'Medical record created'

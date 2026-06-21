@@ -127,6 +127,21 @@
                     >
                         📝 Queues
                     </a>
+
+                    <a
+                        href="{{ route('admin.invoices.index') }}"
+                        class="block px-4 py-2 rounded hover:bg-gray-800
+                            {{
+                                request()->routeIs(
+                                    'admin.invoices.*'
+                                )
+                                    ? 'bg-blue-600 text-white'
+                                    : ''
+                            }}
+                        "
+                    >
+                        💳 Invoices
+                    </a>
                 </div>
             </div>
 

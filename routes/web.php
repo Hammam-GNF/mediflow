@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
@@ -19,6 +20,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
 
+    /** @var \App\Models\User|null $user */
     $user = Auth::user();
 
     if ($user) {
@@ -90,6 +92,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::delete('queues/{queue}/force-delete', [QueueController::class, 'forceDelete'])->name('queues.force-delete');
     Route::patch('queues/{queue}/call', [QueueController::class, 'call'])->name('queues.call');
     Route::patch('queues/{queue}/cancel', [QueueController::class, 'cancel'])->name('queues.cancel');
+
+    Route::resource('invoices',InvoiceController::class)->only(['index','show']);
+    Route::patch('invoices/{invoice}/paid',[InvoiceController::class, 'markAsPaid'])->name('invoices.paid');
+    Route::patch('invoices/{invoice}/cancel',[InvoiceController::class, 'cancel'])->name('invoices.cancel');
 
 });
 
