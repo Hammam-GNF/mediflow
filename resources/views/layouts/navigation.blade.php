@@ -88,8 +88,8 @@
                 </x-responsive-nav-link>
             @else
                 <x-responsive-nav-link
-                    :href="route('dashboard')"
-                    :active="request()->routeIs('dashboard')"
+                    :href="route('doctor.dashboard')"
+                    :active="request()->routeIs('doctor.dashboard')"
                 >
                     Dashboard
                 </x-responsive-nav-link>

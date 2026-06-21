@@ -16,7 +16,7 @@
         <a
             href="{{ $isAdmin
                 ? route('admin.dashboard')
-                : route('dashboard')
+                : route('doctor.dashboard')
             }}"
             class="block px-4 py-2 rounded hover:bg-gray-800
                 {{ request()->routeIs('admin.dashboard')

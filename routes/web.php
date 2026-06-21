@@ -10,18 +10,30 @@ use App\Http\Controllers\Admin\QueueController;
 use App\Http\Controllers\Admin\RegistrationController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Doctor\DashboardController as DoctorDashboardController;
 use App\Http\Controllers\Doctor\ExaminationController;
 use App\Http\Controllers\Doctor\MedicalRecordController;
 use App\Http\Controllers\ProfileController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
+
+    $user = Auth::user();
+
+    if ($user) {
+
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard');
+        }
+
+        if ($user->hasRole('doctor')) {
+            return redirect()->route('doctor.dashboard');
+        }
+    }
+
     return view('welcome');
 });
-
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified', 'role:doctor'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -82,6 +94,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 });
 
 Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->group(function () {
+    Route::get('/dashboard', [DoctorDashboardController::class, 'index'])->name('dashboard');
+    
     Route::get('examinations',[ExaminationController::class, 'index'])->name('examinations.index');
     Route::get('examinations/{queue}/create',[ExaminationController::class, 'create'])->name('examinations.create');
     Route::patch('examinations/{queue}/start',[ExaminationController::class, 'start'])->name('examinations.start');
@@ -89,6 +103,7 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->g
 
     Route::get('medical-records',[MedicalRecordController::class, 'index'])->name('medical-records.index');
     Route::get('medical-records/{medicalRecord}',[MedicalRecordController::class, 'show'])->name('medical-records.show');
+
 });
 
 require __DIR__.'/auth.php';
