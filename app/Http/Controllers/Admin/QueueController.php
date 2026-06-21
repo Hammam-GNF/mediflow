@@ -85,33 +85,10 @@ class QueueController extends Controller
                         $buttons .= '
                             <button
                                 type="button"
-                                class="start-queue-btn px-3 py-1 bg-green-600 text-white rounded"
-                                data-url="' . route('admin.queues.start', $queue) . '"
-                            >
-                                Start
-                            </button>
-                        ';
-
-                        $buttons .= '
-                            <button
-                                type="button"
                                 class="cancel-queue-btn px-3 py-1 bg-yellow-600 text-white rounded"
                                 data-url="' . route('admin.queues.cancel', $queue) . '"
                             >
                                 Cancel
-                            </button>
-                        ';
-                    }
-
-                    if ($queue->status === 'in_progress') {
-
-                        $buttons .= '
-                            <button
-                                type="button"
-                                class="finish-queue-btn px-3 py-1 bg-blue-600 text-white rounded"
-                                data-url="' . route('admin.queues.finish', $queue) . '"
-                            >
-                                Finish
                             </button>
                         ';
                     }
@@ -159,58 +136,6 @@ class QueueController extends Controller
         return back()->with(
             'success',
             'Queue called successfully.'
-        );
-    }
-
-    public function start(Queue $queue)
-    {
-        $this->authorize('update', $queue);
-
-        if ($queue->status !== 'called') {
-            abort(403);
-        }
-
-        $queue->update([
-            'status' => 'in_progress',
-        ]);
-
-        activity()
-            ->causedBy(Auth::user())
-            ->performedOn($queue)
-            ->event('started')
-            ->log('Examination started');
-
-        return back()->with(
-            'success',
-            'Examination started successfully.'
-        );
-    }
-
-    public function finish(Queue $queue)
-    {
-        $this->authorize('update', $queue);
-
-        if ($queue->status !== 'in_progress') {
-            abort(403);
-        }
-
-        $queue->update([
-            'status' => 'done',
-        ]);
-
-        $queue->registration->update([
-            'status' => 'completed',
-        ]);
-
-        activity()
-            ->causedBy(Auth::user())
-            ->performedOn($queue)
-            ->event('finished')
-            ->log('Queue completed');
-
-        return back()->with(
-            'success',
-            'Queue completed successfully.'
         );
     }
 

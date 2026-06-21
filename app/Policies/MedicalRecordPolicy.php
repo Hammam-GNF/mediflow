@@ -13,7 +13,7 @@ class MedicalRecordPolicy
      */
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole('doctor');
     }
 
     /**
@@ -21,7 +21,7 @@ class MedicalRecordPolicy
      */
     public function view(User $user, MedicalRecord $medicalRecord): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole('doctor');
     }
 
     /**
@@ -29,7 +29,7 @@ class MedicalRecordPolicy
      */
     public function create(User $user): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole('doctor');
     }
 
     /**
@@ -37,7 +37,7 @@ class MedicalRecordPolicy
      */
     public function update(User $user, MedicalRecord $medicalRecord): bool
     {
-        return $user->hasRole('admin');
+        return $user->hasRole('doctor');
     }
 
     /**
@@ -45,7 +45,7 @@ class MedicalRecordPolicy
      */
     public function delete(User $user, MedicalRecord $medicalRecord): bool
     {
-        return $user->hasRole('admin');
+        return false;
     }
 
     /**
@@ -53,7 +53,7 @@ class MedicalRecordPolicy
      */
     public function restore(User $user, MedicalRecord $medicalRecord): bool
     {
-        return $user->hasRole('admin');
+        return false;
     }
 
     /**
@@ -61,6 +61,6 @@ class MedicalRecordPolicy
      */
     public function forceDelete(User $user, MedicalRecord $medicalRecord): bool
     {
-        return $user->hasRole('admin');
+        return false;
     }
 }

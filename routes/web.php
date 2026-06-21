@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\QueueController;
 use App\Http\Controllers\Admin\RegistrationController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Doctor\ExaminationController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -75,9 +76,15 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::put('queues/{queue}/restore', [QueueController::class, 'restore'])->name('queues.restore');
     Route::delete('queues/{queue}/force-delete', [QueueController::class, 'forceDelete'])->name('queues.force-delete');
     Route::patch('queues/{queue}/call', [QueueController::class, 'call'])->name('queues.call');
-    Route::patch('queues/{queue}/start', [QueueController::class, 'start'])->name('queues.start');
-    Route::patch('queues/{queue}/finish', [QueueController::class, 'finish'])->name('queues.finish');
     Route::patch('queues/{queue}/cancel', [QueueController::class, 'cancel'])->name('queues.cancel');
+
+});
+
+Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->group(function () {
+    Route::get('examinations',[ExaminationController::class, 'index'])->name('examinations.index');
+    Route::get('examinations/{queue}/create',[ExaminationController::class, 'create'])->name('examinations.create');
+    Route::patch('examinations/{queue}/start',[ExaminationController::class, 'start'])->name('examinations.start');
+    Route::post('examinations/{queue}',[ExaminationController::class, 'store'])->name('examinations.store');
 
 });
 

@@ -133,22 +133,6 @@
                                     `;
                                 }
 
-                                if (data === 'in_progress') {
-                                    return `
-                                        <span class="bg-yellow-500 text-white px-2 py-1 rounded">
-                                            In Progress
-                                        </span>
-                                    `;
-                                }
-
-                                if (data === 'done') {
-                                    return `
-                                        <span class="bg-green-500 text-white px-2 py-1 rounded">
-                                            Done
-                                        </span>
-                                    `;
-                                }
-
                                 if (data === 'cancelled') {
                                     return `
                                         <span class="bg-red-500 text-white px-2 py-1 rounded">
@@ -183,7 +167,7 @@
 
             $(document).on(
                 'click',
-                '.call-queue-btn,.start-queue-btn,.finish-queue-btn,.cancel-queue-btn',
+                '.call-queue-btn,.cancel-queue-btn',
                 function () {
 
                     $('#confirm-workflow-queue-form')
