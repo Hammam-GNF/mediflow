@@ -10,19 +10,31 @@ use Illuminate\Support\Facades\Auth;
 
 class ExaminationController extends Controller
 {
+
+    private function ensureDoctorOwnsQueue(Queue $queue): void
+    {
+        $doctor = Auth::user()->doctor;
+
+        if (
+            $queue->registration->doctor_id !== $doctor->id
+        ) {
+            abort(403);
+        }
+    }
     public function index()
     {
-        $doctor = Auth::user()
-            ->doctor;
+        $doctor = Auth::user()->doctor;
 
         $queues = Queue::query()
             ->with([
                 'registration.patient',
             ])
-            ->where(
+            ->whereIn(
                 'status',
-                'called',
-                'in_progress'
+                [
+                    'called',
+                    'in_progress',
+                ]
             )
             ->whereHas(
                 'registration',
@@ -45,9 +57,7 @@ class ExaminationController extends Controller
 
     public function create(Queue $queue)
     {
-        if ($queue->status !== 'in_progress') {
-            abort(403);
-        }
+        $this->ensureDoctorOwnsQueue($queue);
 
         return view(
             'doctor.examinations.create',
@@ -55,14 +65,9 @@ class ExaminationController extends Controller
         );
     }
 
-    public function store(
-        StoreMedicalRecordRequest $request,
-        Queue $queue
-    ) {
-
-        if ($queue->status !== 'in_progress') {
-            abort(403);
-        }
+    public function store(StoreMedicalRecordRequest $request, Queue $queue)
+    {
+        $this->ensureDoctorOwnsQueue($queue);
 
         MedicalRecord::create([
 
@@ -103,9 +108,7 @@ class ExaminationController extends Controller
 
     public function start(Queue $queue)
     {
-        if ($queue->status !== 'called') {
-            abort(403);
-        }
+        $this->ensureDoctorOwnsQueue($queue);
 
         $queue->update([
             'status' => 'in_progress',
@@ -117,6 +120,9 @@ class ExaminationController extends Controller
             ->event('started')
             ->log('Examination started');
 
-        return back();
+        return back()->with(
+            'success',
+            'Examination started successfully.'
+        );
     }
 }

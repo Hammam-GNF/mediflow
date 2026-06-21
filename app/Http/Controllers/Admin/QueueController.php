@@ -10,6 +10,7 @@ use Yajra\DataTables\Facades\DataTables;
 
 class QueueController extends Controller
 {
+    
     public function index(Request $request)
     {
         $this->authorize('viewAny', Queue::class);
