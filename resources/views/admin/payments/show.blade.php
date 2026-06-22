@@ -165,56 +165,10 @@
                     </strong>
                 </div>
 
-                @if($invoice->payment)
-
-                    <hr class="my-4">
-
-                    <h3 class="font-bold mb-2">
-                        Payment Information
-                    </h3>
-
-                    <p>
-                        Payment Number :
-                        {{ $invoice->payment->payment_number }}
-                    </p>
-
-                    <p>
-                        Method :
-                        {{ strtoupper($invoice->payment->payment_method) }}
-                    </p>
-
-                    <p>
-                        Paid At :
-                        {{ $invoice->payment->paid_at?->format('d-m-Y H:i') }}
-                    </p>
-
-                    <p>
-                        Amount :
-                        Rp {{ number_format($invoice->payment->amount) }}
-                    </p>
-
-                @endif
-
-                @if($invoice->status === 'unpaid')
-
-                    <div class="mt-4 text-right">
-
-                        <a
-                            href="{{ route('admin.payments.create', $invoice) }}"
-                            class="px-4 py-2 bg-green-600 text-white rounded"
-                        >
-                            Pay Invoice
-                        </a>
-
-                    </div>
-
-                @endif
-
                 <div>
                     <x-secondary-button class="mt-4">
                         <a href="{{ route('admin.invoices.index') }}">
                             Back
-                        </a>
                     </x-secondary-button>
                 </div>
 

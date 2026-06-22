@@ -81,23 +81,15 @@ class InvoiceController extends Controller
                 if ($invoice->status === 'unpaid') {
 
                     $buttons .= '
-                        <form
-                            action="' . route(
-                                'admin.invoices.paid',
+                        <a
+                            href="' . route(
+                                'admin.payments.create',
                                 $invoice
                             ) . '"
-                            method="POST"
+                            class="px-3 py-1 bg-green-600 text-white rounded"
                         >
-                            ' . csrf_field() . '
-                            ' . method_field('PATCH') . '
-
-                            <button
-                                type="submit"
-                                class="px-3 py-1 bg-green-600 text-white rounded"
-                            >
-                                Paid
-                            </button>
-                        </form>
+                            Pay
+                        </a>
                     ';
 
                     $buttons .= '
@@ -140,33 +132,12 @@ class InvoiceController extends Controller
         $invoice->load([
             'registration.patient',
             'items',
+            'payment',
         ]);
         
         return view(
             'admin.invoices.show',
             compact('invoice')
-        );
-    }
-
-    public function markAsPaid(Invoice $invoice)
-    {
-        if ($invoice->status !== 'unpaid') {
-            abort(403);
-        }
-
-        $invoice->update([
-            'status' => 'paid',
-        ]);
-
-        activity()
-            ->causedBy(Auth::user())
-            ->performedOn($invoice)
-            ->event('paid')
-            ->log('Invoice paid');
-
-        return back()->with(
-            'success',
-            'Invoice paid successfully.'
         );
     }
 
