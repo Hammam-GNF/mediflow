@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\InvoiceItemController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PolyclinicController;
@@ -96,6 +97,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('invoices',InvoiceController::class)->only(['index','show']);
     Route::patch('invoices/{invoice}/paid',[InvoiceController::class, 'markAsPaid'])->name('invoices.paid');
     Route::patch('invoices/{invoice}/cancel',[InvoiceController::class, 'cancel'])->name('invoices.cancel');
+
+    Route::post('invoices/{invoice}/items',[InvoiceItemController::class, 'store'])->name('invoice-items.store');
+    Route::delete('invoice-items/{invoiceItem}',[InvoiceItemController::class, 'destroy'])->name('invoice-items.destroy');
 
 });
 

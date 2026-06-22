@@ -159,8 +159,9 @@ class ExaminationController extends Controller
                 now(),
         ]);
 
-        Invoice::create([
+        $invoice = Invoice::create([
             'invoice_date' => now(),
+
             'registration_id' =>
                 $queue->registration_id,
 
@@ -170,6 +171,24 @@ class ExaminationController extends Controller
             'total_amount' => 0,
 
             'status' => 'unpaid',
+        ]);
+
+        $invoice->items()->create([
+            'item_name' =>
+                'Doctor Consultation',
+
+            'quantity' => 1,
+
+            'unit_price' => 50000,
+
+            'subtotal' => 50000,
+        ]);
+
+        $invoice->update([
+            'total_amount' =>
+                $invoice->items()->sum(
+                    'subtotal'
+                ),
         ]);
 
         $queue->update([

@@ -27,8 +27,11 @@ class Invoice extends Model
 
     public function registration()
     {
-        return $this->belongsTo(
-            Registration::class
-        );
+        return $this->belongsTo(Registration::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(InvoiceItem::class);
     }
 }

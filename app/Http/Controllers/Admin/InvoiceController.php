@@ -16,7 +16,7 @@ class InvoiceController extends Controller
 
             return DataTables::of(
                 Invoice::with([
-                    'registration.patient'
+                    'registration.patient',
                 ])
             )
             ->addIndexColumn()
@@ -40,6 +40,26 @@ class InvoiceController extends Controller
                     )
             )
 
+            ->editColumn('status', function ($invoice) {
+
+                return match ($invoice->status) {
+                    'unpaid' =>
+                        '<span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded">
+                            Unpaid
+                        </span>',
+
+                    'paid' =>
+                        '<span class="px-2 py-1 bg-green-100 text-green-800 rounded">
+                            Paid
+                        </span>',
+
+                    'cancelled' =>
+                        '<span class="px-2 py-1 bg-red-100 text-red-800 rounded">
+                            Cancelled
+                        </span>',
+                };
+            })
+
             ->addColumn('action', function ($invoice) {
 
                 $buttons = '
@@ -58,7 +78,7 @@ class InvoiceController extends Controller
                     </a>
                 ';
 
-                if ($invoice->status === 'pending') {
+                if ($invoice->status === 'unpaid') {
 
                     $buttons .= '
                         <form
@@ -106,7 +126,7 @@ class InvoiceController extends Controller
                 return $buttons;
             })
 
-            ->rawColumns(['action'])
+            ->rawColumns(['status','action'])
             ->make(true);
         }
 
@@ -117,6 +137,11 @@ class InvoiceController extends Controller
 
     public function show(Invoice $invoice)
     {
+        $invoice->load([
+            'registration.patient',
+            'items',
+        ]);
+        
         return view(
             'admin.invoices.show',
             compact('invoice')
@@ -125,6 +150,10 @@ class InvoiceController extends Controller
 
     public function markAsPaid(Invoice $invoice)
     {
+        if ($invoice->status !== 'unpaid') {
+            abort(403);
+        }
+
         $invoice->update([
             'status' => 'paid',
         ]);
@@ -143,6 +172,10 @@ class InvoiceController extends Controller
 
     public function cancel(Invoice $invoice)
     {
+        if ($invoice->status !== 'unpaid') {
+            abort(403);
+        }
+
         $invoice->update([
             'status' => 'cancelled',
         ]);
