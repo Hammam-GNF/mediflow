@@ -1,8 +1,23 @@
-# Laravel 13 Admin Management System
+# MediFlow
 
-A role-based admin management system built with Laravel 13.
+MediFlow is a Clinic Management Information System (SIM Klinik) built with Laravel 13.
 
-This project demonstrates authentication, authorization, user management, media management, activity logging, soft deletes, reusable UI components, and modern Laravel development practices.
+The system is designed to help clinics manage patients, registrations, queues, medical examinations, medical records, billing, payments, and operational reporting through a simple and role-based workflow.
+
+## Current Version
+
+MVP Version
+
+Roles:
+
+* Admin
+* Doctor
+
+Admin handles operational activities such as patient management, registrations, queues, billing, payments, and reporting.
+
+Doctor handles examinations and medical records.
+
+---
 
 ## Features
 
@@ -13,75 +28,265 @@ This project demonstrates authentication, authorization, user management, media 
 * Registration
 * Email Verification
 * Password Confirmation
+* Profile Management
+* Avatar Upload
 
 ### Authorization
 
 * Role-Based Access Control (RBAC)
 * Admin Role
-* User Role
-* Custom Role Middleware
-* User Policies
+* Doctor Role
+* Role Middleware
+* Laravel Policies
 
-### User Management
+---
 
-* Create User
-* Edit User
-* Delete User (Soft Delete)
-* Restore User
-* Force Delete User
-* Change User Password
-* Filter Users by Role
-* Export Users to Excel
+## Master Data
 
-### Media Library
+### Patient Management
 
-* Upload Files
-* View Files
-* Delete Files
-* User-owned media protection
+* Create Patient
+* Edit Patient
+* Soft Delete Patient
+* Restore Patient
+* Force Delete Patient
+* Medical Record Number (MRN) Generation
+* Active / Inactive Status
 
-### Activity Logs
+### Doctor Management
+
+* Create Doctor
+* Edit Doctor
+* Soft Delete Doctor
+* Restore Doctor
+* Force Delete Doctor
+* Doctor Code Generation
+
+### Polyclinic Management
+
+* Create Polyclinic
+* Edit Polyclinic
+* Soft Delete Polyclinic
+* Restore Polyclinic
+* Force Delete Polyclinic
+
+---
+
+## Registration Module
+
+* Patient Registration
+* Registration Number Generation
+* Automatic Polyclinic Assignment
+* Complaint Recording
+* Registration Status Management
+
+Registration Status:
+
+* Registered
+* Completed
+* Cancelled
+
+---
+
+## Queue Management
+
+Queue is automatically generated after registration.
+
+Features:
+
+* Queue Number Generation
+* Call Queue
+* Start Examination
+* Finish Examination
+* Cancel Queue
+
+Queue Workflow:
+
+```text
+waiting
+   ↓
+called
+   ↓
+in_progress
+   ↓
+done
+
+or
+
+waiting/called/in_progress
+   ↓
+cancelled
+```
+
+---
+
+## Examination Module
+
+Doctor Features:
+
+* View Assigned Queues
+* Start Examination
+* Record Vital Signs
+* Record Diagnosis
+* Record Examination Notes
+* Complete Examination
+
+Medical Data:
+
+* Chief Complaint
+* Height
+* Weight
+* Blood Pressure
+* Heart Rate
+* Body Temperature
+* Respiratory Rate
+* Diagnosis
+* Examination Notes
+
+---
+
+## Medical Records
+
+* Automatic Medical Record Creation
+* Medical Record History
+* Doctor Medical Record Viewer
+* Patient Medical History Tracking
+
+---
+
+## Billing & Payment
+
+### Invoice Management
+
+* Automatic Invoice Generation
+* Invoice Number Generation
+* Invoice Item Management
+* Invoice Status Management
+
+Invoice Status:
+
+* Unpaid
+* Paid
+* Cancelled
+
+### Payment Management
+
+* Payment Recording
+* Payment Method Tracking
+* Automatic Invoice Settlement
+
+### Receipt
+
+* Receipt View
+* PDF Receipt Export
+
+---
+
+## Reports
+
+### Financial Report
+
+* Revenue Summary
+* Date Range Filtering
+* PDF Export
+
+### Registration Report
+
+* Registration Statistics
+* Doctor Filtering
+* Polyclinic Filtering
+* Date Range Filtering
+* PDF Export
+
+### Patient Report
+
+* Gender Filtering
+* Active Status Filtering
+* PDF Export
+
+### Medical Record Report
+
+* Doctor Filtering
+* Patient Filtering
+* Date Range Filtering
+* PDF Export
+
+---
+
+## Activity Logging
+
+System activities are automatically recorded.
+
+Examples:
 
 * User Created
 * User Updated
-* Password Updated
 * User Deleted
-* User Restored
-* User Force Deleted
+* Patient Created
+* Registration Created
+* Queue Updated
+* Medical Record Created
+* Invoice Updated
+* Payment Recorded
 
-### UI Features
+---
 
-* Server-side DataTables
-* Flash Alerts
-* Reusable Confirmation Modal
-* Responsive Layout
+## Media Library
+
+* File Upload
+* File Management
+* Media Protection
+
+---
+
+## Settings
+
+* Application Settings Management
+
+---
 
 ## Tech Stack
+
+### Backend
 
 * PHP 8.3
 * Laravel 13
 * MySQL
+
+### Frontend
+
 * Blade
 * Tailwind CSS
 * Alpine.js
 * jQuery
 * DataTables
 
+### Reporting
+
+* DomPDF
+* Laravel Excel
+
+---
+
 ## Packages
 
 * spatie/laravel-permission
 * spatie/laravel-activitylog
 * spatie/laravel-medialibrary
-* maatwebsite/excel
+* spatie/laravel-settings
 * yajra/laravel-datatables
+* maatwebsite/excel
+* barryvdh/laravel-dompdf
+
+---
 
 ## Installation
 
-Clone the repository:
+Clone repository:
 
 ```bash
 git clone <repository-url>
-cd <project-folder>
+cd mediflow
 ```
 
 Install dependencies:
@@ -91,7 +296,7 @@ composer install
 npm install
 ```
 
-Create environment file:
+Create environment:
 
 ```bash
 cp .env.example .env
@@ -103,7 +308,7 @@ Generate application key:
 php artisan key:generate
 ```
 
-Run migrations and seeders:
+Configure database and run migrations:
 
 ```bash
 php artisan migrate --seed
@@ -115,39 +320,82 @@ Create storage link:
 php artisan storage:link
 ```
 
-Run the application:
+Run application:
 
 ```bash
 php artisan serve
 npm run dev
 ```
 
-## Demo Account
+---
 
-Admin Account
+## Demo Accounts
+
+### Admin
 
 Email:
+
 [admin@gmail.com](mailto:admin@gmail.com)
 
 Password:
+
 123456789
 
-## Project Structure
+### Doctor
 
-* Authentication & Authorization
-* User Management
-* Media Management
-* Activity Logging
-* Settings Management
+Create through admin panel.
 
-## Future Improvements
+---
 
-* Automated Tests (Pest)
+## Project Status
+
+Current Progress:
+
+* Sprint 1: Master Data ✅
+* Sprint 2: Registration & Queue ✅
+* Sprint 3: Examination & Medical Records ✅
+* Sprint 4: Billing & Payment ✅
+* Sprint 5: Reporting ✅
+
+Current Completed Modules:
+
+* Patients
+* Doctors
+* Polyclinics
+* Registrations
+* Queues
+* Examinations
+* Medical Records
+* Invoices
+* Payments
+* Receipts
+* Financial Reports
+* Registration Reports
+* Patient Reports
+* Medical Record Reports
+
+---
+
+## Planned Features
+
+### Phase 2
+
 * Dashboard Analytics
-* API Authentication
-* Multi-Tenant Support
-* Notification System
-* Audit Report Export
+* ICD-10 Integration
+* Pharmacy Module
+* Laboratory Module
+* SATUSEHAT Integration
+* BPJS Integration
+
+### Phase 3
+
+* Multi Doctor Scheduling
+* Multi Branch Support
+* Inventory Management
+* Advanced Analytics
+* REST API
+
+---
 
 ## License
 
