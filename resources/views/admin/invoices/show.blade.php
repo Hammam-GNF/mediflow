@@ -210,6 +210,19 @@
 
                 @endif
 
+                <hr class="my-4">
+
+                @if($invoice->payment)
+
+                <a
+                    href="{{ route('admin.receipts.show',$invoice) }}"
+                    class="px-4 py-2 bg-blue-600 text-white rounded"
+                >
+                    View Receipt
+                </a>
+
+                @endif
+
                 <div>
                     <x-secondary-button class="mt-4">
                         <a href="{{ route('admin.invoices.index') }}">

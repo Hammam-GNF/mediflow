@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PolyclinicController;
 use App\Http\Controllers\Admin\QueueController;
+use App\Http\Controllers\Admin\ReceiptController;
 use App\Http\Controllers\Admin\RegistrationController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
@@ -103,6 +104,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     Route::get('invoices/{invoice}/payment',[PaymentController::class, 'create'])->name('payments.create');
     Route::post('invoices/{invoice}/payment',[PaymentController::class, 'store'])->name('payments.store');
+
+    Route::get('receipts/{invoice}',[ReceiptController::class, 'show'])->name('receipts.show');
+    Route::get('receipts/{invoice}/pdf',[ReceiptController::class, 'pdf'])->name('receipts.pdf');
 
 });
 

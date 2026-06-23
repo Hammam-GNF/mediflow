@@ -53,7 +53,7 @@ class PaymentController extends Controller
             Payment::create([
                 'payment_number' =>
                     'PAY-' .
-                    now()->format('YmdHis'),
+                    now()->format('YmdHis').'-'. random_int(100, 999),
 
                 'invoice_id' =>
                     $invoice->id,
