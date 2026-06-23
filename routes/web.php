@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\FinancialReportController;
 use App\Http\Controllers\Admin\InvoiceItemController;
 use App\Http\Controllers\Admin\MediaController;
+use App\Http\Controllers\Admin\MedicalRecordReportController;
 use App\Http\Controllers\Admin\PatientController;
 use App\Http\Controllers\Admin\PatientReportController;
 use App\Http\Controllers\Admin\PaymentController;
@@ -119,6 +120,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     Route::get('reports/patients',[PatientReportController::class, 'index'])->name('reports.patients');
     Route::get('reports/patients/pdf',[PatientReportController::class, 'pdf'])->name('reports.patients.pdf');
+
+    Route::get('reports/medical-records',[MedicalRecordReportController::class, 'index'])->name('reports.medical-records');
+    Route::get('reports/medical-records/pdf',[MedicalRecordReportController::class, 'pdf'])->name('reports.medical-records.pdf');
 
 });
 
