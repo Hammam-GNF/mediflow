@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\FinancialReportController;
 use App\Http\Controllers\Admin\InvoiceItemController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PatientController;
+use App\Http\Controllers\Admin\PatientReportController;
 use App\Http\Controllers\Admin\PaymentController;
 use App\Http\Controllers\Admin\PolyclinicController;
 use App\Http\Controllers\Admin\QueueController;
@@ -115,6 +116,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     Route::get('reports/registrations',[RegistrationReportController::class, 'index'])->name('reports.registrations');
     Route::get('reports/registrations/pdf',[RegistrationReportController::class, 'pdf'])->name('reports.registrations.pdf');
+
+    Route::get('reports/patients',[PatientReportController::class, 'index'])->name('reports.patients');
+    Route::get('reports/patients/pdf',[PatientReportController::class, 'pdf'])->name('reports.patients.pdf');
 
 });
 

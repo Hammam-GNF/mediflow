@@ -211,10 +211,7 @@
                     <a
                         href="{{ route('admin.reports.financial') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
-                        {{
-                            request()->routeIs(
-                                'admin.reports.financial*'
-                            )
+                        {{ request()->routeIs('admin.reports.financial*')
                                 ? 'bg-blue-600 text-white'
                                 : ''
                         }}"
@@ -225,15 +222,23 @@
                     <a
                         href="{{ route('admin.reports.registrations') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
-                        {{
-                            request()->routeIs(
-                                'admin.reports.registrations*'
-                            )
+                        {{ request()->routeIs('admin.reports.registrations*')
                                 ? 'bg-blue-600 text-white'
                                 : ''
                         }}"
                     >
                         📋 Registration Report
+                    </a>
+                    
+                    <a
+                        href="{{ route('admin.reports.patients') }}"
+                        class="block px-4 py-2 rounded hover:bg-gray-800
+                        {{ request()->routeIs('admin.reports.patients*')
+                                ? 'bg-blue-600 text-white'
+                                : ''
+                        }}"
+                    >
+                        👥 Patient Report
                     </a>
 
                 </div>

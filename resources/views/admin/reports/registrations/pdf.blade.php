@@ -44,7 +44,7 @@
     <div class="title">
 
         <h2>
-            MediFlow Financial Report
+            MediFlow Registration Report
         </h2>
 
     </div>
