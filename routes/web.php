@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\PolyclinicController;
 use App\Http\Controllers\Admin\QueueController;
 use App\Http\Controllers\Admin\ReceiptController;
 use App\Http\Controllers\Admin\RegistrationController;
+use App\Http\Controllers\Admin\RegistrationReportController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Doctor\DashboardController as DoctorDashboardController;
@@ -111,6 +112,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     Route::get('reports/financial',[FinancialReportController::class, 'index'])->name('reports.financial');
     Route::get('reports/financial/pdf',[FinancialReportController::class, 'pdf'])->name('reports.financial.pdf');
+
+    Route::get('reports/registrations',[RegistrationReportController::class, 'index'])->name('reports.registrations');
+    Route::get('reports/registrations/pdf',[RegistrationReportController::class, 'pdf'])->name('reports.registrations.pdf');
 
 });
 
