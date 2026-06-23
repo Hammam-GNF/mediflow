@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
+use App\Http\Controllers\Admin\FinancialReportController;
 use App\Http\Controllers\Admin\InvoiceItemController;
 use App\Http\Controllers\Admin\MediaController;
 use App\Http\Controllers\Admin\PatientController;
@@ -107,6 +108,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     Route::get('receipts/{invoice}',[ReceiptController::class, 'show'])->name('receipts.show');
     Route::get('receipts/{invoice}/pdf',[ReceiptController::class, 'pdf'])->name('receipts.pdf');
+
+    Route::get('reports/financial',[FinancialReportController::class, 'index'])->name('reports.financial');
+    Route::get('reports/financial/pdf',[FinancialReportController::class, 'pdf'])->name('reports.financial.pdf');
 
 });
 

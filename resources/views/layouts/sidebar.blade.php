@@ -195,6 +195,37 @@
                 </div>
             </div>
 
+            <div x-data="{ open: true }" class="pt-4">
+
+                <button
+                    @click="open = !open"
+                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
+                >
+                    <span>Reports</span>
+
+                    <span x-text="open ? '-' : '+'"></span>
+                </button>
+
+                <div x-show="open" class="mt-2 space-y-1">
+
+                    <a
+                        href="{{ route('admin.reports.financial') }}"
+                        class="block px-4 py-2 rounded hover:bg-gray-800
+                        {{
+                            request()->routeIs(
+                                'admin.reports.financial*'
+                            )
+                                ? 'bg-blue-600 text-white'
+                                : ''
+                        }}"
+                    >
+                        📈 Financial Report
+                    </a>
+
+                </div>
+
+            </div>
+
         @endif
 
         @if($isDoctor)
@@ -244,7 +275,7 @@
 
             </div>
 
-            @endif
+        @endif
 
     </nav>
 
