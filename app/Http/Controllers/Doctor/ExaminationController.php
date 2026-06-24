@@ -7,6 +7,8 @@ use App\Http\Requests\Doctor\StoreMedicalRecordRequest;
 use App\Models\Icd10Code;
 use App\Models\Invoice;
 use App\Models\MedicalRecord;
+use App\Models\Medication;
+use App\Models\Prescription;
 use App\Models\Queue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -143,10 +145,15 @@ class ExaminationController extends Controller
             ->active()
             ->orderBy('code')
             ->get();
+
+        $medications = Medication::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
             
         return view(
             'doctor.examinations.create',
-            compact('queue', 'icd10Codes')
+            compact('queue', 'icd10Codes', 'medications')
         );
     }
 
@@ -157,6 +164,7 @@ class ExaminationController extends Controller
         $data = $request->safe()->except([
             'primary_icd10_id',
             'secondary_icd10_ids',
+            'medications',
         ]);
 
         $medicalRecord = MedicalRecord::create([
@@ -183,6 +191,33 @@ class ExaminationController extends Controller
 
         $medicalRecord->icd10Codes()->sync($syncData);
 
+        $prescription = Prescription::create([
+            'medical_record_id' => $medicalRecord->id,
+        ]);
+
+        foreach ($request->medications ?? [] as $item) {
+
+            $prescription->items()->create([
+                'medication_id' =>
+                    $item['medication_id'],
+
+                'quantity' =>
+                    $item['quantity'],
+
+                'dosage' =>
+                    $item['dosage'] ?? null,
+
+                'frequency' =>
+                    $item['frequency'] ?? null,
+
+                'duration' =>
+                    $item['duration'] ?? null,
+
+                'notes' =>
+                    $item['notes'] ?? null,
+            ]);
+        }
+
         $invoice = Invoice::create([
             'invoice_date' => now(),
 
@@ -208,11 +243,30 @@ class ExaminationController extends Controller
             'subtotal' => 50000,
         ]);
 
+        foreach (
+            $prescription->items()->with('medication')->get()
+            as $item
+        ) {
+
+            $invoice->items()->create([
+                'item_name' =>
+                    $item->medication->name,
+
+                'quantity' =>
+                    $item->quantity,
+
+                'unit_price' =>
+                    $item->medication->price,
+
+                'subtotal' =>
+                    $item->quantity *
+                    $item->medication->price,
+            ]);
+        }
+
         $invoice->update([
             'total_amount' =>
-                $invoice->items()->sum(
-                    'subtotal'
-                ),
+                $invoice->items()->sum('subtotal'),
         ]);
 
         $queue->update([

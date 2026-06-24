@@ -17,7 +17,7 @@ return new class extends Migration
             $table->foreignId('medication_id')->constrained()->restrictOnDelete();
             $table->string('dosage');
             $table->string('frequency');
-            $table->integer('duration');
+            $table->string('duration');
             $table->integer('quantity');
             $table->text('notes')->nullable();
             $table->timestamps();

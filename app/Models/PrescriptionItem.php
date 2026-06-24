@@ -18,15 +18,11 @@ class PrescriptionItem extends Model
 {
     public function prescription()
     {
-        return $this->belongsTo(
-            Prescription::class
-        );
+        return $this->belongsTo(Prescription::class);
     }
 
     public function medication()
     {
-        return $this->belongsTo(
-            Medication::class
-        );
+        return $this->belongsTo(Medication::class);
     }
 }

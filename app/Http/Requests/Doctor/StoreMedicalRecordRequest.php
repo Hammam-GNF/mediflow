@@ -83,6 +83,42 @@ class StoreMedicalRecordRequest extends FormRequest
             'secondary_icd10_ids.*' => [
                 'exists:icd10_codes,id',
             ],
+
+            'medications' => [
+                'nullable',
+                'array',
+            ],
+
+            'medications.*.medication_id' => [
+                'required',
+                'exists:medications,id',
+            ],
+
+            'medications.*.quantity' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
+
+            'medications.*.dosage' => [
+                'nullable',
+                'string',
+            ],
+
+            'medications.*.frequency' => [
+                'nullable',
+                'string',
+            ],
+
+            'medications.*.duration' => [
+                'nullable',
+                'string',
+            ],
+
+            'medications.*.notes' => [
+                'nullable',
+                'string',
+            ],
         ];
     }
 }

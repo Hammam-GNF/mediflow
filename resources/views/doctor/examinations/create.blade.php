@@ -158,6 +158,36 @@
 
                     </div>
 
+                    <hr class="my-6">
+
+                    <h3 class="font-bold text-lg mb-3">
+                        Prescription
+                    </h3>
+
+                    <table class="w-full border">
+                        <thead>
+                            <tr>
+                                <th>Medication</th>
+                                <th>Qty</th>
+                                <th>Dosage</th>
+                                <th>Frequency</th>
+                                <th>Duration</th>
+                            </tr>
+                        </thead>
+
+                        <tbody id="prescription-items">
+
+                        </tbody>
+                    </table>
+
+                    <button
+                        type="button"
+                        id="add-medication"
+                        class="mt-2 px-3 py-2 bg-green-600 text-white rounded"
+                    >
+                        Add Medication
+                    </button>
+
                     <div class="mt-6">
 
                         <button
@@ -187,6 +217,8 @@
         <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
         <script>
+            let medicationIndex = 0;
+
             $(document).ready(function () {
                 $('#primary_icd10').select2({
                     placeholder: 'Search ICD-10',
@@ -220,6 +252,89 @@
                         })
                     }
                 });
+
+                $('#add-medication').on('click', function () {
+
+                    let row = `
+                        <tr>
+                            <td>
+                                <select
+                                    name="medications[${medicationIndex}][medication_id]"
+                                    class="w-full border rounded"
+                                    required
+                                >
+                                    <option value="">
+                                        Select Medication
+                                    </option>
+
+                                    @foreach($medications as $medication)
+                                        <option value="{{ $medication->id }}">
+                                            {{ $medication->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </td>
+
+                            <td>
+                                <input
+                                    type="number"
+                                    min="1"
+                                    value="1"
+                                    name="medications[${medicationIndex}][quantity]"
+                                    class="w-full border rounded"
+                                    required
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    name="medications[${medicationIndex}][dosage]"
+                                    class="w-full border rounded"
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    name="medications[${medicationIndex}][frequency]"
+                                    class="w-full border rounded"
+                                >
+                            </td>
+
+                            <td>
+                                <input
+                                    type="text"
+                                    name="medications[${medicationIndex}][duration]"
+                                    class="w-full border rounded"
+                                >
+                            </td>
+
+                            <td>
+                                <button
+                                    type="button"
+                                    class="remove-medication px-2 py-1 bg-red-600 text-white rounded"
+                                >
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+
+                    $('#prescription-items').append(row);
+
+                    medicationIndex++;
+                });
+
+                $(document).on(
+                    'click',
+                    '.remove-medication',
+                    function () {
+                        $(this)
+                            .closest('tr')
+                            .remove();
+                    }
+                );
             });
         </script>
     @endpush
