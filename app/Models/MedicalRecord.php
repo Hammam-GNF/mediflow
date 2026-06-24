@@ -40,4 +40,9 @@ class MedicalRecord extends Model
     {
         return $this->belongsTo(Registration::class);
     }
+
+    public function icd10Codes()
+    {
+        return $this->belongsToMany(Icd10Code::class, 'medical_record_icd10_codes')->withPivot('diagnosis_type')->withTimestamps();
+    }
 }

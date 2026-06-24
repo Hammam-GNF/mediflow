@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Doctor\DashboardController as DoctorDashboardController;
 use App\Http\Controllers\Doctor\ExaminationController;
+use App\Http\Controllers\Doctor\Icd10Controller;
 use App\Http\Controllers\Doctor\MedicalRecordController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Auth;
@@ -124,6 +125,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('reports/medical-records',[MedicalRecordReportController::class, 'index'])->name('reports.medical-records');
     Route::get('reports/medical-records/pdf',[MedicalRecordReportController::class, 'pdf'])->name('reports.medical-records.pdf');
 
+
 });
 
 Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->group(function () {
@@ -136,6 +138,9 @@ Route::prefix('doctor')->name('doctor.')->middleware(['auth', 'role:doctor'])->g
 
     Route::get('medical-records',[MedicalRecordController::class, 'index'])->name('medical-records.index');
     Route::get('medical-records/{medicalRecord}',[MedicalRecordController::class, 'show'])->name('medical-records.show');
+
+    Route::get('icd10/search',[Icd10Controller::class, 'search'])->name('icd10.search');
+
 
 });
 

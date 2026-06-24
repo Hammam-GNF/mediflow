@@ -57,6 +57,28 @@
                                 rows="3"
                                 required
                             >{{ old('diagnosis') }}</textarea>
+
+                        </div>
+
+                        <div>
+                            <label>Primary ICD-10</label>
+                            <select id="primary_icd10" name="primary_icd10_id" class="w-full border rounded">
+                            </select>
+
+                            @error('primary_icd10_id')
+                                <div class="text-red-500 text-sm">
+                                    Primary diagnosis is required
+                                </div>
+                            @enderror
+
+                        </div>
+
+                        <div>
+                            <label>Secondary ICD-10</label>
+
+                            <select name="secondary_icd10_ids[]" id="secondary_icd10" class="w-full border rounded" multiple>
+                            </select>
+                            
                         </div>
 
                         <div>
@@ -154,5 +176,52 @@
         </div>
 
     </div>
+
+    @push('styles')
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    @endpush
+
+    @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+                $('#primary_icd10').select2({
+                    placeholder: 'Search ICD-10',
+                    allowClear: true,
+                    ajax: {
+                        url: '{{ route("doctor.icd10.search") }}',
+                        dataType: 'json',
+                        delay: 250,
+                        data: params => ({ q: params.term }),
+                        processResults: data => ({
+                            results: data.map(item => ({
+                                id: item.id,
+                                text: `${item.code} - ${item.name}`
+                            }))
+                        })
+                    }
+                });
+
+                $('#secondary_icd10').select2({
+                    placeholder: 'Search ICD-10',
+                    ajax: {
+                        url: '{{ route("doctor.icd10.search") }}',
+                        dataType: 'json',
+                        delay: 250,
+                        data: params => ({ q: params.term }),
+                        processResults: data => ({
+                            results: data.map(item => ({
+                                id: item.id,
+                                text: `${item.code} - ${item.name}`
+                            }))
+                        })
+                    }
+                });
+            });
+        </script>
+    @endpush
 
 </x-app-layout>

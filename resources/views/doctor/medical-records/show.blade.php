@@ -47,6 +47,11 @@
                     </p>
 
                     <p>
+                        Primary ICD-10 :
+                        {{ $medicalRecord->icd10Codes->first()->name }}
+                    </p>
+
+                    <p>
                         Height :
                         {{ $medicalRecord->height }}
                     </p>

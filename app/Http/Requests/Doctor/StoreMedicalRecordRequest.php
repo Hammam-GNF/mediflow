@@ -69,6 +69,20 @@ class StoreMedicalRecordRequest extends FormRequest
                 'nullable',
                 'string',
             ],
+
+            'primary_icd10_id' => [
+                'required',
+                'exists:icd10_codes,id',
+            ],
+
+            'secondary_icd10_ids' => [
+                'nullable',
+                'array',
+            ],
+
+            'secondary_icd10_ids.*' => [
+                'exists:icd10_codes,id',
+            ],
         ];
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Doctor;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Doctor\StoreMedicalRecordRequest;
+use App\Models\Icd10Code;
 use App\Models\Invoice;
 use App\Models\MedicalRecord;
 use App\Models\Queue;
@@ -138,9 +139,14 @@ class ExaminationController extends Controller
     {
         $this->ensureDoctorOwnsQueue($queue);
 
+        $icd10Codes = Icd10Code::query()
+            ->active()
+            ->orderBy('code')
+            ->get();
+            
         return view(
             'doctor.examinations.create',
-            compact('queue')
+            compact('queue', 'icd10Codes')
         );
     }
 
@@ -148,16 +154,34 @@ class ExaminationController extends Controller
     {
         $this->ensureDoctorOwnsQueue($queue);
 
-        $medicalRecord = MedicalRecord::create([
-
-            ...$request->validated(),
-
-            'registration_id' =>
-                $queue->registration_id,
-
-            'examined_at' =>
-                now(),
+        $data = $request->safe()->except([
+            'primary_icd10_id',
+            'secondary_icd10_ids',
         ]);
+
+        $medicalRecord = MedicalRecord::create([
+            ...$data,
+            'registration_id' =>$queue->registration_id,
+            'examined_at' =>now(),
+        ]);
+
+        $syncData = [];
+
+        if ($request->primary_icd10_id) {
+            $syncData[$request->primary_icd10_id] = [
+                'diagnosis_type' => 'primary'
+            ];
+        }
+
+        foreach (($request->secondary_icd10_ids ?? []) as $id) {
+            if ($id == $request->primary_icd10_id) continue;
+
+            $syncData[$id] = [
+                'diagnosis_type' => 'secondary'
+            ];
+        }
+
+        $medicalRecord->icd10Codes()->sync($syncData);
 
         $invoice = Invoice::create([
             'invoice_date' => now(),

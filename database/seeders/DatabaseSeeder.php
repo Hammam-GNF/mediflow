@@ -39,6 +39,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             DoctorSeeder::class,
             PatienSeeder::class,
+            Icd10ImportSeeder::class,
         ]);
     }
 }
