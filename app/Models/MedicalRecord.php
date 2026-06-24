@@ -45,4 +45,9 @@ class MedicalRecord extends Model
     {
         return $this->belongsToMany(Icd10Code::class, 'medical_record_icd10_codes')->withPivot('diagnosis_type')->withTimestamps();
     }
+
+    public function prescription()
+    {
+        return $this->hasOne(Prescription::class);
+    }
 }

@@ -40,6 +40,7 @@ class DatabaseSeeder extends Seeder
             DoctorSeeder::class,
             PatienSeeder::class,
             Icd10ImportSeeder::class,
+            MedicationSeeder::class,
         ]);
     }
 }
