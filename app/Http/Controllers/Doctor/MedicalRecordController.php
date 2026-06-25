@@ -98,15 +98,19 @@ class MedicalRecordController extends Controller
 
     public function show(MedicalRecord $medicalRecord)
     {
-
         $doctor = Auth::user()->doctor;
 
         abort_if(
-            $medicalRecord
-                ->registration
-                ->doctor_id !== $doctor->id,
+            $medicalRecord->registration->doctor_id !== $doctor->id,
             403
         );
+
+        $medicalRecord->load([
+            'registration.patient',
+            'registration.doctor',
+            'icd10Codes',
+            'prescription.items.medication',
+        ]);
 
         return view(
             'doctor.medical-records.show',
