@@ -1,21 +1,61 @@
-<nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
+<nav
+    x-data="{ open: false }"
+    class="bg-white border-b border-gray-100"
+>
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        <div class="flex justify-between items-center h-16">
             <div class="flex">
 
-                <div class="hidden sm:flex sm:items-center">
+                <div class="flex items-center lg:hidden">
+                    <button @click="sidebarOpen = ! sidebarOpen" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
+                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+                            <path :class="{'hidden': sidebarOpen, 'inline-flex': ! sidebarOpen }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                            <path :class="{'hidden': ! sidebarOpen, 'inline-flex': sidebarOpen }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex items-center">
                     <span
                         id="current-datetime"
-                        class="text-sm text-gray-600 font-medium"
-                    >
-                    </span>
+                        class="hidden sm:block text-sm text-gray-600 font-medium"
+                    ></span>
+
+                    <span
+                        id="current-time-mobile"
+                        class="sm:hidden text-sm text-gray-600 font-medium"
+                    ></span>
                 </div>
 
                 <!-- Navigation Links -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
                     
                 </div>
+            </div>
+
+            <!-- Mobile Profile Button -->
+            <div class="flex items-center sm:hidden">
+
+                <button
+                    @click="open = !open"
+                    class="inline-flex items-center p-1"
+                >
+                    @if(Auth::user()->hasMedia('avatar'))
+                        <img
+                            src="{{ Auth::user()->getFirstMediaUrl('avatar') }}"
+                            alt="Avatar"
+                            class="w-8 h-8 rounded-full object-cover"
+                        >
+                    @else
+                        <div
+                            class="w-8 h-8 rounded-full bg-gray-300 flex items-center justify-center text-gray-600"
+                        >
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                    @endif
+                </button>
+
             </div>
 
             <!-- Settings Dropdown -->
@@ -64,126 +104,38 @@
                 </x-dropdown>
             </div>
 
-            <!-- Hamburger -->
-            <div class="-me-2 flex items-center sm:hidden">
-                <button @click="open = ! open" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                    <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                        <path :class="{'hidden': open, 'inline-flex': ! open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                        <path :class="{'hidden': ! open, 'inline-flex': open }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                </button>
-            </div>
         </div>
     </div>
 
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
-        <div class="pt-2 pb-3 space-y-1">
-            @if(auth()->user()->hasRole('admin'))
-                <x-responsive-nav-link
-                    :href="route('admin.dashboard')"
-                    :active="request()->routeIs('admin.dashboard')"
-                >
-                    Dashboard
-                </x-responsive-nav-link>
-            @else
-                <x-responsive-nav-link
-                    :href="route('doctor.dashboard')"
-                    :active="request()->routeIs('doctor.dashboard')"
-                >
-                    Dashboard
-                </x-responsive-nav-link>
-            @endif
-
-            @if(auth()->user()->hasRole('admin'))
-                <x-responsive-nav-link
-                    :href="route('admin.users.index')"
-                    :active="request()->routeIs('admin.users.*')"
-                >
-                    Users
-                </x-responsive-nav-link>
-            @endif
-
-            @if(auth()->user()->hasRole('admin'))
-                <x-responsive-nav-link
-                    :href="route('admin.polyclinics.index')"
-                    :active="request()->routeIs('admin.polyclinics.*')"
-                >
-                    Polyclinics
-                </x-responsive-nav-link>
-            @endif
-
-            @if(auth()->user()->hasRole('admin'))
-                <x-responsive-nav-link
-                    :href="route('admin.doctors.index')"
-                    :active="request()->routeIs('admin.doctors.*')"
-                >
-                    Doctors
-                </x-responsive-nav-link>
-            @endif
-
-            @if(auth()->user()->hasRole('admin'))
-                <x-responsive-nav-link
-                    :href="route('admin.patients.index')"
-                    :active="request()->routeIs('admin.patients.*')"
-                >
-                    Patients
-                </x-responsive-nav-link>
-            @endif
-
-            @if(auth()->user()->hasRole('admin'))
-                <x-responsive-nav-link
-                    :href="route('admin.registrations.index')"
-                    :active="request()->routeIs('admin.registrations.*')"
-                >
-                    Registrations
-                </x-responsive-nav-link>
-            @endif
-
-            @if(auth()->user()->hasRole('admin'))
-                <x-responsive-nav-link
-                    :href="route('admin.activity-logs.index')"
-                    :active="request()->routeIs('admin.activity-logs.*')"
-                >
-                    Activity Logs
-                </x-responsive-nav-link>
-            @endif
-
-            @if(auth()->user()->hasRole('admin'))
-                <x-responsive-nav-link
-                    :href="route('admin.settings.index')"
-                    :active="request()->routeIs('admin.settings.*')"
-                >
-                    Settings
-                </x-responsive-nav-link>
-            @endif
-
-            @if(auth()->user()->hasRole('admin'))
-                <x-responsive-nav-link
-                    :href="route('admin.media.index')"
-                    :active="request()->routeIs('admin.media.*')"
-                >
-                    Media Library
-                </x-responsive-nav-link>
-            @endif
-        </div>
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
-            <div class="px-4">
+            <div class="px-4 flex items-center">
                 @if(Auth::user()->hasMedia('avatar'))
                     <img
                         src="{{ Auth::user()->getFirstMediaUrl('avatar') }}"
                         alt="Avatar"
-                        class="w-10 h-10 rounded-full object-cover me-2"
+                        class="w-10 h-10 rounded-full object-cover"
                     >
                 @else
-                    <div class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600 me-2">
+                    <div
+                        class="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center text-gray-600"
+                    >
                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                     </div>
                 @endif
-                <div class="font-medium text-base text-gray-800">{{ Auth::user()->name }}</div>
-                <div class="font-medium text-sm text-gray-500">{{ Auth::user()->email }}</div>
+
+                <div class="ms-3">
+                    <div class="font-medium text-base text-gray-800">
+                        {{ Auth::user()->name }}
+                    </div>
+
+                    <div class="font-medium text-sm text-gray-500">
+                        {{ Auth::user()->email }}
+                    </div>
+                </div>
             </div>
 
             <div class="mt-3 space-y-1">
@@ -204,6 +156,8 @@
             </div>
         </div>
     </div>
+    
+    
     <script>
         function updateDateTime() {
 
@@ -218,9 +172,34 @@
                     }
                 );
 
-            document.getElementById(
-                'current-datetime'
-            ).textContent = formatted;
+            const mobileTime =
+                now.toLocaleTimeString(
+                    'id-ID',
+                    {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit'
+                    }
+                );
+
+            const desktop =
+                document.getElementById(
+                    'current-datetime'
+                );
+
+            const mobile =
+                document.getElementById(
+                    'current-time-mobile'
+                );
+
+            if (desktop) {
+                desktop.textContent = formatted;
+            }
+
+            if (mobile) {
+                mobile.textContent = mobileTime;
+            }
+
         }
 
         updateDateTime();

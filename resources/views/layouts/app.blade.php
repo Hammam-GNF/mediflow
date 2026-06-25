@@ -17,25 +17,28 @@
     </head>
     <body class="font-sans antialiased">
 
-        <div class="flex min-h-screen bg-gray-100">
+        <div
+            x-data="{ sidebarOpen: false }"
+            class="flex min-h-screen bg-gray-100"
+        >
 
             @auth
                 @include('layouts.sidebar')
             @endauth
 
-            <div class="flex-1">
+            <div class="flex-1 min-w-0 overflow-hidden">
 
                 @include('layouts.navigation')
 
                 @isset($header)
                     <header class="bg-white shadow">
-                        <div class="px-6 py-4">
+                        <div class="px-4 sm:px-6 py-4">
                             {{ $header }}
                         </div>
                     </header>
                 @endisset
 
-                <main>
+                <main class="overflow-x-auto">
                     @include('components.flash-message')
 
                     {{ $slot }}

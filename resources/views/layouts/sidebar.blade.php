@@ -3,7 +3,39 @@
     $isDoctor = auth()->user()->hasRole('doctor');
 @endphp
 
-<aside class="w-64 bg-gray-900 text-white min-h-screen sticky top-0">
+
+<!-- Mobile Overlay -->
+<div
+    x-cloak
+    x-show="sidebarOpen"
+    x-transition.opacity
+    class="fixed inset-0 bg-black/50 z-40 lg:hidden"
+    @click="sidebarOpen = false"
+></div>
+
+<aside
+    x-cloak
+    class="
+        fixed lg:sticky
+        top-0 left-0
+        z-50
+        w-64
+        bg-gray-900
+        text-white
+        min-h-screen
+        overflow-y-auto
+
+        transform
+        transition-transform
+
+        lg:translate-x-0
+    "
+    :class="
+        sidebarOpen
+            ? 'translate-x-0'
+            : '-translate-x-full'
+    "
+>
 
     <div class="px-6 py-4 border-b border-gray-700">
         <h1 class="text-xl font-bold">
@@ -14,6 +46,7 @@
     <nav class="p-4 space-y-2">
 
         <a
+            @click="sidebarOpen = false"
             href="{{ $isAdmin
                 ? route('admin.dashboard')
                 : route('doctor.dashboard')
@@ -43,6 +76,7 @@
                 <div x-show="open" class="mt-2 space-y-1">
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.users.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.users.*')
@@ -55,6 +89,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.polyclinics.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.polyclinics.*')
@@ -67,6 +102,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.doctors.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.doctors.*')
@@ -79,6 +115,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.patients.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.patients.*')
@@ -106,6 +143,7 @@
                 <div x-show="open" class="mt-2 space-y-1">
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.medications.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.medications.*')
@@ -134,6 +172,7 @@
                 <div x-show="open" class="mt-2 space-y-1">
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.registrations.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.registrations.*')
@@ -146,6 +185,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.queues.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.queues.*')
@@ -158,6 +198,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.invoices.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{
@@ -188,6 +229,7 @@
                 <div x-show="open" class="mt-2 space-y-1">
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.reports.financial') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                         {{ request()->routeIs('admin.reports.financial*')
@@ -199,6 +241,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.reports.registrations') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                         {{ request()->routeIs('admin.reports.registrations*')
@@ -210,6 +253,7 @@
                     </a>
                     
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.reports.patients') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                         {{ request()->routeIs('admin.reports.patients*')
@@ -221,6 +265,7 @@
                     </a>
                     
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.reports.medical-records') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                         {{ request()->routeIs('admin.reports.medical-records*')
@@ -248,6 +293,7 @@
                 <div x-show="open" class="mt-2 space-y-1">
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.activity-logs.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.activity-logs.*')
@@ -260,6 +306,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.media.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.media.*')
@@ -272,6 +319,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.settings.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{ request()->routeIs('admin.settings.*')
@@ -303,6 +351,7 @@
                 <div x-show="open" class="mt-2 space-y-1">
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('doctor.examinations.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{
@@ -316,6 +365,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('doctor.medical-records.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{
