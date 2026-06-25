@@ -30,6 +30,60 @@
 
                 </div>
 
+                <div class="mt-6">
+
+                    <h3 class="font-bold text-lg mb-3">
+                        Medical History
+                    </h3>
+
+                    @forelse($medicalHistory as $history)
+
+                        <div class="border rounded-lg p-4 mb-3 bg-gray-50">
+
+                            <div class="font-semibold">
+                                {{ $history->examined_at->format('d M Y H:i') }}
+                            </div>
+
+                            <div>
+                                Diagnosis:
+                                {{ $history->diagnosis }}
+                            </div>
+
+                            <div>
+                                Doctor:
+                                {{ $history->registration->doctor->name ?? '-' }}
+                            </div>
+
+                            <div>
+                                ICD-10:
+                                {{  $history->icd10Codes
+                                    ->where('pivot.diagnosis_type', 'primary')
+                                    ->pluck('name')
+                                    ->join(', ') }}
+                            </div>
+
+                            <div>
+                                ICD-10 Secondary:
+                                {{ $history->icd10Codes
+                                    ->where('pivot.diagnosis_type', 'secondary')
+                                    ->pluck('name')
+                                    ->join(', ') }}
+                            </div>
+
+                        </div>
+
+                    @empty
+
+                        <div class="text-gray-500">
+                            No previous medical history.
+                        </div>
+
+                    @endforelse
+
+                </div>
+
+                <hr class="my-6">
+
                 <form
                     method="POST"
                     action="{{ route('doctor.examinations.store',$queue) }}"
@@ -196,6 +250,10 @@
                         >
                             Save Medical Record
                         </button>
+
+                        <x-secondary-button>
+                            <a href="{{ route('doctor.examinations.index') }}">Cancel</a>
+                        </x-secondary-button>
 
                     </div>
 

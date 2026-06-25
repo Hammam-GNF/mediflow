@@ -143,6 +143,21 @@ class ExaminationController extends Controller
     {
         $this->ensureDoctorOwnsQueue($queue);
 
+        $queue->load([
+            'registration.patient',
+        ]);
+
+        $patient = $queue->registration->patient;
+
+        $medicalHistory = $patient->medicalRecords()
+            ->with([
+                'registration.doctor',
+                'icd10Codes',
+            ])
+            ->latest('examined_at')
+            ->take(10)
+            ->get();
+                
         $icd10Codes = Icd10Code::query()
             ->active()
             ->orderBy('code')
@@ -155,7 +170,7 @@ class ExaminationController extends Controller
             
         return view(
             'doctor.examinations.create',
-            compact('queue', 'icd10Codes', 'medications')
+            compact('queue', 'icd10Codes', 'medications', 'medicalHistory')
         );
     }
 
