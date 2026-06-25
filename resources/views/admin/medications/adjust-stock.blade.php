@@ -87,6 +87,12 @@
                         Save Adjustment
                     </x-primary-button>
 
+                    <x-secondary-button>
+                        <a href="{{ route('admin.medications.index') }}">
+                            Cancel
+                        </a>
+                    </x-secondary-button>
+
                 </form>
 
             </div>

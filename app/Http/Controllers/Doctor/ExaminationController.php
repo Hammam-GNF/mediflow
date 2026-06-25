@@ -13,6 +13,8 @@ use App\Models\Queue;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\ValidationException;
 
 class ExaminationController extends Controller
 {
@@ -161,129 +163,161 @@ class ExaminationController extends Controller
     {
         $this->ensureDoctorOwnsQueue($queue);
 
-        $data = $request->safe()->except([
-            'primary_icd10_id',
-            'secondary_icd10_ids',
-            'medications',
-        ]);
-
-        $medicalRecord = MedicalRecord::create([
-            ...$data,
-            'registration_id' =>$queue->registration_id,
-            'examined_at' =>now(),
-        ]);
-
-        $syncData = [];
-
-        if ($request->primary_icd10_id) {
-            $syncData[$request->primary_icd10_id] = [
-                'diagnosis_type' => 'primary'
-            ];
-        }
-
-        foreach (($request->secondary_icd10_ids ?? []) as $id) {
-            if ($id == $request->primary_icd10_id) continue;
-
-            $syncData[$id] = [
-                'diagnosis_type' => 'secondary'
-            ];
-        }
-
-        $medicalRecord->icd10Codes()->sync($syncData);
-
-        $prescription = Prescription::create([
-            'medical_record_id' => $medicalRecord->id,
-        ]);
-
-        foreach ($request->medications ?? [] as $item) {
-
-            $prescription->items()->create([
-                'medication_id' =>
-                    $item['medication_id'],
-
-                'quantity' =>
-                    $item['quantity'],
-
-                'dosage' =>
-                    $item['dosage'] ?? null,
-
-                'frequency' =>
-                    $item['frequency'] ?? null,
-
-                'duration' =>
-                    $item['duration'] ?? null,
-
-                'notes' =>
-                    $item['notes'] ?? null,
+        DB::transaction(function () use ($request, $queue)
+        {
+            $data = $request->safe()->except([
+                'primary_icd10_id',
+                'secondary_icd10_ids',
+                'medications',
             ]);
-        }
 
-        $invoice = Invoice::create([
-            'invoice_date' => now(),
+            $medicalRecord = MedicalRecord::create([
+                ...$data,
+                'registration_id' =>$queue->registration_id,
+                'examined_at' =>now(),
+            ]);
 
-            'registration_id' =>
-                $queue->registration_id,
+            $syncData = [];
 
-            'invoice_number' =>
-                $this->generateInvoiceNumber(),
+            if ($request->primary_icd10_id) {
+                $syncData[$request->primary_icd10_id] = [
+                    'diagnosis_type' => 'primary'
+                ];
+            }
 
-            'total_amount' => 0,
+            foreach (($request->secondary_icd10_ids ?? []) as $id) {
+                if ($id == $request->primary_icd10_id) continue;
 
-            'status' => 'unpaid',
-        ]);
+                $syncData[$id] = [
+                    'diagnosis_type' => 'secondary'
+                ];
+            }
 
-        $invoice->items()->create([
-            'item_name' =>
-                'Doctor Consultation',
+            $medicalRecord->icd10Codes()->sync($syncData);
 
-            'quantity' => 1,
+            $prescription = Prescription::create([
+                'medical_record_id' => $medicalRecord->id,
+            ]);
 
-            'unit_price' => 50000,
+            foreach ($request->medications ?? [] as $item) {
 
-            'subtotal' => 50000,
-        ]);
+                $medication = Medication::query()
+                    ->with([
+                        'stock' => fn ($q) => $q->lockForUpdate()
+                    ])
+                    ->findOrFail(
+                        $item['medication_id']
+                    );
 
-        foreach (
-            $prescription->items()->with('medication')->get()
-            as $item
-        ) {
+                if (
+                    $medication->stock->current_stock <
+                    $item['quantity']
+                ) {
+                    throw ValidationException::withMessages([
+                        'medications' => [
+                            $medication->name . ' stock is insufficient.'
+                        ]
+                    ]);
+                }
+
+                $prescription->items()->create([
+                    'medication_id' =>
+                        $item['medication_id'],
+
+                    'quantity' =>
+                        $item['quantity'],
+
+                    'dosage' =>
+                        $item['dosage'] ?? null,
+
+                    'frequency' =>
+                        $item['frequency'] ?? null,
+
+                    'duration' =>
+                        $item['duration'] ?? null,
+
+                    'notes' =>
+                        $item['notes'] ?? null,
+                ]);
+
+                $medication->stock()->decrement(
+                    'current_stock',
+                    $item['quantity']
+                );
+
+                $medication->stockMovements()->create([
+                    'type' => 'out',
+                    'quantity' => $item['quantity'],
+                    'notes' => 'Prescription #' . $prescription->id,
+                    'user_id' => Auth::id(),
+                ]);
+            }
+
+            $invoice = Invoice::create([
+                'invoice_date' => now(),
+
+                'registration_id' =>
+                    $queue->registration_id,
+
+                'invoice_number' =>
+                    $this->generateInvoiceNumber(),
+
+                'total_amount' => 0,
+
+                'status' => 'unpaid',
+            ]);
 
             $invoice->items()->create([
                 'item_name' =>
-                    $item->medication->name,
+                    'Doctor Consultation',
 
-                'quantity' =>
-                    $item->quantity,
+                'quantity' => 1,
 
-                'unit_price' =>
-                    $item->medication->price,
+                'unit_price' => 50000,
 
-                'subtotal' =>
-                    $item->quantity *
-                    $item->medication->price,
+                'subtotal' => 50000,
             ]);
-        }
 
-        $invoice->update([
-            'total_amount' =>
-                $invoice->items()->sum('subtotal'),
-        ]);
+            foreach ($prescription->items()->with('medication')->get()as $item)
+            {
 
-        $queue->update([
-            'status' => 'done',
-        ]);
+                $invoice->items()->create([
+                    'item_name' =>
+                        $item->medication->name,
 
-        $queue->registration->update([
-            'status' => 'completed',
-        ]);
+                    'quantity' =>
+                        $item->quantity,
 
-        activity()
-            ->causedBy(Auth::user())
-            ->performedOn($medicalRecord)
-            ->event('examined')
-            ->log(
-                'Medical record created'
-            );
+                    'unit_price' =>
+                        $item->medication->price,
+
+                    'subtotal' =>
+                        $item->quantity *
+                        $item->medication->price,
+                ]);
+            }
+
+            $invoice->update([
+                'total_amount' =>
+                    $invoice->items()->sum('subtotal'),
+            ]);
+
+            $queue->update([
+                'status' => 'done',
+            ]);
+
+            $queue->registration->update([
+                'status' => 'completed',
+            ]);
+
+            activity()
+                ->causedBy(Auth::user())
+                ->performedOn($medicalRecord)
+                ->event('examined')
+                ->log(
+                    'Medical record created'
+                );
+        });
 
         return redirect()
             ->route(

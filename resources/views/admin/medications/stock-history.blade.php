@@ -75,6 +75,10 @@
                     {{ $movements->links() }}
 
                 </div>
+                    
+                <x-secondary-button class="mt-4">
+                    <a href="{{ route('admin.medications.index') }}">Back</a>
+                </x-secondary-button>
 
             </div>
 
