@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdjustStockRequest;
 use App\Http\Requests\Admin\StoreMedicationRequest;
 use App\Http\Requests\Admin\UpdateMedicationRequest;
 use App\Models\Medication;
@@ -65,7 +66,27 @@ class MedicationController extends Controller
                     : 'bg-green-600';
 
                 return '
-                    <div class="flex gap-2">
+                    <div class="flex flex-wrap gap-2">
+
+                        <a
+                            href="' . route(
+                                'admin.medications.adjust-stock',
+                                $medication
+                            ) . '"
+                            class="px-3 py-1 bg-blue-600 text-white rounded"
+                        >
+                            Stock
+                        </a>
+
+                        <a
+                            href="' . route(
+                                'admin.medications.stock-history',
+                                $medication
+                            ) . '"
+                            class="px-3 py-1 bg-gray-600 text-white rounded"
+                        >
+                            History
+                        </a>
 
                         <a
                             href="' . route(
@@ -166,6 +187,98 @@ class MedicationController extends Controller
                 'success',
                 'Medication updated successfully.'
             );
+    }
+
+    public function adjustStock(Medication $medication)
+    {
+        $medication->load('stock');
+
+        return view(
+            'admin.medications.adjust-stock',
+            compact('medication')
+        );
+    }
+
+    public function storeAdjustment(AdjustStockRequest $request,Medication $medication)
+    {
+        $stock =
+            $medication->stock;
+
+        $quantity =
+            $request->quantity;
+
+        if (
+            $request->type === 'out'
+            &&
+            $stock->current_stock < $quantity
+        ) {
+
+            return back()
+                ->withErrors([
+                    'quantity' =>
+                        'Insufficient stock.'
+                ]);
+        }
+
+        if (
+            $request->type === 'in'
+        ) {
+
+            $stock->increment(
+                'current_stock',
+                $quantity
+            );
+
+        } else {
+
+            $stock->decrement(
+                'current_stock',
+                $quantity
+            );
+        }
+
+        $medication->stockMovements()
+            ->create([
+
+                'type' =>
+                    $request->type,
+
+                'quantity' =>
+                    $quantity,
+
+                'notes' =>
+                    $request->notes,
+
+                'user_id' =>
+                    Auth::id(),
+            ]);
+
+        return redirect()
+            ->route(
+                'admin.medications.index'
+            )
+            ->with(
+                'success',
+                'Stock adjusted successfully.'
+            );
+    }
+
+    public function stockHistory(Medication $medication)
+    {
+        $movements =
+            $medication
+                ->stockMovements()
+                ->with('user')
+                ->latest()
+                ->paginate(20);
+
+        return view(
+            'admin.medications.stock-history',
+            compact(
+                'medication',
+                'movements'
+            )
+        );
     }
 
     public function destroy(Medication $medication)
