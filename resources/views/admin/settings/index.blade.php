@@ -218,7 +218,6 @@
                                     type="text"
                                     class="block mt-1 w-full"
                                     :value="old('satusehat_organization_id', $settings['satusehat_organization_id'] ?? '')"
-                                    required
                                 />
 
                                 <x-input-error
@@ -239,7 +238,6 @@
                                     type="text"
                                     class="block mt-1 w-full"
                                     :value="old('satusehat_client_key', $settings['satusehat_client_key'] ?? '')"
-                                    required
                                 />
 
                                 <x-input-error
@@ -254,14 +252,13 @@
                                     value="Satusehat Client Secret"
                                 />
 
-                                <x-text-input
+                                <input
                                     id="satusehat_client_secret"
                                     name="satusehat_client_secret"
-                                    type="password"
-                                    class="block mt-1 w-full"
-                                    :value="old('satusehat_client_secret', $settings['satusehat_client_secret'] ?? '')"
-                                    required
-                                />
+                                    type="text"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                    value="{{ old('satusehat_client_secret', $settings['satusehat_client_secret'] ?? '') }}"
+                                >
 
                                 <x-input-error
                                     :messages="$errors->get('satusehat_client_secret')"

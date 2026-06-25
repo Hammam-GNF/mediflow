@@ -23,26 +23,74 @@ class UpdateSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'app_name'
-                => ['required', 'string', 'max:255'],
 
-            'app_email'
-                => ['required', 'email', 'max:255'],
+            'app_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
 
-            'app_phone'
-                => ['required', 'string', 'max:20'],
-                
-            'satusehat_environment'
-                => ['nullable'],
+            'app_description' => [
+                'nullable',
+                'string',
+            ],
 
-            'satusehat_organization_id'
-                => ['nullable'],
+            'company_email' => [
+                'required',
+                'email',
+                'max:255',
+            ],
 
-            'satusehat_client_key'
-                => ['nullable'],
+            'company_phone' => [
+                'required',
+                'string',
+                'max:20',
+            ],
 
-            'satusehat_client_secret'
-                => ['nullable'],
+            'company_address' => [
+                'nullable',
+                'string',
+            ],
+
+            'pagination_per_page' => [
+                'required',
+                'integer',
+                'min:1',
+            ],
+
+            'registration_enabled' => [
+                'nullable',
+                'boolean',
+            ],
+
+            'satusehat_environment' => [
+                'nullable',
+                'in:sandbox,production',
+            ],
+
+            'satusehat_organization_id' => [
+                'nullable',
+                'string',
+            ],
+
+            'satusehat_client_key' => [
+                'nullable',
+                'string',
+            ],
+
+            'satusehat_client_secret' => [
+                'nullable',
+                'string',
+            ],
+
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'registration_enabled' =>
+                $this->boolean('registration_enabled'),
+        ]);
     }
 }

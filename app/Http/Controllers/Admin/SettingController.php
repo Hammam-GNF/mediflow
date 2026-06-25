@@ -21,9 +21,16 @@ class SettingController extends Controller
         $validated = $request->validated();
 
         foreach ($validated as $key => $value) {
+
             Setting::updateOrCreate(
-                ['key' => $key],
-                ['value' => $value]
+                [
+                    'key' => $key,
+                ],
+                [
+                    'value' => is_bool($value)
+                        ? (int) $value
+                        : $value,
+                ]
             );
         }
 
