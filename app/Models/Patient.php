@@ -16,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'phone',
     'address',
     'is_active',
+    'satusehat_synced_at',
 ])]
 
 class Patient extends Model
@@ -27,6 +28,7 @@ class Patient extends Model
         return [
             'birth_date' => 'date',
             'is_active' => 'boolean',
+            'satusehat_synced_at' => 'datetime',
         ];
     }
 
