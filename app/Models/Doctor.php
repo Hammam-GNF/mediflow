@@ -12,6 +12,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'polyclinic_id',
     'doctor_code',
     'sip_number',
+    'satusehat_practitioner_id',
     'phone',
     'address',
     'is_active',

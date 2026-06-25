@@ -23,9 +23,26 @@ class UpdateSettingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'app_name' => ['required', 'string', 'max:255'],
-            'app_email' => ['required', 'email', 'max:255'],
-            'app_phone' => ['required', 'string', 'max:20'],
+            'app_name'
+                => ['required', 'string', 'max:255'],
+
+            'app_email'
+                => ['required', 'email', 'max:255'],
+
+            'app_phone'
+                => ['required', 'string', 'max:20'],
+                
+            'satusehat_environment'
+                => ['nullable'],
+
+            'satusehat_organization_id'
+                => ['nullable'],
+
+            'satusehat_client_key'
+                => ['nullable'],
+
+            'satusehat_client_secret'
+                => ['nullable'],
         ];
     }
 }

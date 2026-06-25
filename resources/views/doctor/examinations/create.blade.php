@@ -349,6 +349,7 @@
                                     type="text"
                                     name="medications[${medicationIndex}][dosage]"
                                     class="w-full border rounded"
+                                    required
                                 >
                             </td>
 
@@ -357,6 +358,7 @@
                                     type="text"
                                     name="medications[${medicationIndex}][frequency]"
                                     class="w-full border rounded"
+                                    required
                                 >
                             </td>
 
@@ -365,6 +367,7 @@
                                     type="text"
                                     name="medications[${medicationIndex}][duration]"
                                     class="w-full border rounded"
+                                    required
                                 >
                             </td>
 

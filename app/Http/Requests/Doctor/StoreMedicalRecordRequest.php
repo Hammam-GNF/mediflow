@@ -101,17 +101,17 @@ class StoreMedicalRecordRequest extends FormRequest
             ],
 
             'medications.*.dosage' => [
-                'nullable',
+                'required',
                 'string',
             ],
 
             'medications.*.frequency' => [
-                'nullable',
+                'required',
                 'string',
             ],
 
             'medications.*.duration' => [
-                'nullable',
+                'required',
                 'string',
             ],
 

@@ -178,6 +178,99 @@
                             </div>
                         </div>
 
+                        {{-- SATUSEHAT Settings --}}
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold mb-4">
+                                SATUSEHAT Settings
+                            </h3>
+                            
+                            <div class="mb-4">
+                                <x-input-label
+                                    for="satusehat_environment"
+                                    value="Satusehat Environment"
+                                />
+
+                                <select
+                                    id="satusehat_environment"
+                                    name="satusehat_environment"
+                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm"
+                                >
+                                    <option value="" @selected(old('satusehat_environment', $settings['satusehat_environment'] ?? '') == '')>Select Environment</option>
+                                    <option value="sandbox" @selected(old('satusehat_environment', $settings['satusehat_environment'] ?? '') == 'sandbox')>Sandbox</option>
+                                    <option value="production" @selected(old('satusehat_environment', $settings['satusehat_environment'] ?? '') == 'production')>Production</option>
+                                </select>
+
+                                <x-input-error
+                                    :messages="$errors->get('satusehat_environment')"
+                                    class="mt-2"
+                                />
+                            </div>
+
+                            <div class="mb-4">
+                                <x-input-label
+                                    for="satusehat_organization_id"
+                                    value="Satusehat Organization ID"
+                                />
+
+                                <x-text-input
+                                    id="satusehat_organization_id"
+                                    name="satusehat_organization_id"
+                                    type="text"
+                                    class="block mt-1 w-full"
+                                    :value="old('satusehat_organization_id', $settings['satusehat_organization_id'] ?? '')"
+                                    required
+                                />
+
+                                <x-input-error
+                                    :messages="$errors->get('satusehat_organization_id')"
+                                    class="mt-2"
+                                />
+                            </div>
+
+                            <div class="mb-4">
+                                <x-input-label
+                                    for="satusehat_client_key"
+                                    value="Satusehat Client Key"
+                                />
+
+                                <x-text-input
+                                    id="satusehat_client_key"
+                                    name="satusehat_client_key"
+                                    type="text"
+                                    class="block mt-1 w-full"
+                                    :value="old('satusehat_client_key', $settings['satusehat_client_key'] ?? '')"
+                                    required
+                                />
+
+                                <x-input-error
+                                    :messages="$errors->get('satusehat_client_key')"
+                                    class="mt-2"
+                                />
+                            </div>
+
+                            <div class="mb-4">
+                                <x-input-label
+                                    for="satusehat_client_secret"
+                                    value="Satusehat Client Secret"
+                                />
+
+                                <x-text-input
+                                    id="satusehat_client_secret"
+                                    name="satusehat_client_secret"
+                                    type="password"
+                                    class="block mt-1 w-full"
+                                    :value="old('satusehat_client_secret', $settings['satusehat_client_secret'] ?? '')"
+                                    required
+                                />
+
+                                <x-input-error
+                                    :messages="$errors->get('satusehat_client_secret')"
+                                    class="mt-2"
+                                />
+                            </div>
+
+                        </div>
+
                         <div class="flex justify-end">
                             <x-primary-button>
                                 Save Settings

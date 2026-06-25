@@ -14,6 +14,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'registration_date',
     'complaint',
     'status',
+    'satusehat_encounter_id',
+    'satusehat_sync_status',
+    'satusehat_synced_at',
 ])]
 
 class Registration extends Model
@@ -24,6 +27,7 @@ class Registration extends Model
     {
         return [
             'registration_date' => 'datetime',
+            'satusehat_synced_at' => 'datetime',
         ];
     }
 

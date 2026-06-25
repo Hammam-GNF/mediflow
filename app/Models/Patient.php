@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'medical_record_number',
     'name',
     'nik',
+    'satusehat_patient_id',
     'gender',
     'birth_date',
     'phone',
