@@ -24,6 +24,7 @@ use App\Http\Controllers\Doctor\ExaminationController;
 use App\Http\Controllers\Doctor\Icd10Controller;
 use App\Http\Controllers\Doctor\MedicalRecordController;
 use App\Http\Controllers\ProfileController;
+use App\Services\Satusehat\SatusehatAuthService;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -129,8 +130,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::get('medications/{medication}/adjust-stock',[MedicationController::class, 'adjustStock'])->name('medications.adjust-stock');
     Route::post('medications/{medication}/adjust-stock',[MedicationController::class, 'storeAdjustment'])->name('medications.store-adjustment');
     Route::get('medications/{medication}/stock-history',[MedicationController::class, 'stockHistory'])->name('medications.stock-history');
-    
+
     Route::resource('medications',MedicationController::class);
+
 
 });
 

@@ -47,5 +47,25 @@ class SettingSeeder extends Seeder
             ['key' => 'registration_enabled'],
             ['value' => '1']
         );
+
+        Setting::updateOrCreate(
+            ['key' => 'satusehat_environment'],
+            ['value' => 'sandbox']
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'satusehat_organization_id'],
+            ['value' => '']
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'satusehat_client_key'],
+            ['value' => '']
+        );
+
+        Setting::updateOrCreate(
+            ['key' => 'satusehat_client_secret'],
+            ['value' => '']
+        );
     }
 }
