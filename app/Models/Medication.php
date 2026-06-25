@@ -25,4 +25,14 @@ class Medication extends Model
             'is_active' => 'boolean',
         ];
     }
+
+    public function stock()
+    {
+        return $this->hasOne(MedicationStock::class);
+    }
+
+    public function stockMovements()
+    {
+        return $this->hasMany(StockMovement::class);
+    }
 }
