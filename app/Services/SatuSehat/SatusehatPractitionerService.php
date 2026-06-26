@@ -2,28 +2,28 @@
 
 namespace App\Services\Satusehat;
 
-use App\Models\Patient;
+use App\Models\Doctor;
 
-class SatusehatPatientService
+class SatusehatPractitionerService
 {
     public function __construct(
         private SatusehatService $satusehat
     ) {
     }
 
-    public function sync(Patient $patient): Patient
+    public function sync(Doctor $doctor): Doctor
     {
-        if (empty($patient->nik)) {
+        if (empty($doctor->nik)) {
             throw new \RuntimeException(
-                'Patient NIK is required.'
+                'Doctor NIK is required.'
             );
         }
 
         $response = $this->satusehat->get(
-            '/Patient',
+            '/Practitioner',
             [
                 'identifier' =>
-                    'https://fhir.kemkes.go.id/id/nik|' . $patient->nik,
+                    'https://fhir.kemkes.go.id/id/nik|' . $doctor->nik,
             ]
         );
 
@@ -35,13 +35,13 @@ class SatusehatPatientService
             empty($data['entry'][0]['resource']['id'])
         ) {
             throw new \RuntimeException(
-                'Patient not found in SATUSEHAT.'
+                'Practitioner not found.'
             );
         }
 
-        $patient->update([
+        $doctor->update([
 
-            'satusehat_patient_id' =>
+            'satusehat_practitioner_id' =>
                 $data['entry'][0]['resource']['id'],
 
             'satusehat_synced_at' =>
@@ -49,6 +49,6 @@ class SatusehatPatientService
 
         ]);
 
-        return $patient->fresh();
+        return $doctor->fresh();
     }
 }

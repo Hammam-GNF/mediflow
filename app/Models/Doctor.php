@@ -11,8 +11,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'user_id',
     'polyclinic_id',
     'doctor_code',
+    'nik',
     'sip_number',
     'satusehat_practitioner_id',
+    'satusehat_synced_at',
     'phone',
     'address',
     'is_active',
@@ -36,6 +38,7 @@ class Doctor extends Model
     {
         return [
             'is_active' => 'boolean',
+            'satusehat_synced_at' => 'datetime',
         ];
     }
 

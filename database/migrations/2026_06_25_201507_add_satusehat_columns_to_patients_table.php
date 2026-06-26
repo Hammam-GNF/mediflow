@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::table('patients', function (Blueprint $table) {
             $table->string('satusehat_patient_id')->nullable()->after('nik');
+            $table->timestamp('satusehat_synced_at')->nullable();
         });
     }
 
@@ -23,6 +24,7 @@ return new class extends Migration
     {
         Schema::table('patients', function (Blueprint $table) {
             $table->dropColumn('satusehat_patient_id');
+            $table->dropColumn('satusehat_synced_at');
         });
     }
 };

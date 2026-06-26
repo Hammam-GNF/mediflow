@@ -134,6 +134,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::resource('medications',MedicationController::class);
 
     Route::post('patients/{patient}/sync-satusehat',[PatientController::class, 'sync'])->name('patients.sync-satusehat');
+    Route::post('/doctors/{doctor}/sync-satusehat',[DoctorController::class, 'sync'])->name('doctors.sync-satusehat');
 
     Route::get('/test-satusehat', function (
     \App\Services\Satusehat\SatusehatService $satusehat

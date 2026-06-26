@@ -27,6 +27,7 @@ class DoctorSeeder extends Seeder
                 [
                     'polyclinic_id' => Polyclinic::inRandomOrder()->first()->id,
                     'doctor_code' => 'DOC-'.str_pad($index + 1, 4, '0', STR_PAD_LEFT),
+                    'nik' => fake()->numerify('################'),
                     'phone' => fake()->phoneNumber(),
                     'is_active' => true,
                 ]

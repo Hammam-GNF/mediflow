@@ -38,9 +38,9 @@
                                 <th>MRN</th>
                                 <th>Name</th>
                                 <th>NIK</th>
+                                <th>SATUSEHAT</th>
                                 <th>Gender</th>
                                 <th>Phone</th>
-                                <th>SATUSEHAT</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -90,9 +90,9 @@
                         { data: 'medical_record_number' },
                         { data: 'name' },
                         { data: 'nik' },
+                        { data: 'satusehat_status' },
                         { data: 'gender' },
                         { data: 'phone' },
-                        { data: 'satusehat_status' },
                         { data: 'is_active' },
                         {
                             data: 'action',

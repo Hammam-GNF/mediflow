@@ -35,6 +35,10 @@ class StoreDoctorRequest extends FormRequest
                 'exists:polyclinics,id',
             ],
 
+            'nik' => [
+                'nullable',
+                'digits:16',
+            ],
 
             'sip_number' => [
                 'nullable',

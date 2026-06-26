@@ -36,6 +36,8 @@
                             <tr>
                                 <th>No</th>
                                 <th>Doctor Code</th>
+                                <th>NIK</th>
+                                <th>SATUSEHAT</th>
                                 <th>Name</th>
                                 <th>Polyclinic</th>
                                 <th>User Account</th>
@@ -90,6 +92,14 @@
                         {
                             data: 'doctor_code',
                             name: 'doctor_code'
+                        },
+                        {
+                            data: 'nik',
+                            name: 'nik'
+                        },
+                        {
+                            data: 'satusehat_status',
+                            name: 'satusehat_status'
                         },
                         {
                             data: 'doctor_name',

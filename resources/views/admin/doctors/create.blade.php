@@ -102,6 +102,25 @@
                     </div>
 
                     <div class="mb-4">
+                        <x-input-label
+                            for="nik"
+                            value="NIK"
+                        />
+
+                        <x-text-input
+                            id="nik"
+                            name="nik"
+                            type="number"
+                            class="mt-1 block w-full"
+                            :value="old('nik')"
+                        />
+
+                        <x-input-error
+                            :messages="$errors->get('nik')"
+                        />
+                    </div>
+
+                    <div class="mb-4">
 
                         <x-input-label
                             for="sip_number"
@@ -166,6 +185,7 @@
                             id="is_active"
                             name="is_active"
                             class="w-full border-gray-300 rounded-md"
+                            required
                         >
                             <option value="1" {{ old('is_active', '1') === '1' ? 'selected' : '' }}>
                                 Active

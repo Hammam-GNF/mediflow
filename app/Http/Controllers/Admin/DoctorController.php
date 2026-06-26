@@ -8,6 +8,7 @@ use App\Http\Requests\Admin\UpdateDoctorRequest;
 use App\Models\Doctor;
 use App\Models\Polyclinic;
 use App\Models\User;
+use App\Services\Satusehat\SatusehatPractitionerService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -61,13 +62,36 @@ class DoctorController extends Controller
                         : 'Inactive';
                 })
 
-                ->addColumn('action', function ($row) {
+                ->addColumn('satusehat_status', function ($doctor) {
 
-                    return '
+                    if ($doctor->satusehat_practitioner_id) {
+                        return 'Synced';
+                    }
+
+                    return 'Not Synced';
+                })
+
+                ->addColumn('action', function ($doctor) {
+
+                     return '
                         <div class="flex gap-2">
 
+                            <form
+                                method="POST"
+                                action="'.route('admin.doctors.sync-satusehat', $doctor).'"
+                            >
+                                '.csrf_field().'
+
+                                <button
+                                    type="submit"
+                                    class="px-3 py-1 bg-green-600 text-white rounded"
+                                >
+                                    Sync SATUSEHAT
+                                </button>
+                            </form>
+
                             <a
-                                href="'.route('admin.doctors.edit', $row).'"
+                                href="'.route('admin.doctors.edit', $doctor).'"
                                 class="px-3 py-1 bg-blue-600 text-white rounded"
                             >
                                 Edit
@@ -76,7 +100,7 @@ class DoctorController extends Controller
                             <button
                                 type="button"
                                 class="delete-doctor-btn px-3 py-1 bg-red-600 text-white rounded"
-                                data-url="'.route('admin.doctors.destroy', $row).'"
+                                data-url="'.route('admin.doctors.destroy', $doctor).'"
                             >
                                 Delete
                             </button>
@@ -259,6 +283,32 @@ class DoctorController extends Controller
         $doctor->forceDelete();
 
         return back()->with('success', 'Doctor force deleted successfully.');
+    }
+
+    public function sync(Doctor $doctor, SatusehatPractitionerService $service)
+    {
+        try {
+
+            $service->sync($doctor);
+
+            activity()
+                ->causedBy(Auth::user())
+                ->performedOn($doctor)
+                ->event('satusehat synced')
+                ->log('Doctor synced to SATUSEHAT');
+
+            return back()->with(
+                'success',
+                'Doctor synced successfully.'
+            );
+
+        } catch (\Throwable $e) {
+
+            return back()->with(
+                'error',
+                $e->getMessage()
+            );
+        }
     }
 
 

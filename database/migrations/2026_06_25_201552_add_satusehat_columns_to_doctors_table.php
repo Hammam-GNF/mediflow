@@ -12,7 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('doctors', function (Blueprint $table) {
+            $table->string('nik', 16)->nullable()->after('doctor_code');
             $table->string('satusehat_practitioner_id')->nullable()->after('sip_number');
+            $table->timestamp('satusehat_synced_at')->nullable()->after('satusehat_practitioner_id');
         });
     }
 
@@ -22,7 +24,11 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('doctors', function (Blueprint $table) {
-            //
+            $table->dropColumn([
+                'nik',
+                'satusehat_practitioner_id',
+                'satusehat_synced_at',
+            ]);
         });
     }
 };

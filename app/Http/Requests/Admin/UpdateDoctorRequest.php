@@ -39,6 +39,11 @@ class UpdateDoctorRequest extends FormRequest
                     ->ignore($doctor),
             ],
 
+            'nik' => [
+                'nullable',
+                'digits:16',
+            ],
+
             'sip_number' => [
                 'nullable',
                 'string',

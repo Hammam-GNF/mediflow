@@ -31,7 +31,9 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('registrations', function (Blueprint $table) {
-            //
+            $table->dropColumn('satusehat_encounter_id');
+            $table->dropColumn('satusehat_sync_status');
+            $table->dropColumn('satusehat_synced_at');
         });
     }
 };
