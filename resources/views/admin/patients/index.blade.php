@@ -40,6 +40,7 @@
                                 <th>NIK</th>
                                 <th>Gender</th>
                                 <th>Phone</th>
+                                <th>SATUSEHAT</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -91,6 +92,7 @@
                         { data: 'nik' },
                         { data: 'gender' },
                         { data: 'phone' },
+                        { data: 'satusehat_status' },
                         { data: 'is_active' },
                         {
                             data: 'action',

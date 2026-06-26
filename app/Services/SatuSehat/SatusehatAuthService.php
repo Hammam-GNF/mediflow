@@ -27,6 +27,11 @@ class SatusehatAuthService
 
     private function generateToken(): string
     {
+        $settings = Setting::pluck(
+            'value',
+            'key'
+        );
+
         if (
             empty($settings['satusehat_client_key']) ||
             empty($settings['satusehat_client_secret'])
@@ -35,11 +40,6 @@ class SatusehatAuthService
                 'SATUSEHAT credentials are not configured.'
             );
         }
-
-        $settings = Setting::pluck(
-            'value',
-            'key'
-        );
 
         $baseUrl =
             ($settings['satusehat_environment'] ?? 'sandbox')

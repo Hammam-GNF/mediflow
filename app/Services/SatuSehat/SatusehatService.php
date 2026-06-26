@@ -12,8 +12,7 @@ class SatusehatService
 
     private function baseUrl(): string
     {
-        $environment =
-            setting('satusehat_environment');
+        $environment = setting('satusehat_environment');
 
         return $environment === 'production'
             ? 'https://api-satusehat.kemkes.go.id/fhir-r4'

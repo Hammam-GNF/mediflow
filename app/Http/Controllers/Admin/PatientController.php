@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StorePatientRequest;
 use App\Http\Requests\Admin\UpdatePatientRequest;
 use App\Models\Patient;
+use App\Services\Satusehat\SatusehatPatientService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -53,10 +54,35 @@ class PatientController extends Controller
                         : 'Inactive';
                 })
 
+                ->addColumn('satusehat_status', function ($patient) {
+
+                    if (
+                        $patient->satusehat_patient_id
+                    ) {
+                        return 'Synced';
+                    }
+
+                    return 'Not Synced';
+                })
+
                 ->addColumn('action', function ($patient) {
 
                     return '
                         <div class="flex gap-2">
+
+                            <form
+                                method="POST"
+                                action="'.route('admin.patients.sync-satusehat', $patient).'"
+                            >
+                                '.csrf_field().'
+
+                                <button
+                                    type="submit"
+                                    class="px-3 py-1 bg-green-600 text-white rounded"
+                                >
+                                    Sync SATUSEHAT
+                                </button>
+                            </form>
 
                             <a
                                 href="'.route('admin.patients.edit', $patient).'"
@@ -254,6 +280,32 @@ class PatientController extends Controller
             'success',
             'Patient force deleted successfully.'
         );
+    }
+
+    public function sync(Patient $patient, SatusehatPatientService $service)
+    {
+        try {
+
+            $service->sync($patient);
+
+            activity()
+                ->causedBy(Auth::user())
+                ->performedOn($patient)
+                ->event('satusehat synced')
+                ->log('Patient synced to SATUSEHAT');
+
+            return back()->with(
+                'success',
+                'Patient synced successfully.'
+            );
+
+        } catch (\Throwable $e) {
+
+            return back()->with(
+                'error',
+                $e->getMessage()
+            );
+        }
     }
 
     public function destroy(Patient $patient)
