@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\Model;
     'duration',
     'quantity',
     'notes',
+    'satusehat_medication_id',
+    'satusehat_medication_request_id',
+    'satusehat_synced_at',
 ])]
 class PrescriptionItem extends Model
 {
@@ -24,5 +27,12 @@ class PrescriptionItem extends Model
     public function medication()
     {
         return $this->belongsTo(Medication::class);
+    }
+
+    protected function casts(): array
+    {
+        return [
+            'satusehat_synced_at' => 'datetime',
+        ];
     }
 }

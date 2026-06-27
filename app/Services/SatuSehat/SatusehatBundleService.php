@@ -14,10 +14,8 @@ class SatusehatBundleService
     ) {
     }
 
-    public function sync(
-        Registration $registration
-    ): array {
-
+    public function sync(Registration $registration): array 
+    {
         $bundle = $this->bundleBuilder->make(
             $registration
         );
@@ -53,14 +51,22 @@ class SatusehatBundleService
         return $payload;
     }
 
-    private function storeResourceIds(
-        Registration $registration,
-        array $payload
-    ): void {
-
+    private function storeResourceIds(Registration $registration,array $payload): void
+    {
         $medicalRecord = $registration->medicalRecord;
 
         $resourceIds = [];
+
+        $medicalRecord->loadMissing([
+            'prescription.items',
+        ]);
+
+        $items = $medicalRecord
+            ->prescription
+            ?->items
+            ->values();
+
+        $itemIndex = 0;
 
         foreach (
             $payload['entry'] ?? []
@@ -76,8 +82,42 @@ class SatusehatBundleService
                 continue;
             }
 
-            [$resourceType, $id] =
-                explode('/', $location);
+            $segments = explode('/', $location);
+
+            $resourceType = $segments[0];
+            $id = $segments[1];
+
+            if (
+                in_array(
+                    $resourceType,
+                    ['Medication', 'MedicationRequest']
+                )
+                && $items
+                && isset($items[$itemIndex])
+            ) {
+
+                $currentItem = $items[$itemIndex];
+
+                if ($resourceType === 'Medication') {
+
+                    $currentItem->update([
+                        'satusehat_medication_id' => $id,
+                    ]);
+
+                }
+
+                if ($resourceType === 'MedicationRequest') {
+
+                    $currentItem->update([
+                        'satusehat_medication_request_id' => $id,
+                        'satusehat_synced_at' => now(),
+                    ]);
+
+                    $itemIndex++;
+
+                }
+
+            }
 
             $resourceIds[$resourceType] = $id;
         }
