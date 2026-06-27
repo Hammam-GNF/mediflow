@@ -23,6 +23,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'examination_notes',
 
     'examined_at',
+
+    'satusehat_condition_id',
+    'satusehat_observation_id',
+    'satusehat_procedure_id',
+    'satusehat_composition_id',
+    'satusehat_bundle_synced_at',
 ])]
 
 class MedicalRecord extends Model
@@ -33,6 +39,7 @@ class MedicalRecord extends Model
     {
         return [
             'examined_at' => 'datetime',
+            'satusehat_bundle_synced_at' => 'datetime',
         ];
     }
 
