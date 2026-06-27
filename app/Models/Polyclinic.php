@@ -7,7 +7,12 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-#[Fillable(['name', 'description', 'is_active'])]
+#[Fillable([
+    'name',
+    'description',
+    'satusehat_location_id',
+    'is_active'
+])]
 
 class Polyclinic extends Model
 {

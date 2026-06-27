@@ -23,9 +23,24 @@ class StorePolyclinicRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'max:255', 'unique:polyclinics,name'],
+            'name' => [
+                'required',
+                'max:255',
+                'unique:polyclinics,name'
+            ],
+
             'description' => ['nullable'],
-            'is_active' => ['required', 'boolean'],
+
+            'satusehat_location_id' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+            
+            'is_active' => [
+                'required',
+                'boolean'
+            ],
         ];
     }
 }

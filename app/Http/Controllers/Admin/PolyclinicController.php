@@ -23,6 +23,12 @@ class PolyclinicController extends Controller
             )
                 ->addIndexColumn()
 
+                ->addColumn(
+                    'satusehat_location_id',
+                    fn ($row) =>
+                        $row->satusehat_location_id ?? '-'
+                )
+
                 ->editColumn('is_active', function ($row) {
                     return $row->is_active
                         ? 'Active'

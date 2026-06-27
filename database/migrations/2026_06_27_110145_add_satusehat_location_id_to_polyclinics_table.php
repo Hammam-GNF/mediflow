@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('polyclinics', function (Blueprint $table) {
-            $table->softDeletes();
+            $table->string('satusehat_location_id')->nullable()->after('description');
         });
     }
 
@@ -22,7 +22,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('polyclinics', function (Blueprint $table) {
-            $table->dropSoftDeletes();
+            $table->dropColumn('satusehat_location_id');
         });
     }
 };

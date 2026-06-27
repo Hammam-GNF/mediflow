@@ -33,6 +33,13 @@ class UpdatePolyclinicRequest extends FormRequest
                     ->ignore($polyclinic)
             ],
             'description' => ['nullable'],
+
+            'satusehat_location_id' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
             'is_active' => ['required', 'boolean'],
         ];
     }

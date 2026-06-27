@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Create Polyclinic
+            Edit Polyclinic
         </h2>
     </x-slot>
 
@@ -46,6 +46,28 @@
                         >{{ old('description', $polyclinic->description) }}</textarea>
                     </div>
 
+                    <div class="mb-4">
+                        <x-input-label
+                            for="satusehat_location_id"
+                            value="SATUSEHAT Location ID"
+                        />
+
+                        <x-text-input
+                            id="satusehat_location_id"
+                            name="satusehat_location_id"
+                            class="mt-1 block w-full"
+                            :value="old('satusehat_location_id', $polyclinic->satusehat_location_id)"
+                        />
+
+                        <x-input-error
+                            :messages="$errors->get('satusehat_location_id')"
+                        />
+
+                        <p class="text-xs text-gray-500 mt-1">
+                            FHIR Location ID registered in SATUSEHAT.
+                        </p>
+                    </div>
+
                     <div class="mb-6">
 
                         <x-input-label
@@ -73,6 +95,10 @@
                         <x-primary-button>
                             Save
                         </x-primary-button>
+
+                        <x-secondary-button class="ms-3" onclick="window.history.back();">
+                            Cancel
+                        </x-secondary-button>
 
                     </div>
 

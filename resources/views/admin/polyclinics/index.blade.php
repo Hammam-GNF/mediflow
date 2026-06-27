@@ -37,6 +37,7 @@
                                 <th>No</th>
                                 <th>Name</th>
                                 <th>Description</th>
+                                <th>Location ID</th>
                                 <th>Status</th>
                                 <th>Action</th>
                             </tr>
@@ -85,6 +86,7 @@
                         },
                         { data: 'name' },
                         { data: 'description' },
+                        { data: 'satusehat_location_id' },
                         { data: 'is_active' },
                         {
                             data: 'action',
