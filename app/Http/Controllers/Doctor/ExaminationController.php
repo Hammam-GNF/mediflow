@@ -10,6 +10,7 @@ use App\Models\MedicalRecord;
 use App\Models\Medication;
 use App\Models\Prescription;
 use App\Models\Queue;
+use App\Services\Satusehat\SatusehatEncounterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -18,6 +19,11 @@ use Illuminate\Validation\ValidationException;
 
 class ExaminationController extends Controller
 {
+    public function __construct(
+        private SatusehatEncounterService $encounterService
+    ){
+    }
+
     private function generateInvoiceNumber(): string
     {
         $lastInvoice = Invoice::withTrashed()
@@ -324,6 +330,18 @@ class ExaminationController extends Controller
             $queue->registration->update([
                 'status' => 'completed',
             ]);
+
+            try {
+
+                $this->encounterService->sync(
+                    $queue->registration
+                );
+
+            } catch (\Throwable $e) {
+
+                report($e);
+
+            }
 
             activity()
                 ->causedBy(Auth::user())
