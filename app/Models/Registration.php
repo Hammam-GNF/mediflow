@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'satusehat_encounter_id',
     'satusehat_sync_status',
     'satusehat_synced_at',
+    'satusehat_error_message',
 ])]
 
 class Registration extends Model

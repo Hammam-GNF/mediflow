@@ -28,7 +28,12 @@ class SatusehatBundleService
         if (! $response->successful()) {
 
             $registration->update([
+
                 'satusehat_sync_status' => 'failed',
+
+                'satusehat_error_message' =>
+                    $response->body(),
+
             ]);
 
             throw new RuntimeException(
@@ -46,6 +51,7 @@ class SatusehatBundleService
         $registration->update([
             'satusehat_sync_status' => 'success',
             'satusehat_synced_at' => now(),
+            'satusehat_error_message' => null,
         ]);
 
         return $payload;
