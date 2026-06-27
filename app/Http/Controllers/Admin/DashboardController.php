@@ -14,6 +14,18 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        $total = Registration::count();
+
+        $success = Registration::where(
+            'satusehat_sync_status',
+            'success'
+        )->count();
+
+        $successRate =
+            $total > 0
+                ? round(($success / $total) * 100, 1)
+                : 0;
+                
         return view('admin.dashboard', [
 
             'totalPatients' =>
@@ -54,6 +66,39 @@ class DashboardController extends Controller
             'totalMedicalRecords' =>
                 MedicalRecord::count(),
 
+            'satusehatSuccess' =>
+                Registration::where(
+                    'satusehat_sync_status',
+                    'success'
+                )->count(),
+
+                'satusehatFailed' =>
+                Registration::where(
+                    'satusehat_sync_status',
+                    'failed'
+                )->count(),
+
+                'satusehatPending' =>
+                Registration::where(
+                    'satusehat_sync_status',
+                    'pending'
+                )->orWhereNull(
+                    'satusehat_sync_status'
+                )->count(),
+
+                'satusehatTotal' =>
+                Registration::count(),
+
+                'failedSatusehatRegistrations' =>
+                Registration::with('patient')
+                    ->where(
+                        'satusehat_sync_status',
+                        'failed'
+                    )
+                    ->latest()
+                    ->take(10)
+                    ->get(),
+
             'recentRegistrations' =>
                 Registration::with([
                     'patient',
@@ -70,6 +115,8 @@ class DashboardController extends Controller
                 ->latest('paid_at')
                 ->take(5)
                 ->get(),
+
+            'satusehatSuccessRate' => $successRate,
         ]);
     }
 }

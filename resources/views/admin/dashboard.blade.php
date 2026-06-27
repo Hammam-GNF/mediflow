@@ -42,6 +42,161 @@
 
                     </div>
 
+                    <div class="mt-8">
+
+                        <h2 class="text-xl font-bold mb-4">
+                            SATUSEHAT Dashboard
+                        </h2>
+
+                        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+
+                            <div class="bg-green-100 rounded p-4">
+                                <p>Success</p>
+
+                                <h2 class="text-2xl font-bold">
+                                    {{ $satusehatSuccess }}
+                                </h2>
+                            </div>
+
+                            <div class="bg-yellow-100 rounded p-4">
+                                <p>Pending</p>
+
+                                <h2 class="text-2xl font-bold">
+                                    {{ $satusehatPending }}
+                                </h2>
+                            </div>
+
+                            <div class="bg-red-100 rounded p-4">
+                                <p>Failed</p>
+
+                                <h2 class="text-2xl font-bold">
+                                    {{ $satusehatFailed }}
+                                </h2>
+                            </div>
+
+                            <div class="bg-blue-100 rounded p-4">
+                                <p>Success Rate</p>
+
+                                <h2 class="text-2xl font-bold">
+                                    {{ $satusehatSuccessRate }}%
+                                </h2>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="bg-white rounded shadow p-6 mt-6">
+
+                        <h3 class="font-bold mb-4">
+
+                            Failed SATUSEHAT Synchronization
+
+                        </h3>
+
+                        <table class="w-full">
+
+                            <thead>
+
+                                <tr>
+
+                                    <th class="text-left py-2">
+                                        Registration
+                                    </th>
+
+                                    <th class="text-left py-2">
+                                        Patient
+                                    </th>
+
+                                    <th class="text-left py-2">
+                                        Error
+                                    </th>
+
+                                    <th class="text-left py-2">
+                                        Action
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                            @forelse(
+                                $failedSatusehatRegistrations
+                                as $registration
+                            )
+
+                                <tr class="border-b">
+
+                                    <td class="py-2">
+
+                                        {{ $registration->registration_number }}
+
+                                    </td>
+
+                                    <td class="py-2">
+
+                                        {{ $registration->patient->name }}
+
+                                    </td>
+
+                                    <td class="py-2 text-sm text-red-600">
+
+                                        {{ Str::limit(
+                                            $registration->satusehat_error_message,
+                                            80
+                                        ) }}
+
+                                    </td>
+
+                                    <td class="py-2">
+
+                                        <form
+                                            method="POST"
+                                            action="{{ route(
+                                                'admin.registrations.retry-satusehat',
+                                                $registration
+                                            ) }}"
+                                        >
+
+                                            @csrf
+
+                                            <button
+                                                class="bg-blue-600 text-white px-3 py-1 rounded"
+                                            >
+                                                Retry
+                                            </button>
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+
+                            @empty
+
+                                <tr>
+
+                                    <td
+                                        colspan="4"
+                                        class="text-center py-4 text-gray-500"
+                                    >
+
+                                        No failed synchronization.
+
+                                    </td>
+
+                                </tr>
+
+                            @endforelse
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
                     <div class="bg-white rounded shadow p-6 mt-6">
 
                         <h3 class="font-bold mb-4">
