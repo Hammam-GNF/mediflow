@@ -224,6 +224,21 @@
                                     :messages="$errors->get('satusehat_organization_id')"
                                     class="mt-2"
                                 />
+
+                                @if(! empty($settings['satusehat_organization_id']))
+                                    <div class="mt-2">
+                                        <form
+                                            method="POST"
+                                            action="{{ route('admin.settings.validate-organization') }}"
+                                        >
+                                            @csrf
+
+                                            <x-primary-button>
+                                                Validate Organization
+                                            </x-primary-button>
+                                        </form>
+                                    </div>
+                                @endif
                             </div>
 
                             <div class="mb-4">

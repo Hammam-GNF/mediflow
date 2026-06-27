@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\UpdateSettingRequest;
 use App\Models\Setting;
-use Illuminate\Http\Request;
+use App\Services\Satusehat\SatusehatOrganizationService;
+use Illuminate\Support\Facades\Auth;
 
 class SettingController extends Controller
 {
@@ -35,5 +36,24 @@ class SettingController extends Controller
         }
 
         return back()->with('success', 'Settings updated successfully.');
+    }
+
+    public function validateOrganization(SatusehatOrganizationService $service)
+    {
+        $organization = $service->get();
+
+        activity()
+            ->causedBy(Auth::user())
+            ->event('validated')
+            ->log(
+                'SATUSEHAT organization validated: '
+                . $organization['name']
+            );
+
+        return back()->with(
+            'success',
+            'Organization berhasil divalidasi: '
+            . $organization['name']
+        );
     }
 }
