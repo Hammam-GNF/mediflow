@@ -44,6 +44,7 @@
                                 <th>Polyclinic</th>
                                 <th>Date</th>
                                 <th>Status</th>
+                                <th>SATUSEHAT</th>
                                 <th>Action</th>
                             </tr>
                         </thead>
@@ -146,6 +147,26 @@
                                 }
 
                                 return data;
+                            }
+                        },
+                        {
+                            data: 'satusehat_sync_status',
+                            name: 'satusehat_sync_status',
+                            render: function(data){
+
+                                if(data === 'success'){
+                                    return '<span class="px-2 py-1 rounded bg-green-200 text-green-800">Success</span>';
+                                }
+
+                                if(data === 'failed'){
+                                    return '<span class="px-2 py-1 rounded bg-red-200 text-red-800">Failed</span>';
+                                }
+
+                                if(data === 'pending'){
+                                    return '<span class="px-2 py-1 rounded bg-yellow-200 text-yellow-800">Pending</span>';
+                                }
+
+                                return '-';
                             }
                         },
                         {

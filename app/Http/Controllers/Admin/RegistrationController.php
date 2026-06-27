@@ -9,12 +9,18 @@ use App\Models\Doctor;
 use App\Models\Patient;
 use App\Models\Queue;
 use App\Models\Registration;
+use App\Services\Satusehat\SatusehatRetryService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class RegistrationController extends Controller
 {
+    public function __construct(
+        private SatusehatRetryService $retryService,
+    ) {
+    }
+
     private function generateRegistrationNumber(): string
     {
         $lastRegistration = Registration::withTrashed()
@@ -95,13 +101,22 @@ class RegistrationController extends Controller
                     return $registration->status;
                 })
 
+                ->addColumn(
+                    'satusehat_sync_status',
+                    fn($registration)
+                        => $registration->satusehat_sync_status
+                )
+
                 ->addColumn('action', function ($registration) {
 
-                    return '
+                    $buttons = '
                         <div class="flex gap-2">
 
                             <a
-                                href="' . route('admin.registrations.edit', $registration) . '"
+                                href="' . route(
+                                    'admin.registrations.edit',
+                                    $registration
+                                ) . '"
                                 class="px-3 py-1 bg-blue-600 text-white rounded"
                             >
                                 Edit
@@ -110,13 +125,50 @@ class RegistrationController extends Controller
                             <button
                                 type="button"
                                 class="delete-registration-btn px-3 py-1 bg-red-600 text-white rounded"
-                                data-url="' . route('admin.registrations.destroy', $registration) . '"
+                                data-url="' . route(
+                                    'admin.registrations.destroy',
+                                    $registration
+                                ) . '"
                             >
                                 Delete
                             </button>
-
-                        </div>
                     ';
+
+                    if (
+                        in_array(
+                            $registration->satusehat_sync_status,
+                            ['failed', 'pending']
+                        )
+                    ) {
+
+                        $buttons .= '
+
+                            <form
+                                method="POST"
+                                action="' . route(
+                                    'admin.registrations.retry-satusehat',
+                                    $registration
+                                ) . '"
+                            >
+
+                                ' . csrf_field() . '
+
+                                <button
+                                    class="px-3 py-1 bg-orange-600 text-white rounded"
+                                >
+                                    Retry SATUSEHAT
+                                </button>
+
+                            </form>
+
+                        ';
+
+                    }
+
+                    $buttons .= '</div>';
+
+                    return $buttons;
+
                 })
 
                 ->rawColumns(['action'])
@@ -369,6 +421,41 @@ class RegistrationController extends Controller
             'success',
             'Registration force deleted successfully.'
         );
+    }
+
+    public function retrySatusehat(Registration $registration)
+    {
+
+        $this->authorize('update', $registration);
+
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($registration)
+            ->event('satusehat_retry')
+            ->log('SATUSEHAT sync retried');
+
+        try {
+
+            $this->retryService->retry(
+                $registration
+            );
+
+            return back()->with(
+                'success',
+                'SATUSEHAT sync retried successfully.'
+            );
+
+        } catch (\Throwable $e) {
+
+            report($e);
+
+            return back()->with(
+                'error',
+                'SATUSEHAT sync failed.'
+            );
+
+        }
+
     }
 
     public function destroy(Registration $registration)

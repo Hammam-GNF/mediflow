@@ -92,6 +92,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::delete('patients/{patient}/force-delete', [PatientController::class, 'forceDelete'])->name('patients.force-delete');
 
     Route::resource('registrations', RegistrationController::class);
+    Route::post('registrations/{registration}/retry-satusehat',[RegistrationController::class, 'retrySatusehat'])->name('registrations.retry-satusehat');
     Route::get('registrations-trash', [RegistrationController::class, 'trash'])->name('registrations.trash');
     Route::put('registrations/{registration}/restore', [RegistrationController::class, 'restore'])->name('registrations.restore');
     Route::delete('registrations/{registration}/force-delete', [RegistrationController::class, 'forceDelete'])->name('registrations.force-delete');
