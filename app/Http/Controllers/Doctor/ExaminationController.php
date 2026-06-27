@@ -10,6 +10,7 @@ use App\Models\MedicalRecord;
 use App\Models\Medication;
 use App\Models\Prescription;
 use App\Models\Queue;
+use App\Services\Satusehat\SatusehatBundleService;
 use App\Services\Satusehat\SatusehatEncounterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -20,7 +21,8 @@ use Illuminate\Validation\ValidationException;
 class ExaminationController extends Controller
 {
     public function __construct(
-        private SatusehatEncounterService $encounterService
+        private SatusehatEncounterService $encounterService,
+        private SatusehatBundleService $bundleService,
     ){
     }
 
@@ -335,6 +337,10 @@ class ExaminationController extends Controller
 
                 $this->encounterService->sync(
                     $queue->registration
+                );
+
+                $this->bundleService->sync(
+                    $queue->registration->fresh()
                 );
 
             } catch (\Throwable $e) {
