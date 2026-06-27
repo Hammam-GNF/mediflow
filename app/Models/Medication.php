@@ -11,6 +11,9 @@ use Illuminate\Database\Eloquent\Model;
     'unit',
     'price',
     'is_active',
+    'kfa_code',
+    'kfa_display',
+    'kfa_synced_at',
 ])]
 class Medication extends Model
 {
@@ -23,6 +26,7 @@ class Medication extends Model
     {
         return [
             'is_active' => 'boolean',
+            'kfa_synced_at' => 'datetime',
         ];
     }
 
