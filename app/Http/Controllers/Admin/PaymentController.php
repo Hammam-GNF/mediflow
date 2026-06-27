@@ -55,20 +55,23 @@ class PaymentController extends Controller
                     'PAY-' .
                     now()->format('YmdHis').'-'. random_int(100, 999),
 
-                'invoice_id' =>
-                    $invoice->id,
+                'invoice_id' => $invoice->id,
 
-                'payment_method' =>
-                    $request->payment_method,
+                'payment_method' => $request->payment_method,
 
-                'amount' =>
-                    $request->amount,
+                'amount' => $request->amount,
 
-                'paid_at' =>
-                    now(),
+                'paid_at' => now(),
 
-                'notes' =>
-                    $request->notes,
+                'status' => 'paid',
+
+                'paid_by' => Auth::id(),
+
+                'confirmed_by' => Auth::id(),
+
+                'confirmed_at' => now(),
+
+                'notes' => $request->notes,
             ]);
 
             $invoice->update([
