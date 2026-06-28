@@ -154,12 +154,9 @@
 
                     </div>
 
-                    <button
-                        type="submit"
-                        class="px-4 py-2 bg-green-600 text-white rounded"
-                    >
+                    <x-primary-button>
                         Submit Payment
-                    </button>
+                    </x-primary-button>
 
                     <x-secondary-button class="ms-3">
                         <a href="{{ route('admin.invoices.show', $invoice) }}">

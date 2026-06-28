@@ -188,6 +188,47 @@
                         {{ strtoupper($invoice->payment->payment_method) }}
                     </p>
 
+                    <p>
+                        Status :
+
+                        @switch($invoice->payment->status)
+
+                            @case('pending')
+
+                                <span class="text-yellow-600 font-semibold">
+                                    Pending Confirmation
+                                </span>
+
+                            @break
+
+                            @case('paid')
+
+                                <span class="text-green-600 font-semibold">
+                                    Paid
+                                </span>
+
+                            @break
+
+                            @case('failed')
+
+                                <span class="text-red-600 font-semibold">
+                                    Failed
+                                </span>
+
+                            @break
+
+                            @case('cancelled')
+
+                                <span class="text-red-600 font-semibold">
+                                    Cancelled
+                                </span>
+
+                            @break
+
+                        @endswitch
+
+                    </p>
+
                     @if($invoice->payment?->payment_reference)
 
                         <p>
@@ -221,6 +262,14 @@
 
                         </p>
 
+                        @if($invoice->payment->status === 'pending')
+
+                            <p class="mt-3 text-yellow-600 font-semibold">
+                                Waiting for payment confirmation.
+                            </p>
+
+                        @endif
+
                     @endif
 
                 @endif
@@ -242,7 +291,10 @@
 
                 <hr class="my-4">
 
-                @if($invoice->payment)
+                @if(
+                    $invoice->payment &&
+                    $invoice->payment->status === 'paid'
+                )
 
                 <a
                     href="{{ route('admin.receipts.show',$invoice) }}"

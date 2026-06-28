@@ -27,7 +27,7 @@ class PaymentController extends Controller
         );
     }
 
-    public function store(StorePaymentRequest $request,Invoice $invoice)
+    public function store(StorePaymentRequest $request, Invoice $invoice)
     {
         if ($invoice->status !== 'unpaid') {
             abort(403);
@@ -59,6 +59,8 @@ class PaymentController extends Controller
             $paymentProof
         ) {
 
+            $isCash = $request->payment_method === 'cash';
+
             Payment::create([
                 'payment_number' =>
                     'PAY-'
@@ -74,14 +76,20 @@ class PaymentController extends Controller
 
                 'paid_at' => now(),
 
-                'status' => 'paid',
+                'status' => $isCash
+                    ? 'paid'
+                    : 'pending',
 
                 'paid_by' => Auth::id(),
 
-                'confirmed_by' => Auth::id(),
+                'confirmed_by' => $isCash
+                    ? Auth::id()
+                    : null,
 
-                'confirmed_at' => now(),
-                
+                'confirmed_at' => $isCash
+                    ? now()
+                    : null,
+
                 'payment_reference' => $request->payment_reference,
 
                 'payment_proof' => $paymentProof,
@@ -89,9 +97,12 @@ class PaymentController extends Controller
                 'notes' => $request->notes,
             ]);
 
-            $invoice->update([
-                'status' => 'paid',
-            ]);
+            if ($isCash) {
+
+                $invoice->update([
+                    'status' => 'paid',
+                ]);
+            }
         });
 
         activity()
@@ -104,7 +115,9 @@ class PaymentController extends Controller
             ->route('admin.invoices.show', $invoice)
             ->with(
                 'success',
-                'Payment created successfully.'
+                $request->payment_method === 'cash'
+                    ? 'Payment completed successfully.'
+                    : 'Payment submitted and waiting for confirmation.'
             );
     }
 }
