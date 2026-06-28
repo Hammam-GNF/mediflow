@@ -34,14 +34,16 @@
                 <form
                     action="{{ route('admin.payments.store', $invoice) }}"
                     method="POST"
+                    enctype="multipart/form-data"
                 >
                     @csrf
 
                     <div class="mb-4">
 
-                        <label class="block mb-2">
-                            Payment Method
-                        </label>
+                        <x-input-label
+                            for="payment_method"
+                            value="Payment Method"
+                        />
 
                         <select
                             name="payment_method"
@@ -66,19 +68,72 @@
 
                         </select>
 
+                        <x-input-error
+                            :messages="$errors->get('payment_method')"
+                        />
+
+                    </div>
+
+                    <div id="transfer-fields" class="hidden">
+
+                        <div class="mb-4">
+
+                            <x-input-label
+                                for="payment_reference"
+                                value="Payment Reference"
+                            />
+
+                            <x-text-input
+                                id="payment_reference"
+                                type="text"
+                                name="payment_reference"
+                                class="mt-1 block w-full"
+                                :value="old('payment_reference')"
+                            />
+
+                        </div>
+
+                        <x-input-error
+                            :messages="$errors->get('payment_reference')"
+                            class="mt-2"
+                        />
+
+                        <div class="mb-4">
+
+                            <x-input-label
+                                for="payment_proof"
+                                value="Payment Proof"
+                            />
+
+                            <input 
+                                id="payment_proof"
+                                type="file"
+                                name="payment_proof"
+                                class="w-full border rounded"
+                                accept=".jpg,.jpeg,.png,.webp"
+                            >
+
+                        </div>
+
+                        <x-input-error
+                            :messages="$errors->get('payment_proof')"
+                        />
+
                     </div>
 
                     <div class="mb-4">
 
-                        <label class="block mb-2">
-                            Amount
-                        </label>
+                        <x-input-label
+                            for="amount"
+                            value="Amount"
+                        />
 
                         <input
+                            id="amount"
                             type="number"
                             name="amount"
                             value="{{ $invoice->total_amount }}"
-                            class="w-full border rounded"
+                            class="mt-1 block w-full border rounded"
                             required
                             readonly
                         >
@@ -87,15 +142,15 @@
 
                     <div class="mb-4">
 
-                        <label class="block mb-2">
-                            Notes
-                        </label>
+                        <x-input-label
+                            for="notes"
+                            value="Notes"
+                        />
 
                         <textarea
                             name="notes"
-                            rows="3"
-                            class="w-full border rounded"
-                        ></textarea>
+                            class="mt-1 block w-full border rounded"
+                        >{{ old('notes') }}</textarea>
 
                     </div>
 
@@ -119,5 +174,36 @@
         </div>
 
     </div>
+
+    @push('scripts')
+
+    <script>
+
+    function toggleTransferFields()
+    {
+        const method = document.querySelector(
+            '[name=payment_method]'
+        ).value;
+
+        document
+            .getElementById('transfer-fields')
+            .classList.toggle(
+                'hidden',
+                method === 'cash'
+            );
+    }
+
+    document
+        .querySelector('[name=payment_method]')
+        .addEventListener(
+            'change',
+            toggleTransferFields
+        );
+
+    toggleTransferFields();
+
+    </script>
+
+    @endpush
 
 </x-app-layout>

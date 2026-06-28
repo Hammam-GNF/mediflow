@@ -37,6 +37,11 @@
                     {{ $invoice->status }}
                 </p>
 
+                <p>
+                    Doctor :
+                    {{ $invoice->registration->doctor->user->name }}
+                </p>
+
                 <hr class="my-4">
 
                 <h3 class="font-bold mb-2">
@@ -183,6 +188,15 @@
                         {{ strtoupper($invoice->payment->payment_method) }}
                     </p>
 
+                    @if($invoice->payment?->payment_reference)
+
+                        <p>
+                            Reference :
+                            {{ $invoice->payment->payment_reference }}
+                        </p>
+
+                    @endif
+
                     <p>
                         Paid At :
                         {{ $invoice->payment->paid_at?->format('d-m-Y H:i') }}
@@ -192,6 +206,22 @@
                         Amount :
                         Rp {{ number_format($invoice->payment->amount) }}
                     </p>
+
+                    @if($invoice->payment?->payment_proof)
+
+                        <p class="mt-2">
+
+                            <a
+                                href="{{ asset('storage/'.$invoice->payment?->payment_proof) }}"
+                                target="_blank"
+                                class="text-blue-600 underline"
+                            >
+                                View Payment Proof
+                            </a>
+
+                        </p>
+
+                    @endif
 
                 @endif
 

@@ -45,15 +45,26 @@ class PaymentController extends Controller
             abort(403);
         }
 
+        $paymentProof = null;
+
+        if ($request->hasFile('payment_proof')) {
+            $paymentProof = $request
+                ->file('payment_proof')
+                ->store('payment-proofs', 'public');
+        }
+
         DB::transaction(function () use (
             $request,
-            $invoice
+            $invoice,
+            $paymentProof
         ) {
 
             Payment::create([
                 'payment_number' =>
-                    'PAY-' .
-                    now()->format('YmdHis').'-'. random_int(100, 999),
+                    'PAY-'
+                    . now()->format('YmdHis')
+                    . '-'
+                    . random_int(100,999),
 
                 'invoice_id' => $invoice->id,
 
@@ -70,6 +81,10 @@ class PaymentController extends Controller
                 'confirmed_by' => Auth::id(),
 
                 'confirmed_at' => now(),
+                
+                'payment_reference' => $request->payment_reference,
+
+                'payment_proof' => $paymentProof,
 
                 'notes' => $request->notes,
             ]);

@@ -4,6 +4,7 @@ namespace App\Http\Requests\Admin;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StorePaymentRequest extends FormRequest
 {
@@ -23,9 +24,13 @@ class StorePaymentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'payment_method' => [
+        'payment_method' => [
                 'required',
-                'in:cash,transfer,qris',
+                Rule::in([
+                    'cash',
+                    'transfer',
+                    'qris',
+                ]),
             ],
 
             'amount' => [
@@ -34,10 +39,32 @@ class StorePaymentRequest extends FormRequest
                 'min:0',
             ],
 
+            'payment_reference' => [
+                Rule::requiredIf(fn () => in_array(
+                    $this->payment_method,
+                    ['transfer', 'qris']
+                )),
+                'nullable',
+                'string',
+                'max:100',
+            ],
+
+            'payment_proof' => [
+                Rule::requiredIf(fn () => in_array(
+                    $this->payment_method,
+                    ['transfer', 'qris']
+                )),
+                'nullable',
+                'image',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
+            ],
+
             'notes' => [
                 'nullable',
                 'string',
             ],
         ];
+
     }
 }
