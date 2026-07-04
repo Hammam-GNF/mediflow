@@ -106,6 +106,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     Route::resource('invoices',InvoiceController::class)->only(['index','show']);
     Route::patch('invoices/{invoice}/cancel',[InvoiceController::class, 'cancel'])->name('invoices.cancel');
+    Route::patch('invoices/{invoice}/discount',[InvoiceController::class, 'updateDiscount'])->name('invoices.discount');
 
     Route::post('invoices/{invoice}/items',[InvoiceItemController::class, 'store'])->name('invoice-items.store');
     Route::delete('invoice-items/{invoiceItem}',[InvoiceItemController::class, 'destroy'])->name('invoice-items.destroy');

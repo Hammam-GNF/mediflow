@@ -163,6 +163,48 @@
 
                 @endif
 
+                @if($invoice->isEditable())
+
+                    <hr class="my-6">
+
+                    <h3 class="font-bold mb-3">
+                        Discount
+                    </h3>
+
+                    <form
+                        action="{{ route('admin.invoices.discount', $invoice) }}"
+                        method="POST"
+                        class="flex items-end gap-3"
+                    >
+                        @csrf
+                        @method('PATCH')
+
+                        <div>
+
+                            <label class="block text-sm mb-1">
+                                Discount Amount
+                            </label>
+
+                            <input
+                                type="number"
+                                min="0"
+                                name="discount_amount"
+                                value="{{ $invoice->discount_amount }}"
+                                class="border rounded"
+                            >
+
+                        </div>
+
+                        <button
+                            class="px-4 py-2 bg-orange-600 text-white rounded"
+                        >
+                            Apply Discount
+                        </button>
+
+                    </form>
+
+                @endif
+
                 <div class="mt-4 text-right">
                     <strong>
                         Subtotal :

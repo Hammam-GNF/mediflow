@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdateInvoiceDiscountRequest;
 use App\Models\Invoice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -192,6 +193,38 @@ class InvoiceController extends Controller
         return back()->with(
             'success',
             'Invoice cancelled successfully.'
+        );
+    }
+
+    public function updateDiscount(UpdateInvoiceDiscountRequest $request, Invoice $invoice)
+    {
+        if (! $invoice->isEditable()) {
+            abort(403);
+        }
+
+        $subtotal = $invoice->subtotal_amount;
+
+        $discount = $request->discount_amount;
+
+        $total =
+            $subtotal
+            - $discount
+            + $invoice->tax_amount;
+
+        $invoice->update([
+            'discount_amount' => $discount,
+            'total_amount' => max($total, 0),
+        ]);
+
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($invoice)
+            ->event('discount_updated')
+            ->log('Invoice discount updated');
+
+        return back()->with(
+            'success',
+            'Discount updated successfully.'
         );
     }
 }
