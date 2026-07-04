@@ -186,4 +186,44 @@ class PaymentController extends Controller
                 'Payment rejected.'
             );
     }
+
+    public function refund(Payment $payment)
+    {
+        if ($payment->status !== 'paid') {
+            abort(403);
+        }
+
+        DB::transaction(function () use ($payment) {
+
+            $payment->update([
+
+                'status' => 'cancelled',
+
+                'refunded_by' => Auth::id(),
+
+                'refunded_at' => now(),
+
+            ]);
+
+            $payment->invoice->update([
+
+                'status' => 'unpaid',
+
+            ]);
+
+        });
+
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($payment)
+            ->event('payment_refunded')
+            ->log('Payment refunded');
+
+        return redirect()
+            ->route('admin.invoices.show', $payment->invoice)
+            ->with(
+                'success',
+                'Payment refunded successfully.'
+            );
+    }
 }

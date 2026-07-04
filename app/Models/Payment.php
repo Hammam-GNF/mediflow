@@ -18,6 +18,8 @@ use Illuminate\Database\Eloquent\Model;
     'paid_by',
     'confirmed_by',
     'confirmed_at',
+    'refunded_at',
+    'refunded_by',
 ])]
 class Payment extends Model
 {
@@ -27,6 +29,7 @@ class Payment extends Model
             'paid_at' => 'datetime',
             'amount' => 'decimal:2',
             'confirmed_at' => 'datetime',
+            'refunded_at' => 'datetime',
         ];
     }
 
@@ -43,5 +46,10 @@ class Payment extends Model
     public function confirmer()
     {
         return $this->belongsTo(User::class, 'confirmed_by');
+    }
+
+    public function refunder()
+    {
+        return $this->belongsTo(User::class, 'refunded_by');
     }
 }

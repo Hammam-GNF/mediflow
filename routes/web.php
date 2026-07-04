@@ -108,6 +108,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
     Route::patch('invoices/{invoice}/cancel',[InvoiceController::class, 'cancel'])->name('invoices.cancel');
     Route::patch('invoices/{invoice}/discount',[InvoiceController::class, 'updateDiscount'])->name('invoices.discount');
     Route::patch('invoices/{invoice}/tax',[InvoiceController::class, 'updateTax'])->name('invoices.tax');
+    Route::patch('payments/{payment}/refund',[PaymentController::class, 'refund'])->name('payments.refund');
 
     Route::post('invoices/{invoice}/items',[InvoiceItemController::class, 'store'])->name('invoice-items.store');
     Route::delete('invoice-items/{invoiceItem}',[InvoiceItemController::class, 'destroy'])->name('invoice-items.destroy');

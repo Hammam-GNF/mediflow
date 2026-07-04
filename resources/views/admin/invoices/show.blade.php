@@ -338,6 +338,14 @@
 
                             @break
 
+                            @case('refunded')
+
+                                <span class="text-orange-600 font-semibold">
+                                    Refunded
+                                </span>
+
+                            @break
+
                         @endswitch
 
                     </p>
@@ -361,6 +369,15 @@
                         Rp {{ number_format($invoice->payment->amount) }}
                     </p>
 
+                    @if($invoice->payment->refunded_at)
+
+                        <p>
+                            Refunded At :
+                            {{ $invoice->payment->refunded_at->format('d-m-Y H:i') }}
+                        </p>
+
+                    @endif
+
                     @if($invoice->payment->payment_proof)
 
                         <p class="mt-2">
@@ -374,68 +391,83 @@
                             </a>
 
                         </p>
+                    @endif
 
-                        @if($invoice->payment->status === 'pending')
+                    @if($invoice->payment->status === 'pending')
 
-                            <div class="bg-yellow-50 border border-yellow-300 p-4 mt-4">
-                                Waiting for payment confirmation.
+                        <div class="bg-yellow-50 border border-yellow-300 p-4 mt-4">
+                            Waiting for payment confirmation.
 
-                                <br>
+                            <br>
 
-                                This invoice cannot be modified while the payment is awaiting confirmation.
-                            </div>
+                            This invoice cannot be modified while the payment is awaiting confirmation.
+                        </div>
 
-                            <div class="mt-4 flex gap-2">
+                        <div class="mt-4 flex gap-2">
 
-                                <form
-                                    action="{{ route('admin.payments.approve', $invoice->payment) }}"
-                                    method="POST"
+                            <form
+                                action="{{ route('admin.payments.approve', $invoice->payment) }}"
+                                method="POST"
+                            >
+                                @csrf
+                                @method('PATCH')
+
+                                <button
+                                    class="px-4 py-2 bg-green-600 text-white rounded"
+                                    onclick="this.disabled = true; this.innerText = 'Processing...'; this.form.submit();"
                                 >
-                                    @csrf
-                                    @method('PATCH')
+                                    Approve Payment
+                                </button>
 
-                                    <button
-                                        class="px-4 py-2 bg-green-600 text-white rounded"
-                                        onclick="this.disabled = true; this.innerText = 'Processing...'; this.form.submit();"
-                                    >
-                                        Approve Payment
-                                    </button>
+                            </form>
 
-                                </form>
+                            <form
+                                action="{{ route('admin.payments.reject', $invoice->payment) }}"
+                                method="POST"
+                            >
+                                @csrf
+                                @method('PATCH')
 
-                                <form
-                                    action="{{ route('admin.payments.reject', $invoice->payment) }}"
-                                    method="POST"
+                                <button
+                                    class="px-4 py-2 bg-red-600 text-white rounded"
+                                    onclick="this.disabled = true; this.innerText = 'Processing...'; this.form.submit();"
                                 >
-                                    @csrf
-                                    @method('PATCH')
+                                    Reject Payment
+                                </button>
 
-                                    <button
-                                        class="px-4 py-2 bg-red-600 text-white rounded"
-                                        onclick="this.disabled = true; this.innerText = 'Processing...'; this.form.submit();"
-                                    >
-                                        Reject Payment
-                                    </button>
+                            </form>
 
-                                </form>
+                        </div>
 
-                            </div>
+                    @elseif($invoice->payment->status === 'paid')
 
-                        @elseif($invoice->payment->status === 'paid')
+                        <div class="bg-green-50 border border-green-300 p-4 mt-4">
+                            Invoice has been paid.
+                        </div>
 
-                            <div class="bg-green-50 border border-green-300 p-4 mt-4">
-                                Invoice has been paid.
-                            </div>
+                        <div class="mt-4">
+                            <button
+                                type="button"
+                                class="px-4 py-2 bg-red-600 text-white rounded refund-payment-btn"
+                                data-url="{{ route('admin.payments.refund', $invoice->payment) }}"
+                            >
+                                Refund Payment
+                            </button>
+                        </div>
 
-                        @elseif($invoice->payment->status === 'failed')
+                    @elseif($invoice->payment->status === 'refunded')
 
-                            <div class="bg-red-50 border border-red-300 p-4 mt-4">
-                                Payment was rejected.
+                        <div class="bg-blue-50 border border-blue-300 p-4 mt-4">
+                            Payment has been refunded.
+                        </div>
 
-                                Please create a new payment.
-                            </div>
+                    @elseif($invoice->payment->status === 'failed')
 
-                        @endif
+                        <div class="bg-red-50 border border-red-300 p-4 mt-4">
+                            Payment was rejected.
+
+                            Please create a new payment.
+                        </div>
 
                     @endif
 
@@ -460,7 +492,8 @@
 
                 @if(
                     $invoice->payment &&
-                    $invoice->payment->status === 'paid'
+                    in_array($invoice->payment->status, ['paid', 'refunded', 'cancelled'])
+
                 )
 
                 <a
@@ -494,7 +527,19 @@
         submit-text="Delete"
     />
 
+    <x-confirm-modal
+        name="confirm-refund-payment"
+        title="Refund Payment"
+        message="Are you sure you want to refund this payment?"
+        method="PATCH"
+        submit-text="Refund"
+    />
+
     @push('scripts')
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+        <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+        
         <script>
             $(document).on(
                 'click',
@@ -512,6 +557,28 @@
                             'open-modal',
                             {
                                 detail: 'confirm-delete-invoice-item'
+                            }
+                        )
+                    );
+                }
+            );
+
+            $(document).on(
+                'click',
+                '.refund-payment-btn',
+                function () {
+
+                    $('#confirm-refund-payment-form')
+                        .attr(
+                            'action',
+                            $(this).data('url')
+                        );
+
+                    window.dispatchEvent(
+                        new CustomEvent(
+                            'open-modal',
+                            {
+                                detail: 'confirm-refund-payment'
                             }
                         )
                     );

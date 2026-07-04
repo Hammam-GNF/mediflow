@@ -60,6 +60,11 @@ class InvoiceController extends Controller
                         '<span class="px-2 py-1 bg-red-100 text-red-800 rounded">
                             Cancelled
                         </span>',
+
+                    'refunded' =>
+                        '<span class="px-2 py-1 bg-orange-100 text-orange-800 rounded">
+                            Refunded
+                        </span>',
                 };
             })
 
