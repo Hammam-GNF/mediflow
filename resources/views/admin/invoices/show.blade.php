@@ -205,6 +205,50 @@
 
                 @endif
 
+                @if($invoice->isEditable())
+
+                    <div class="mt-6">
+
+                        <h3 class="font-bold mb-3">
+                            Tax
+                        </h3>
+
+                        <form
+                            action="{{ route('admin.invoices.tax', $invoice) }}"
+                            method="POST"
+                            class="flex items-end gap-3"
+                        >
+                            @csrf
+                            @method('PATCH')
+
+                            <div>
+
+                                <label class="block text-sm mb-1">
+                                    Tax Amount
+                                </label>
+
+                                <input
+                                    type="number"
+                                    min="0"
+                                    name="tax_amount"
+                                    value="{{ $invoice->tax_amount }}"
+                                    class="border rounded"
+                                >
+
+                            </div>
+
+                            <button
+                                class="px-4 py-2 bg-indigo-600 text-white rounded"
+                            >
+                                Apply Tax
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                @endif
+
                 <div class="mt-4 text-right">
                     <strong>
                         Subtotal :
