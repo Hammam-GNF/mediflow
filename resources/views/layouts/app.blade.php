@@ -18,7 +18,14 @@
     <body class="font-sans antialiased">
 
         <div
-            x-data="{ sidebarOpen: false }"
+            x-data="{
+                sidebarOpen: false
+            }"
+            @resize.window="
+                if (window.innerWidth >= 1024) {
+                    sidebarOpen = false
+                }
+            "
             class="flex min-h-screen bg-gray-100"
         >
 
@@ -26,7 +33,7 @@
                 @include('layouts.sidebar')
             @endauth
 
-            <div class="flex-1 min-w-0 overflow-hidden">
+            <div class="flex-1 min-w-0">
 
                 @include('layouts.navigation')
 
@@ -38,7 +45,7 @@
                     </header>
                 @endisset
 
-                <main class="overflow-x-auto">
+                <main class="flex-1 overflow-x-auto">
                     @include('components.flash-message')
 
                     {{ $slot }}

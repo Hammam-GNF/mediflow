@@ -15,18 +15,22 @@
 
 <aside
     x-cloak
+    @keydown.escape.window="sidebarOpen = false"
     class="
         fixed lg:sticky
-        top-0 left-0
+        inset-y-0 left-0
         z-50
         w-64
         bg-gray-900
         text-white
-        min-h-screen
+
+        h-screen
         overflow-y-auto
+        overscroll-contain
 
         transform
         transition-transform
+        duration-300
 
         lg:translate-x-0
     "
@@ -37,10 +41,19 @@
     "
 >
 
-    <div class="px-6 py-4 border-b border-gray-700">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-700">
+
         <h1 class="text-xl font-bold">
             MediFlow
         </h1>
+
+        <button
+            @click="sidebarOpen = false"
+            class="lg:hidden text-2xl leading-none"
+        >
+            ✕
+        </button>
+
     </div>
 
     <nav class="p-4 space-y-2">
