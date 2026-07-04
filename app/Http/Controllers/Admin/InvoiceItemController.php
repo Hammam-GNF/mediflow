@@ -12,7 +12,7 @@ class InvoiceItemController extends Controller
 {
     public function store(StoreInvoiceItemRequest $request, Invoice $invoice)
     {
-        if ($invoice->status !== 'unpaid') {
+        if (! $invoice->isEditable()) {
             abort(403);
         }
 
@@ -25,11 +25,6 @@ class InvoiceItemController extends Controller
             'quantity' => $request->quantity,
             'unit_price' => $request->unit_price,
             'subtotal' => $subtotal,
-        ]);
-
-        $invoice->update([
-            'total_amount' =>
-                $invoice->items()->sum('subtotal')
         ]);
 
         activity()
@@ -48,18 +43,11 @@ class InvoiceItemController extends Controller
     {
         $invoice = $invoiceItem->invoice;
 
-        if ($invoice->status !== 'unpaid') {
+        if (! $invoice->isEditable()) {
             abort(403);
         }
 
         $invoiceItem->delete();
-
-        $invoice->refresh();
-
-        $invoice->update([
-            'total_amount' =>
-                $invoice->items()->sum('subtotal')
-        ]);
 
         activity()
             ->causedBy(Auth::user())

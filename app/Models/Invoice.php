@@ -39,4 +39,9 @@ class Invoice extends Model
     {
         return $this->hasOne(Payment::class);
     }
+
+    public function isEditable(): bool
+    {
+        return ! $this->payment;
+    }
 }

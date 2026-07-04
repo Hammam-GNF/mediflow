@@ -48,52 +48,52 @@
                     Invoice Items
                 </h3>
 
-                @if($invoice->status === 'unpaid')
+                @if($invoice->isEditable())
 
-                <form
-                    action="{{ route('admin.invoice-items.store', $invoice) }}"
-                    method="POST"
-                    class="mb-6"
-                >
-                    @csrf
-
-                    <div class="grid grid-cols-3 gap-4">
-
-                        <input
-                            type="text"
-                            name="item_name"
-                            placeholder="Item Name"
-                            class="border rounded"
-                            required
-                        >
-
-                        <input
-                            type="number"
-                            name="quantity"
-                            min="1"
-                            value="1"
-                            class="border rounded"
-                            required
-                        >
-
-                        <input
-                            type="number"
-                            name="unit_price"
-                            min="0"
-                            class="border rounded"
-                            required
-                        >
-
-                    </div>
-
-                    <button
-                        type="submit"
-                        class="mt-3 px-4 py-2 bg-blue-600 text-white rounded"
+                    <form
+                        action="{{ route('admin.invoice-items.store', $invoice) }}"
+                        method="POST"
+                        class="mb-6"
                     >
-                        Add Item
-                    </button>
+                        @csrf
 
-                </form>
+                        <div class="grid grid-cols-3 gap-4">
+
+                            <input
+                                type="text"
+                                name="item_name"
+                                placeholder="Item Name"
+                                class="border rounded"
+                                required
+                            >
+
+                            <input
+                                type="number"
+                                name="quantity"
+                                min="1"
+                                value="1"
+                                class="border rounded"
+                                required
+                            >
+
+                            <input
+                                type="number"
+                                name="unit_price"
+                                min="0"
+                                class="border rounded"
+                                required
+                            >
+
+                        </div>
+
+                        <button
+                            type="submit"
+                            class="mt-3 px-4 py-2 bg-blue-600 text-white rounded"
+                        >
+                            Add Item
+                        </button>
+
+                    </form>
 
                 @endif
 
@@ -127,7 +127,7 @@
                                         Rp {{ number_format($item->subtotal) }}
                                     </div>
 
-                                    @if($invoice->status === 'unpaid')
+                                    @if($invoice->isEditable())
 
                                         <button
                                             type="button"
@@ -248,7 +248,7 @@
                         Rp {{ number_format($invoice->payment->amount) }}
                     </p>
 
-                    @if($invoice->payment?->payment_proof)
+                    @if($invoice->payment->payment_proof)
 
                         <p class="mt-2">
 
@@ -264,9 +264,63 @@
 
                         @if($invoice->payment->status === 'pending')
 
-                            <p class="mt-3 text-yellow-600 font-semibold">
+                            <div class="bg-yellow-50 border border-yellow-300 p-4 mt-4">
                                 Waiting for payment confirmation.
-                            </p>
+
+                                <br>
+
+                                This invoice cannot be modified while the payment is awaiting confirmation.
+                            </div>
+
+                            <div class="mt-4 flex gap-2">
+
+                                <form
+                                    action="{{ route('admin.payments.approve', $invoice->payment) }}"
+                                    method="POST"
+                                >
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <button
+                                        class="px-4 py-2 bg-green-600 text-white rounded"
+                                        onclick="this.disabled = true; this.innerText = 'Processing...'; this.form.submit();"
+                                    >
+                                        Approve Payment
+                                    </button>
+
+                                </form>
+
+                                <form
+                                    action="{{ route('admin.payments.reject', $invoice->payment) }}"
+                                    method="POST"
+                                >
+                                    @csrf
+                                    @method('PATCH')
+
+                                    <button
+                                        class="px-4 py-2 bg-red-600 text-white rounded"
+                                        onclick="this.disabled = true; this.innerText = 'Processing...'; this.form.submit();"
+                                    >
+                                        Reject Payment
+                                    </button>
+
+                                </form>
+
+                            </div>
+
+                        @elseif($invoice->payment->status === 'paid')
+
+                            <div class="bg-green-50 border border-green-300 p-4 mt-4">
+                                Invoice has been paid.
+                            </div>
+
+                        @elseif($invoice->payment->status === 'failed')
+
+                            <div class="bg-red-50 border border-red-300 p-4 mt-4">
+                                Payment was rejected.
+
+                                Please create a new payment.
+                            </div>
 
                         @endif
 
@@ -274,7 +328,7 @@
 
                 @endif
 
-                @if($invoice->status === 'unpaid')
+                @if($invoice->isEditable() && ! $invoice->payment)
 
                     <div class="mt-4 text-right">
 

@@ -22,7 +22,8 @@
                             <th>Invoice</th>
                             <th>Patient</th>
                             <th>Total</th>
-                            <th>Status</th>
+                            <th>Invoice Status</th>
+                            <th>Payment Status</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -81,6 +82,10 @@
                         {
                             data: 'status',
                             name: 'status',
+                        },
+                        {
+                            data: 'payment_status',
+                            name: 'payment_status',
                         },
                         {
                             data: 'action',

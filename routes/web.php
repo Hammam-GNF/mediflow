@@ -112,6 +112,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin'])->grou
 
     Route::get('invoices/{invoice}/payment',[PaymentController::class, 'create'])->name('payments.create');
     Route::post('invoices/{invoice}/payment',[PaymentController::class, 'store'])->name('payments.store');
+    Route::patch('payments/{payment}/approve',[PaymentController::class, 'approve'])->name('payments.approve');
+    Route::patch('payments/{payment}/reject',[PaymentController::class, 'reject'])->name('payments.reject');
 
     Route::get('receipts/{invoice}',[ReceiptController::class, 'show'])->name('receipts.show');
     Route::get('receipts/{invoice}/pdf',[ReceiptController::class, 'pdf'])->name('receipts.pdf');

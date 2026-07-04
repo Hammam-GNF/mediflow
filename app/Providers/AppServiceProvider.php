@@ -3,12 +3,14 @@
 namespace App\Providers;
 
 use App\Models\Doctor;
+use App\Models\InvoiceItem;
 use App\Models\MedicalRecord;
 use App\Models\Patient;
 use App\Models\Polyclinic;
 use App\Models\Queue;
 use App\Models\Registration;
 use App\Models\User;
+use App\Observers\InvoiceItemObserver;
 use App\Policies\DoctorPolicy;
 use App\Policies\MedicalRecordPolicy;
 use App\Policies\PatientPolicy;
@@ -41,5 +43,7 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(Registration::class, RegistrationPolicy::class);
         Gate::policy(Queue::class, QueuePolicy::class);
         Gate::policy(MedicalRecord::class, MedicalRecordPolicy::class);
+
+        InvoiceItem::observe(InvoiceItemObserver::class);
     }
 }

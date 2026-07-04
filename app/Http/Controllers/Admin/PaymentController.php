@@ -29,7 +29,7 @@ class PaymentController extends Controller
 
     public function store(StorePaymentRequest $request, Invoice $invoice)
     {
-        if ($invoice->status !== 'unpaid') {
+        if (! $invoice->isEditable()) {
             abort(403);
         }
 
@@ -118,6 +118,72 @@ class PaymentController extends Controller
                 $request->payment_method === 'cash'
                     ? 'Payment completed successfully.'
                     : 'Payment submitted and waiting for confirmation.'
+            );
+    }
+
+    public function approve(Payment $payment)
+    {
+        if ($payment->status !== 'pending') {
+            abort(403);
+        }
+
+        DB::transaction(function () use ($payment) {
+
+            $payment->update([
+                'status' => 'paid',
+                'confirmed_by' => Auth::id(),
+                'confirmed_at' => now(),
+            ]);
+
+            $payment->invoice->update([
+                'status' => 'paid',
+            ]);
+        });
+
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($payment)
+            ->event('payment_approved')
+            ->log('Payment approved');
+
+        return redirect()
+            ->route('admin.invoices.show', $payment->invoice)
+            ->with(
+                'success',
+                'Payment approved successfully.'
+            );
+    }
+
+    public function reject(Payment $payment)
+    {
+        if ($payment->status !== 'pending') {
+            abort(403);
+        }
+
+        DB::transaction(function () use ($payment) {
+
+            $payment->update([
+                'status' => 'failed',
+                'confirmed_by' => Auth::id(),
+                'confirmed_at' => now(),
+            ]);
+
+            $payment->invoice->update([
+                'status' => 'unpaid',
+            ]);
+        });
+
+        activity()
+            ->causedBy(Auth::user())
+            ->performedOn($payment)
+            ->event('payment_rejected')
+            ->log('Payment rejected');
+
+        return redirect()
+            ->route('admin.invoices.show', $payment->invoice)
+            ->with(
+                'success',
+                'Payment rejected.'
             );
     }
 }
