@@ -144,6 +144,80 @@
 
                 </div>
 
+                <p>
+                    Payment Status :
+
+                    <strong>
+
+                        @switch($invoice->payment->status)
+
+                            @case('paid')
+                                Paid
+                            @break
+
+                            @case('pending')
+                                Pending
+                            @break
+
+                            @case('failed')
+                                Failed
+                            @break
+
+                            @default
+                                {{ ucfirst($invoice->payment->status) }}
+
+                        @endswitch
+
+                    </strong>
+
+                </p>
+
+                @if($invoice->payment->payment_reference)
+
+                <p>
+                    Payment Reference :
+                    {{ $invoice->payment->payment_reference }}
+                </p>
+
+                @endif
+
+                <p>
+                    Cashier :
+                    {{ $invoice->payment->cashier?->name ?? '-' }}
+                </p>
+
+                @if($invoice->payment->confirmer)
+
+                <p>
+                    Confirmed By :
+                    {{ $invoice->payment->confirmer->name }}
+                </p>
+
+                <p>
+                    Confirmed At :
+                    {{ $invoice->payment->confirmed_at?->format('d-m-Y H:i') }}
+                </p>
+
+                @endif
+
+                @if($invoice->payment->notes)
+
+                <div class="mt-4">
+
+                    <h3 class="font-semibold">
+                        Notes
+                    </h3>
+
+                    <p>
+                        {{ $invoice->payment->notes }}
+                    </p>
+
+                </div>
+
+                @endif
+
+                <br>
+
                 <div class="flex gap-3">
 
                     <a

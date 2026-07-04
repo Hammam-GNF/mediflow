@@ -18,7 +18,8 @@ class ReceiptController extends Controller
         $invoice->load([
             'registration.patient',
             'items',
-            'payment',
+            'payment.cashier',
+            'payment.confirmer',
         ]);
 
         return view(
@@ -36,7 +37,8 @@ class ReceiptController extends Controller
         $invoice->load([
             'registration.patient',
             'items',
-            'payment',
+            'payment.cashier',
+            'payment.confirmer',
         ]);
 
         $pdf = Pdf::loadView(
