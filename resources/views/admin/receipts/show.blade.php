@@ -128,8 +128,23 @@
 
                 <div class="text-right mb-6">
 
+                    <p>
+                        Subtotal :
+                        Rp {{ number_format($invoice->subtotal_amount) }}
+                    </p>
+
+                    <p>
+                        Discount :
+                        Rp {{ number_format($invoice->discount_amount) }}
+                    </p>
+
+                    <p>
+                        Tax :
+                        Rp {{ number_format($invoice->tax_amount) }}
+                    </p>
+
                     <h3 class="text-xl font-bold">
-                        Total :
+                        Grand Total :
                         Rp {{ number_format($invoice->total_amount) }}
                     </h3>
 

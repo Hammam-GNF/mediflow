@@ -165,6 +165,33 @@
 
                 <div class="mt-4 text-right">
                     <strong>
+                        Subtotal :
+                        Rp {{ number_format($invoice->subtotal_amount) }}
+                    </strong>
+                </div>
+
+                <div class="mt-2 text-right">
+                    <strong>
+                        Discount :
+                        Rp {{ number_format($invoice->discount_amount) }}
+                    </strong>
+                </div>
+
+                <div class="mt-2 text-right">
+                    <strong>
+                        Tax :
+                        Rp {{ number_format($invoice->tax_amount) }}
+                    </strong>
+                </div>
+
+                <div class="mt-2 text-right">
+                    <strong>
+                        --------------------------------
+                    </strong>
+                </div>
+
+                <div class="mt-4 text-right">
+                    <strong>
                         Total :
                         Rp {{ number_format($invoice->total_amount) }}
                     </strong>

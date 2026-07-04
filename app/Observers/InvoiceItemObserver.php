@@ -25,8 +25,24 @@ class InvoiceItemObserver
     {
         $invoice = $invoiceItem->invoice;
 
+        $subtotal = $invoice
+            ->items()
+            ->sum('subtotal');
+
+        $total =
+            $subtotal
+            - $invoice->discount_amount
+            + $invoice->tax_amount;
+
         $invoice->update([
-            'total_amount' => $invoice->items()->sum('subtotal'),
+
+            'subtotal_amount' => $subtotal,
+
+            'total_amount' => max(
+                $total,
+                0
+            ),
+
         ]);
     }
 }

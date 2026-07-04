@@ -13,6 +13,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
     'status',
     'invoice_date',
     'notes',
+    'subtotal_amount',
+    'discount_amount',
+    'tax_amount',
 ])]
 class Invoice extends Model
 {
@@ -22,6 +25,9 @@ class Invoice extends Model
     {
         return [
             'invoice_date' => 'datetime',
+            'subtotal_amount' => 'decimal:2',
+            'discount_amount' => 'decimal:2',
+            'tax_amount' => 'decimal:2',
         ];
     }
 
