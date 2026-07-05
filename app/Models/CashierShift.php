@@ -38,4 +38,14 @@ class CashierShift extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+    public function getTransactionCountAttribute()
+    {
+        return $this->payments()->count();
+    }
+
+    public function getRevenueAttribute()
+    {
+        return $this->payments()->sum('amount');
+    }
 }

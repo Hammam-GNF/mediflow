@@ -42,6 +42,70 @@
 
                     </div>
 
+                    @if($currentShift)
+
+                        <div class="bg-white rounded shadow p-6 mt-6">
+
+                            <h2 class="text-xl font-bold mb-4">
+                                Current Cashier Shift
+                            </h2>
+
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+
+                                <div>
+
+                                    <p class="text-gray-500 text-sm">
+                                        Cashier
+                                    </p>
+
+                                    <p class="font-semibold">
+                                        {{ $currentShift->cashier->name }}
+                                    </p>
+
+                                </div>
+
+                                <div>
+
+                                    <p class="text-gray-500 text-sm">
+                                        Opened At
+                                    </p>
+
+                                    <p class="font-semibold">
+                                        {{ $currentShift->opened_at->format('d M Y H:i') }}
+                                    </p>
+
+                                </div>
+
+                                <div>
+
+                                    <p class="text-gray-500 text-sm">
+                                        Transactions
+                                    </p>
+
+                                    <p class="font-semibold">
+                                        {{ $currentShift->transaction_count }}
+                                    </p>
+
+                                </div>
+
+                                <div>
+
+                                    <p class="text-gray-500 text-sm">
+                                        Revenue
+                                    </p>
+
+                                    <p class="font-semibold">
+                                        Rp {{ number_format($currentShift->revenue) }}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    @endif
+
                     <div class="mt-8">
 
                         <h2 class="text-xl font-bold mb-4">

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\CashierShift;
 use App\Models\Doctor;
 use App\Models\MedicalRecord;
 use App\Models\Patient;
@@ -25,6 +26,11 @@ class DashboardController extends Controller
             $total > 0
                 ? round(($success / $total) * 100, 1)
                 : 0;
+
+        $currentShift = CashierShift::with('cashier')
+            ->whereNull('closed_at')
+            ->latest()
+            ->first();
                 
         return view('admin.dashboard', [
 
@@ -117,6 +123,8 @@ class DashboardController extends Controller
                 ->get(),
 
             'satusehatSuccessRate' => $successRate,
+
+            'currentShift' => $currentShift,
         ]);
     }
 }
