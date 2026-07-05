@@ -82,6 +82,10 @@
                     Paid At
                 </th>
 
+                <th>
+                    Shift
+                </th>
+
             </tr>
 
         </thead>
@@ -110,6 +114,10 @@
 
                     <td>
                         {{ $payment->paid_at?->format('d-m-Y H:i') }}
+                    </td>
+
+                    <td>
+                        Shift #{{ $payment->cashier_shift_id }}
                     </td>
 
                 </tr>

@@ -12,8 +12,13 @@ class FinancialReportController extends Controller
     public function index(Request $request)
     {
         $payments = Payment::with([
-            'invoice.registration.patient'
+            'invoice.registration.patient',
+            'cashierShift'
         ])
+
+        ->whereHas('cashierShift', function ($query) {
+            $query->where('status', 'closed');
+        })
 
         ->when(
             $request->start_date,
@@ -51,8 +56,13 @@ class FinancialReportController extends Controller
     public function pdf(Request $request)
     {
         $payments = Payment::with([
-            'invoice.registration.patient'
+            'invoice.registration.patient',
+            'cashierShift'
         ])
+
+        ->whereHas('cashierShift', function ($query) {
+            $query->where('status', 'closed');
+        })
 
         ->when(
             $request->start_date,

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
     'closing_balance',
     'status',
     'notes',
+    'difference_amount',
 ])]
 class CashierShift extends Model
 {
@@ -47,5 +48,19 @@ class CashierShift extends Model
     public function getRevenueAttribute()
     {
         return $this->payments()->sum('amount');
+    }
+
+    public function getExpectedClosingBalanceAttribute()
+    {
+        return $this->opening_balance + $this->revenue;
+    }
+
+    public function getDifferenceAmountAttribute()
+    {
+        if ($this->closing_balance === null) {
+            return null;
+        }
+
+        return $this->closing_balance - $this->expected_closing_balance;
     }
 }
