@@ -20,6 +20,7 @@ use Illuminate\Database\Eloquent\Model;
     'confirmed_at',
     'refunded_at',
     'refunded_by',
+    'cashier_shift_id',
 ])]
 class Payment extends Model
 {
@@ -51,5 +52,10 @@ class Payment extends Model
     public function refunder()
     {
         return $this->belongsTo(User::class, 'refunded_by');
+    }
+
+    public function cashierShift()
+    {
+        return $this->belongsTo(CashierShift::class);
     }
 }

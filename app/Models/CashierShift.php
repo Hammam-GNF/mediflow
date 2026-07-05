@@ -1,0 +1,41 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
+
+#[Fillable([
+    'user_id',
+    'opened_at',
+    'closed_at',
+    'opening_balance',
+    'closing_balance',
+    'status',
+    'notes',
+])]
+class CashierShift extends Model
+{
+    protected function casts(): array
+    {
+        return [
+            'opened_at' => 'datetime',
+            'closed_at' => 'datetime',
+            'opening_balance' => 'decimal:2',
+            'closing_balance' => 'decimal:2',
+        ];
+    }
+
+    public function cashier()
+    {
+        return $this->belongsTo(
+            User::class,
+            'user_id'
+        );
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+}
