@@ -38,6 +38,16 @@
                             Invoice Number :
                             {{ $invoice->invoice_number }}
                         </p>
+
+                        <p>
+                            Shift :
+                            {{ $invoice->payment->cashierShift?->name ?? '-' }}
+                        </p>
+
+                        <p>
+                            Cashier :
+                            {{ $invoice->payment->cashier?->name ?? '-' }}
+                        </p>
                     </div>
 
                     <div class="text-right">

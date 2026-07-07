@@ -43,4 +43,9 @@ class User extends Authenticatable implements HasMedia
     {
         return $this->hasOne(Doctor::class);
     }
+
+    public function cashierShifts()
+    {
+        return $this->hasMany(CashierShift::class);
+    }
 }

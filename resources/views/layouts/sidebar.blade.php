@@ -1,6 +1,9 @@
 @php
     $isAdmin = auth()->user()->hasRole('admin');
+    $isCashier = auth()->user()->hasRole('cashier');
     $isDoctor = auth()->user()->hasRole('doctor');
+
+    $canBilling = $isAdmin || $isCashier;
 @endphp
 
 
@@ -60,15 +63,14 @@
 
         <a
             @click="sidebarOpen = false"
-            href="{{ $isAdmin
-                ? route('admin.dashboard')
-                : route('doctor.dashboard')
-            }}"
+            href="{{ route($isDoctor ? 'doctor.dashboard' : 'admin.dashboard') }}"
             class="block px-4 py-2 rounded hover:bg-gray-800
-                {{ request()->routeIs('admin.dashboard')
+            {{
+                ($isDoctor && request()->routeIs('doctor.dashboard')) ||
+                (!$isDoctor && request()->routeIs('admin.dashboard'))
                     ? 'bg-blue-600 text-white'
                     : ''
-                }}
+            }}
             "
         >
             🏥 Dashboard
@@ -86,7 +88,7 @@
                     <span x-text="open ? '-' : '+'"></span>
                 </button>
 
-                <div x-show="open" class="mt-2 space-y-1">
+                <div x-show="open" x-transition class="mt-2 space-y-1">
 
                     <a
                         @click="sidebarOpen = false"
@@ -142,73 +144,53 @@
                 </div>
             </div>
 
-            <div x-data="{ open: true }" class="pt-4">
+        @endif
 
-                <button
-                    @click="open = !open"
-                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
-                >
-                    <span>Pharmacy</span>
-
-                    <span x-text="open ? '-' : '+'"></span>
-                </button>
-
-                <div x-show="open" class="mt-2 space-y-1">
-
-                    <a
-                        @click="sidebarOpen = false"
-                        href="{{ route('admin.medications.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.medications.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                            }}
-                        "
-                    >
-                        💊 Medications
-                    </a>
-
-                </div>
-
-            </div>
+        @if($isAdmin || $isCashier)
 
             <div x-data="{ open: true }" class="pt-4">
                 <button
                     @click="open = !open"
                     class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
                 >
-                    <span>Registration</span>
+                    <span>Billing</span>
 
                     <span x-text="open ? '-' : '+'"></span>
                 </button>
 
-                <div x-show="open" class="mt-2 space-y-1">
+                <div x-show="open" x-transition class="mt-2 space-y-1">
 
-                    <a
-                        @click="sidebarOpen = false"
-                        href="{{ route('admin.registrations.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.registrations.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                            }}
-                        "
-                    >
-                        📝 Registrations
-                    </a>
+                    @if($isAdmin)
 
-                    <a
-                        @click="sidebarOpen = false"
-                        href="{{ route('admin.queues.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.queues.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                            }}
-                        "
-                    >
-                        📝 Queues
-                    </a>
+                        <a
+                            @click="sidebarOpen = false"
+                            href="{{ route('admin.registrations.index') }}"
+                            class="block px-4 py-2 rounded hover:bg-gray-800
+                                {{ request()->routeIs('admin.registrations.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : ''
+                                }}
+                            "
+                        >
+                            📝 Registrations
+                        </a>
+
+                        <a
+                            @click="sidebarOpen = false"
+                            href="{{ route('admin.queues.index') }}"
+                            class="block px-4 py-2 rounded hover:bg-gray-800
+                                {{ request()->routeIs('admin.queues.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : ''
+                                }}
+                            "
+                        >
+                            🎫 Queue
+                        </a>
+
+                    @endif
+
+                    <hr class="border-gray-700 my-2">
 
                     <a
                         @click="sidebarOpen = false"
@@ -227,6 +209,7 @@
                     </a>
 
                     <a
+                        @click="sidebarOpen = false"
                         href="{{ route('admin.cashier-shifts.index') }}"
                         class="block px-4 py-2 rounded hover:bg-gray-800
                             {{
@@ -237,21 +220,6 @@
                     >
                         💰 Cashier Shifts
                     </a>
-                </div>
-            </div>
-
-            <div x-data="{ open: true }" class="pt-4">
-
-                <button
-                    @click="open = !open"
-                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
-                >
-                    <span>Reports</span>
-
-                    <span x-text="open ? '-' : '+'"></span>
-                </button>
-
-                <div x-show="open" class="mt-2 space-y-1">
 
                     <a
                         @click="sidebarOpen = false"
@@ -264,6 +232,59 @@
                     >
                         📈 Financial Report
                     </a>
+                </div>
+            </div>
+
+        @endif
+
+        @if($isAdmin)
+
+            <div x-data="{ open: true }" class="pt-4">
+
+                <button
+                    @click="open = !open"
+                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
+                >
+                    <span>Pharmacy</span>
+
+                    <span x-text="open ? '-' : '+'"></span>
+                </button>
+
+                <div x-show="open" x-transition class="mt-2 space-y-1">
+
+                    <a
+                        @click="sidebarOpen = false"
+                        href="{{ route('admin.medications.index') }}"
+                        class="block px-4 py-2 rounded hover:bg-gray-800
+                            {{ request()->routeIs('admin.medications.*')
+                                ? 'bg-blue-600 text-white'
+                                : ''
+                            }}
+                        "
+                    >
+                        💊 Medications
+                    </a>
+
+                </div>
+
+            </div>
+
+        @endif
+
+        @if($isAdmin)
+
+            <div x-data="{ open: true }" class="pt-4">
+
+                <button
+                    @click="open = !open"
+                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
+                >
+                    <span>Reports</span>
+
+                    <span x-text="open ? '-' : '+'"></span>
+                </button>
+
+                <div x-show="open" x-transition class="mt-2 space-y-1">
 
                     <a
                         @click="sidebarOpen = false"
@@ -305,6 +326,10 @@
 
             </div>
 
+        @endif
+
+        @if($isAdmin)
+
             <div x-data="{ open: true }" class="pt-4">
                 <button
                     @click="open = !open"
@@ -315,7 +340,7 @@
                     <span x-text="open ? '-' : '+'"></span>
                 </button>
 
-                <div x-show="open" class="mt-2 space-y-1">
+                <div x-show="open" x-transition class="mt-2 space-y-1">
 
                     <a
                         @click="sidebarOpen = false"
@@ -373,7 +398,7 @@
                     <span x-text="open ? '-' : '+'"></span>
                 </button>
 
-                <div x-show="open" class="mt-2 space-y-1">
+                <div x-show="open" x-transition class="mt-2 space-y-1">
 
                     <a
                         @click="sidebarOpen = false"

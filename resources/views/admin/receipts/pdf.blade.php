@@ -62,6 +62,16 @@
             </p>
 
             <p>
+                Shift :
+                {{ $invoice->payment->cashierShift?->name ?? '-' }}
+            </p>
+
+            <p>
+                Cashier :
+                {{ $invoice->payment->cashier?->name ?? '-' }}
+            </p>
+
+            <p>
                 Paid At :
                 {{ $invoice->payment->paid_at?->format('d-m-Y H:i') }}
             </p>

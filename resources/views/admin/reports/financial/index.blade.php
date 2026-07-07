@@ -122,6 +122,14 @@
                                 Paid At
                             </th>
 
+                            <th class="text-left py-3">
+                                Shift
+                            </th>
+
+                            <th class="text-left py-3">
+                                Cashier
+                            </th>
+
                         </tr>
 
                     </thead>
@@ -152,12 +160,20 @@
                                     {{ $payment->paid_at?->format('d-m-Y H:i') }}
                                 </td>
 
+                                <td class="py-3">
+                                    {{ $payment->cashierShift?->name }}
+                                </td>
+
+                                <td class="py-3">
+                                    {{ $payment->cashier?->name }}
+                                </td>
+
                             </tr>
 
                         @empty
 
                             <tr>
-                                <td colspan="5" class="text-center py-6">
+                                <td colspan="7" class="text-center py-6">
                                     No data available.
                                 </td>
                             </tr>

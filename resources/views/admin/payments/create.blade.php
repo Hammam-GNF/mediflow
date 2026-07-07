@@ -31,6 +31,16 @@
 
                 </div>
 
+                @if($errors->has('payment'))
+
+                    <div class="mb-4 rounded border border-red-300 bg-red-100 px-4 py-3 text-red-700">
+
+                        {{ $errors->first('payment') }}
+
+                    </div>
+
+                @endif
+
                 <form
                     action="{{ route('admin.payments.store', $invoice) }}"
                     method="POST"

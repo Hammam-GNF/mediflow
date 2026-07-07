@@ -22,5 +22,10 @@ class RolePermissionSeeder extends Seeder
             'name' => 'doctor',
             'guard_name' => 'web',
         ]);
+
+        Role::firstOrCreate([
+            'name' => 'cashier',
+            'guard_name' => 'web',
+        ]);
     }
 }

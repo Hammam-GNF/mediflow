@@ -61,6 +61,25 @@ class PaymentController extends Controller
 
             $isCash = $request->payment_method === 'cash';
 
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+
+            $currentShift = $user
+                ->cashierShifts()
+                ->where('status', 'open')
+                ->latest()
+                ->first();
+
+            if ($isCash && ! $currentShift) {
+
+                return back()
+                    ->withErrors([
+                        'payment' => 'Please open a cashier shift before accepting cash payments.',
+                    ])
+                    ->withInput();
+
+            }
+
             Payment::create([
                 'payment_number' =>
                     'PAY-'
@@ -95,6 +114,8 @@ class PaymentController extends Controller
                 'payment_proof' => $paymentProof,
 
                 'notes' => $request->notes,
+
+                'cashier_shift_id' => $currentShift?->id,
             ]);
 
             if ($isCash) {
@@ -129,10 +150,18 @@ class PaymentController extends Controller
 
         DB::transaction(function () use ($payment) {
 
+            $currentShift = $payment
+                ->cashier
+                ?->cashierShifts()
+                ->where('status','open')
+                ->latest()
+                ->first();
+
             $payment->update([
                 'status' => 'paid',
                 'confirmed_by' => Auth::id(),
                 'confirmed_at' => now(),
+                'cashier_shift_id' => $currentShift?->id,
             ]);
 
             $payment->invoice->update([

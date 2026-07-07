@@ -20,6 +20,7 @@ class ReceiptController extends Controller
             'items',
             'payment.cashier',
             'payment.confirmer',
+            'payment.cashierShift',
         ]);
 
         return view(
@@ -39,6 +40,7 @@ class ReceiptController extends Controller
             'items',
             'payment.cashier',
             'payment.confirmer',
+            'payment.cashierShift',
         ]);
 
         $pdf = Pdf::loadView(

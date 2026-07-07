@@ -58,4 +58,9 @@ class Payment extends Model
     {
         return $this->belongsTo(CashierShift::class);
     }
+
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'paid');
+    }
 }
