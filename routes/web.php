@@ -142,7 +142,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin|cashier'
 
     Route::get('cashier-shifts',[CashierShiftController::class, 'index'])->name('cashier-shifts.index');
     Route::patch('cashier-shifts/{cashierShift}/close',[CashierShiftController::class, 'close'])->name('cashier-shifts.close');
-
+    Route::post('cashier-shifts/open',[CashierShiftController::class, 'open'])->name('cashier-shifts.open');
+    
     Route::post('patients/{patient}/sync-satusehat',[PatientController::class, 'sync'])->name('patients.sync-satusehat');
     Route::post('/doctors/{doctor}/sync-satusehat',[DoctorController::class, 'sync'])->name('doctors.sync-satusehat');
 

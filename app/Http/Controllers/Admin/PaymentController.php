@@ -53,13 +53,11 @@ class PaymentController extends Controller
                 ->store('payment-proofs', 'public');
         }
 
-        DB::transaction(function () use (
-            $request,
-            $invoice,
-            $paymentProof
-        ) {
+        $isCash = $request->payment_method === 'cash';
 
-            $isCash = $request->payment_method === 'cash';
+        $currentShift = null;
+
+        if ($isCash) {
 
             /** @var \App\Models\User $user */
             $user = Auth::user();
@@ -70,15 +68,22 @@ class PaymentController extends Controller
                 ->latest()
                 ->first();
 
-            if ($isCash && ! $currentShift) {
-
+            if (! $currentShift) {
                 return back()
                     ->withErrors([
                         'payment' => 'Please open a cashier shift before accepting cash payments.',
                     ])
                     ->withInput();
-
             }
+        }
+
+        DB::transaction(function () use (
+            $request,
+            $invoice,
+            $paymentProof,
+            $currentShift,
+            $isCash
+        ) {
 
             Payment::create([
                 'payment_number' =>

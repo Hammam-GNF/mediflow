@@ -12,9 +12,21 @@ class CashierShiftController extends Controller
 {
     public function index()
     {
+        $currentShift = CashierShift::where(
+            'user_id',
+            Auth::id()
+        )
+        ->where(
+            'status',
+            'open'
+        )
+        ->latest()
+        ->first();
+
         return view(
             'admin.cashier-shifts.index',
             [
+                'currentShift' => $currentShift,
                 'shifts' => CashierShift::with('cashier')
                     ->latest()
                     ->paginate(15),
@@ -70,6 +82,57 @@ class CashierShiftController extends Controller
         return back()->with(
             'success',
             'Cashier shift closed successfully.'
+        );
+    }
+
+    public function open(Request $request)
+    {
+        $request->validate([
+            'opening_balance' => [
+                'required',
+                'numeric',
+                'min:0',
+            ],
+            'notes' => [
+                'nullable',
+                'string',
+            ],
+        ]);
+
+        $user = Auth::user();
+
+        $hasOpenShift = CashierShift::where(
+            'user_id',
+            $user->id
+        )
+        ->where(
+            'status',
+            'open'
+        )
+        ->exists();
+
+        if ($hasOpenShift) {
+            return back()->withErrors([
+                'shift' => 'You already have an open cashier shift.',
+            ]);
+        }
+
+        $shift = CashierShift::create([
+            'user_id' => $user->id,
+            'opened_at' => now(),
+            'opening_balance' => $request->opening_balance,
+            'notes' => $request->notes,
+        ]);
+
+        activity()
+            ->causedBy($user)
+            ->performedOn($shift)
+            ->event('cashier_shift_opened')
+            ->log('Cashier shift opened');
+
+        return back()->with(
+            'success',
+            'Cashier shift opened successfully.'
         );
     }
 }

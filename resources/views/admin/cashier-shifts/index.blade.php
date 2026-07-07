@@ -15,6 +15,41 @@
                 </div>
             @endif
 
+            @if($currentShift)
+                <div class="mb-4 flex justify-end">
+                    <div class="p-6 border-b bg-yellow-50">
+
+                        <div class="flex items-center justify-between">
+
+                            <div>
+
+                                <h4 class="text-md font-semibold">
+                                    Current Shift
+                                </h4>
+
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Cashier: {{ $currentShift->cashier->name }} | Opened at: {{ $currentShift->opened_at->format('d M Y H:i') }}
+                                </p>
+
+                                <p class="text-sm text-gray-500 mt-1">
+                                    Opening Balance: Rp {{ number_format($currentShift->opening_balance) }} | Revenue: Rp {{ number_format($currentShift->revenue) }} | Expected Closing Balance: Rp {{ number_format($currentShift->expected_closing_balance) }}
+                                </p>
+
+                            </div>
+
+                            <x-primary-button
+                                type="button"
+                                x-on:click="$dispatch('open-modal','close-shift-{{ $currentShift->id }}')"
+                            >
+                                Close Shift
+                            </x-primary-button>
+
+                        </div>
+
+                    </div>
+                </div>
+            @endif
+
             <div class="bg-white shadow rounded-lg overflow-hidden">
 
                 <div class="p-6 border-b">
