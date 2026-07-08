@@ -55,27 +55,6 @@
                             
                         </h2>
 
-                        <p
-                            id="current-datetime"
-                            class="
-                                hidden
-                                sm:block
-
-                                text-sm
-                                text-slate-500
-                            "
-                        ></p>
-
-                        <p
-                            id="current-time-mobile"
-                            class="
-                                sm:hidden
-
-                                text-xs
-                                text-slate-500
-                            "
-                        ></p>
-
                     </div>
 
                 </div>
@@ -180,15 +159,23 @@
                         </x-dropdown-link>
 
                         <!-- Authentication -->
-                        <form method="POST" action="{{ route('logout') }}">
-                            @csrf
+                        <x-dropdown-link
+                            href="#"
+                            onclick="
+                                event.preventDefault();
 
-                            <x-dropdown-link :href="route('logout')"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                {{ __('Log Out') }}
-                            </x-dropdown-link>
-                        </form>
+                                window.dispatchEvent(
+                                    new CustomEvent(
+                                        'open-modal',
+                                        {
+                                            detail: 'logout-modal'
+                                        }
+                                    )
+                                );
+                            "
+                        >
+                            Log Out
+                        </x-dropdown-link>
                     </x-slot>
                 </x-dropdown>
             </div>
@@ -233,15 +220,23 @@
                 </x-responsive-nav-link>
 
                 <!-- Authentication -->
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
+                <x-responsive-nav-link
+                    href="#"
+                    onclick="
+                        event.preventDefault();
 
-                    <x-responsive-nav-link :href="route('logout')"
-                            onclick="event.preventDefault();
-                                        this.closest('form').submit();">
-                        {{ __('Log Out') }}
-                    </x-responsive-nav-link>
-                </form>
+                        window.dispatchEvent(
+                            new CustomEvent(
+                                'open-modal',
+                                {
+                                    detail: 'logout-modal'
+                                }
+                            )
+                        );
+                    "
+                >
+                    Log Out
+                </x-responsive-nav-link>
             </div>
         </div>
     </div>
@@ -298,4 +293,5 @@
             1000
         );
     </script>
+
 </nav>

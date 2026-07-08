@@ -55,6 +55,8 @@
 
         </div>
 
+        <x-logout-modal />
+
         @stack('scripts')
 
     </body>
