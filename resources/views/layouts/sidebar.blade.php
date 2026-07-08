@@ -41,49 +41,150 @@
     "
 >
 
-    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-700">
+    <div class="px-6 py-5 border-b border-gray-800">
 
-        <h1 class="text-xl font-bold">
-            MediFlow
-        </h1>
+        <div class="flex items-center justify-between">
 
-        <button
-            @click="sidebarOpen = false"
-            class="lg:hidden text-2xl leading-none"
-        >
-            ✕
-        </button>
+            <div class="flex items-center gap-3">
+
+                <div
+                    class="
+                        w-11
+                        h-11
+
+                        rounded-xl
+
+                        bg-blue-600
+
+                        flex
+                        items-center
+                        justify-center
+
+                        font-bold
+                        text-lg
+                        shadow-lg
+                    "
+                >
+                    M
+                </div>
+
+                <div>
+
+                    <h1 class="font-bold text-lg">
+                        MediFlow
+                    </h1>
+
+                    <p class="text-xs text-gray-400">
+                        Clinic Management
+                    </p>
+
+                </div>
+
+            </div>
+
+            <button
+                @click="sidebarOpen = false"
+                class="lg:hidden text-gray-400 hover:text-white"
+            >
+                ✕
+            </button>
+
+        </div>
+
+        <div class="mt-4">
+
+            <span
+                class="
+                    inline-flex
+                    items-center
+
+                    rounded-full
+
+                    bg-blue-600/20
+
+                    px-3
+                    py-1
+
+                    text-xs
+                    font-medium
+
+                    text-blue-300
+                "
+            >
+                {{ $isAdmin ? 'Administrator' : 'Doctor' }}
+            </span>
+
+        </div>
 
     </div>
 
-    <nav class="p-4 space-y-2">
+    <nav class="p-4 space-y-5">
 
         <a
             @click="sidebarOpen = false"
-            href="{{ $isAdmin
-                ? route('admin.dashboard')
-                : route('doctor.dashboard')
-            }}"
-            class="block px-4 py-2 rounded hover:bg-gray-800
-                {{ request()->routeIs('admin.dashboard')
-                    ? 'bg-blue-600 text-white'
-                    : ''
+            href="{{ $isAdmin ? route('admin.dashboard') : route('doctor.dashboard') }}"
+            class="
+                flex
+                items-center
+                gap-3
+
+                rounded-xl
+
+                px-4
+                py-3
+
+                transition
+
+                hover:bg-gray-800
+
+                {{
+                    request()->routeIs('admin.dashboard') ||
+                    request()->routeIs('doctor.dashboard')
+                        ? 'bg-blue-600 text-white shadow'
+                        : 'text-gray-300'
                 }}
             "
         >
-            🏥 Dashboard
+            <span class="text-lg">
+                🏥
+            </span>
+
+            <span class="font-medium">
+                Dashboard
+            </span>
+
         </a>
 
         @if($isAdmin)
 
-            <div x-data="{ open: true }" class="pt-4">
+            <div x-data="{ open: true }" class="pt-2">
                 <button
                     @click="open = !open"
-                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
-                >
-                    <span>Master Data</span>
+                    class="
+                        w-full
 
-                    <span x-text="open ? '-' : '+'"></span>
+                        flex items-center justify-between
+
+                        px-3 py-2
+
+                        text-xs font-semibold uppercase tracking-wider
+
+                        text-gray-500
+
+                        rounded-lg
+
+                        hover:text-white
+                    "
+                >
+                    <span>
+                        Master Data
+                    </span>
+
+                    <span
+                        class="text-base"
+                        x-text="open ? '−' : '+'"
+                    ></span>
+
                 </button>
 
                 <div x-show="open" class="mt-2 space-y-1">
@@ -91,66 +192,116 @@
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.users.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.users.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.users.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        👤 Users
+                        <span>👥</span>
+                        <span>Users</span>
                     </a>
 
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.polyclinics.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.polyclinics.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.polyclinics.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        🏢 Polyclinics
+                        <span>🏥</span>
+                        <span>Polyclinics</span>
                     </a>
 
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.doctors.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.doctors.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.doctors.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        👨‍⚕️ Doctors
+                        <span>🩺</span>
+                        <span>Doctors</span>
                     </a>
 
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.patients.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.patients.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.patients.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        🧑 Patients
+                        <span>🧑</span>
+                        <span>Patients</span>
                     </a>
                 </div>
             </div>
 
-            <div x-data="{ open: true }" class="pt-4">
+            <div x-data="{ open: true }" class="pt-2">
 
                 <button
                     @click="open = !open"
-                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
+                    class="
+                        w-full
+
+                        flex
+                        items-center
+                        justify-between
+
+                        px-3
+                        py-2
+
+                        text-xs
+                        font-semibold
+
+                        uppercase
+                        tracking-wider
+
+                        text-gray-500
+
+                        hover:text-white
+                    "
                 >
                     <span>Pharmacy</span>
 
-                    <span x-text="open ? '-' : '+'"></span>
+                    <span
+                        class="text-base"
+                        x-text="open ? '−' : '+'"
+                    ></span>
                 </button>
 
                 <div x-show="open" class="mt-2 space-y-1">
@@ -158,28 +309,54 @@
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.medications.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.medications.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.medications.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        💊 Medications
+                        <span>💊</span>
+                        <span>Medications</span>
                     </a>
 
                 </div>
 
             </div>
 
-            <div x-data="{ open: true }" class="pt-4">
+            <div x-data="{ open: true }" class="pt-2">
                 <button
                     @click="open = !open"
-                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
+                    class="
+                        w-full
+                        flex
+                        items-center
+                        justify-between
+
+                        px-3
+                        py-2
+                        text-xs
+                        font-semibold
+
+                        uppercase
+                        tracking-wider
+
+                        text-gray-500
+                        hover:text-white
+                    "
                 >
                     <span>Registration</span>
 
-                    <span x-text="open ? '-' : '+'"></span>
+                    <span
+                        class="text-base"
+                        x-text="open ? '−' : '+'"
+                    ></span>
                 </button>
 
                 <div x-show="open" class="mt-2 space-y-1">
@@ -187,68 +364,114 @@
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.registrations.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.registrations.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.registrations.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        📝 Registrations
+                        <span>📝</span>
+                        <span>Registrations</span>
                     </a>
 
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.queues.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.queues.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.queues.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        📝 Queues
+                        <span>📝</span>
+                        <span>Queues</span>
                     </a>
 
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.invoices.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
                             {{
                                 request()->routeIs(
                                     'admin.invoices.*'
                                 )
                                     ? 'bg-blue-600 text-white'
-                                    : ''
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        💳 Invoices
+                        <span>💳</span>
+                        <span>Invoices</span>
                     </a>
 
                     <a
                         href="{{ route('admin.cashier-shifts.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
                             {{
                                 request()->routeIs('admin.cashier-shifts.*')
                                     ? 'bg-blue-600 text-white'
-                                    : ''
+                                    : 'text-gray-300'
                             }}"
                     >
-                        💰 Cashier Shifts
+                        <span>💵</span>
+                        <span>Cashier Shifts</span>
                     </a>
                 </div>
             </div>
 
-            <div x-data="{ open: true }" class="pt-4">
+            <div x-data="{ open: true }" class="pt-2">
 
                 <button
                     @click="open = !open"
-                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
+                    class="
+                        w-full
+
+                        flex
+                        items-center
+                        justify-between
+
+                        px-3
+                        py-2
+                        text-xs
+                        font-semibold
+
+                        uppercase
+                        tracking-wider
+
+                        text-gray-500
+                        hover:text-white
+                    "
                 >
                     <span>Reports</span>
 
-                    <span x-text="open ? '-' : '+'"></span>
+                    <span
+                        class="text-base"
+                        x-text="open ? '−' : '+'"
+                    ></span>
                 </button>
 
                 <div x-show="open" class="mt-2 space-y-1">
@@ -256,59 +479,87 @@
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.reports.financial') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                        {{ request()->routeIs('admin.reports.financial*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                        }}"
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.reports.financial*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
+                            }}"
                     >
-                        📈 Financial Report
+                        <span>💰</span>
+                        <span>Financial Report</span>
                     </a>
 
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.reports.registrations') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                        {{ request()->routeIs('admin.reports.registrations*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                        }}"
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.reports.registrations*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
+                            }}"
                     >
-                        📋 Registration Report
+                        <span>📋</span>
+                        <span>Registration Report</span>
                     </a>
                     
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.reports.patients') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                        {{ request()->routeIs('admin.reports.patients*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                        }}"
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.reports.patients*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
+                            }}"
                     >
-                        👥 Patient Report
+                        <span>👥</span>
+                        <span>Patient Report</span>
                     </a>
                     
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.reports.medical-records') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                        {{ request()->routeIs('admin.reports.medical-records*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                        }}"
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.reports.medical-records*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
+                            }}"
                     >
-                        📋 Medical Record Report
+                        <span>📋</span>
+                        <span>Medical Record Report</span>
                     </a>
 
                 </div>
 
             </div>
 
-            <div x-data="{ open: true }" class="pt-4">
+            <div x-data="{ open: true }" class="pt-2">
                 <button
                     @click="open = !open"
-                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
+                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400 tracking-wider hover:text-white"
                 >
                     <span>System</span>
 
@@ -320,40 +571,60 @@
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.activity-logs.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.activity-logs.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                            }}
-                        "
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.activity-logs.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
+                            }}"
                     >
-                        📜 Activity Logs
+                        <span>📜</span>
+                        <span>Activity Logs</span>
                     </a>
 
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.media.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.media.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
-                            }}
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.media.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
+                            }}"
                         "
                     >
-                        🖼️ Media Library
+                        <span>🖼️</span>
+                        <span>Media Library</span>
                     </a>
 
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('admin.settings.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
-                            {{ request()->routeIs('admin.settings.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
+                            {{
+                                request()->routeIs('admin.settings.*')
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        ⚙️ Settings
+                        <span>⚙️</span>
+                        <span>Settings</span>
                     </a>
                 </div>
             </div>
@@ -362,11 +633,11 @@
 
         @if($isDoctor)
 
-            <div x-data="{ open: true }" class="pt-4">
+            <div x-data="{ open: true }" class="pt-2">
 
                 <button
                     @click="open = !open"
-                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400"
+                    class="w-full flex justify-between items-center px-4 py-2 text-xs uppercase text-gray-400 tracking-wider"
                 >
                     <span>Medical Services</span>
 
@@ -378,31 +649,43 @@
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('doctor.examinations.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
                             {{
                                 request()->routeIs('doctor.examinations.*')
-                                ? 'bg-blue-600 text-white'
-                                : ''
+                                    ? 'bg-blue-600 text-white'
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        🩺 Examination Queue
+                        <span>🩺</span>
+                        <span>Examination Queue</span>
                     </a>
 
                     <a
                         @click="sidebarOpen = false"
                         href="{{ route('doctor.medical-records.index') }}"
-                        class="block px-4 py-2 rounded hover:bg-gray-800
+                        class="
+                            flex items-center gap-3
+                            rounded-xl
+                            px-4 py-2.5
+                            transition
+                            hover:bg-gray-800
                             {{
                                 request()->routeIs(
                                     'doctor.medical-records.*'
                                 )
                                     ? 'bg-blue-600 text-white'
-                                    : ''
+                                    : 'text-gray-300'
                             }}
                         "
                     >
-                        📋 Medical Records
+                        <span>📋</span>
+                        <span>Medical Records</span>
                     </a>
 
                 </div>
