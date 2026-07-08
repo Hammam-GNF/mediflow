@@ -30,36 +30,86 @@ class PolyclinicController extends Controller
                 )
 
                 ->editColumn('is_active', function ($row) {
+
                     return $row->is_active
-                        ? 'Active'
-                        : 'Inactive';
+
+                        ? '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Active
+                            </span>
+                        '
+
+                        : '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Inactive
+                            </span>
+                        ';
                 })
 
                 ->addColumn('action', function ($row) {
 
                     return '
-                        <div class="flex gap-2">
+
+                        <div class="flex items-center gap-2 whitespace-nowrap">
 
                             <a
                                 href="'.route('admin.polyclinics.edit', $row).'"
-                                class="px-3 py-1 bg-blue-600 text-white rounded"
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-blue-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-blue-700
+
+                                    transition
+
+                                    hover:bg-blue-100
+                                "
                             >
                                 Edit
                             </a>
 
                             <button
                                 type="button"
-                                class="delete-polyclinic-btn px-3 py-1 bg-red-600 text-white rounded"
                                 data-url="'.route('admin.polyclinics.destroy', $row).'"
+
+                                class="
+                                    delete-polyclinic-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-red-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-red-700
+
+                                    transition
+
+                                    hover:bg-red-100
+                                "
                             >
                                 Delete
                             </button>
 
                         </div>
+
                     ';
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['is_active', 'action'])
                 ->make(true);
         }
 
@@ -134,10 +184,21 @@ class PolyclinicController extends Controller
                     return $polyclinic->description;
                 })
 
-                ->addColumn('is_active', function ($polyclinic) {
-                    return $polyclinic->is_active
-                        ? 'Active'
-                        : 'Inactive';
+                ->editColumn('is_active', function ($row) {
+
+                    return $row->is_active
+
+                        ? '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Active
+                            </span>
+                        '
+
+                        : '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Inactive
+                            </span>
+                        ';
                 })
 
                 ->editColumn('deleted_at', function ($polyclinic) {
@@ -174,7 +235,7 @@ class PolyclinicController extends Controller
                     return $buttons;
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['is_active', 'action'])
                 ->make(true);
         }
 
