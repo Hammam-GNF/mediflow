@@ -43,32 +43,62 @@ class PatientController extends Controller
                 ->addIndexColumn()
 
                 ->editColumn('gender', function ($patient) {
+
                     return $patient->gender === 'male'
-                        ? 'Male'
-                        : 'Female';
+
+                        ? '
+                            <span class="inline-flex items-center rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">
+                                Male
+                            </span>
+                        '
+
+                        : '
+                            <span class="inline-flex items-center rounded-full bg-pink-100 px-3 py-1 text-xs font-semibold text-pink-700">
+                                Female
+                            </span>
+                        ';
                 })
 
                 ->editColumn('is_active', function ($patient) {
+
                     return $patient->is_active
-                        ? 'Active'
-                        : 'Inactive';
+
+                        ? '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Active
+                            </span>
+                        '
+
+                        : '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Inactive
+                            </span>
+                        ';
                 })
 
                 ->addColumn('satusehat_status', function ($patient) {
 
-                    if (
-                        $patient->satusehat_patient_id
-                    ) {
-                        return 'Synced';
+                    if ($patient->satusehat_patient_id) {
+
+                        return '
+                            <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                Synced
+                            </span>
+                        ';
                     }
 
-                    return 'Not Synced';
+                    return '
+                        <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                            Not Synced
+                        </span>
+                    ';
                 })
 
                 ->addColumn('action', function ($patient) {
 
                     return '
-                        <div class="flex gap-2">
+
+                        <div class="flex items-center gap-2 whitespace-nowrap">
 
                             <form
                                 method="POST"
@@ -78,32 +108,91 @@ class PatientController extends Controller
 
                                 <button
                                     type="submit"
-                                    class="px-3 py-1 bg-green-600 text-white rounded"
+
+                                    class="
+                                        inline-flex
+                                        items-center
+
+                                        rounded-lg
+
+                                        bg-violet-50
+                                        px-3
+                                        py-2
+
+                                        text-xs
+                                        font-semibold
+                                        text-violet-700
+
+                                        transition
+
+                                        hover:bg-violet-100
+                                    "
                                 >
-                                    Sync SATUSEHAT
+                                    Sync
                                 </button>
+
                             </form>
 
                             <a
                                 href="'.route('admin.patients.edit', $patient).'"
-                                class="px-3 py-1 bg-blue-600 text-white rounded"
+
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-blue-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-blue-700
+
+                                    transition
+
+                                    hover:bg-blue-100
+                                "
                             >
                                 Edit
                             </a>
 
                             <button
                                 type="button"
-                                class="delete-patient-btn px-3 py-1 bg-red-600 text-white rounded"
+
                                 data-url="'.route('admin.patients.destroy', $patient).'"
+
+                                class="
+                                    delete-patient-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-red-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-red-700
+
+                                    transition
+
+                                    hover:bg-red-100
+                                "
                             >
                                 Delete
                             </button>
 
                         </div>
+
                     ';
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['is_active', 'gender', 'satusehat_status', 'action'])
                 ->make(true);
         }
 
@@ -186,15 +275,34 @@ class PatientController extends Controller
                 ->addIndexColumn()
 
                 ->editColumn('gender', function ($patient) {
+
                     return $patient->gender === 'male'
-                        ? 'Male'
-                        : 'Female';
+
+                        ? '
+                            <span class="inline-flex items-center rounded-full bg-sky-100 px-3 py-1 text-xs font-semibold text-sky-700">
+                                Male
+                            </span>
+                        '
+
+                        : '
+                            <span class="inline-flex items-center rounded-full bg-pink-100 px-3 py-1 text-xs font-semibold text-pink-700">
+                                Female
+                            </span>
+                        ';
                 })
 
                 ->editColumn('is_active', function ($patient) {
                     return $patient->is_active
-                        ? 'Active'
-                        : 'Inactive';
+                        ? '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Active
+                            </span>
+                        '
+                        : '
+                            <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700">
+                                Inactive
+                            </span>
+                        ';
                 })
 
                 ->editColumn('deleted_at', function ($patient) {
@@ -233,7 +341,7 @@ class PatientController extends Controller
                     return $buttons;
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['is_active', 'gender', 'action'])
                 ->make(true);
         }
 
