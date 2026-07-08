@@ -58,10 +58,19 @@ class CashierShiftController extends Controller
             $request
         ) {
 
+            $expectedBalance =
+                $cashierShift->expected_closing_balance;
+
+            $difference =
+                $request->closing_balance
+                - $expectedBalance;
+
             $cashierShift->update([
 
                 'closing_balance' =>
                     $request->closing_balance,
+
+                'difference_amount' => $difference,
 
                 'closed_at' => now(),
 

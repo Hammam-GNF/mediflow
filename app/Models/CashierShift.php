@@ -24,6 +24,7 @@ class CashierShift extends Model
             'closed_at' => 'datetime',
             'opening_balance' => 'decimal:2',
             'closing_balance' => 'decimal:2',
+            'difference_amount' => 'decimal:2',
         ];
     }
 
@@ -55,12 +56,4 @@ class CashierShift extends Model
         return $this->opening_balance + $this->revenue;
     }
 
-    public function getDifferenceAmountAttribute()
-    {
-        if ($this->closing_balance === null) {
-            return null;
-        }
-
-        return $this->closing_balance - $this->expected_closing_balance;
-    }
 }
