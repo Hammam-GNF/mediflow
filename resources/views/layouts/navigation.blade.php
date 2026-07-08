@@ -1,19 +1,83 @@
 <nav
     x-data="{ open: false }"
-    class="bg-white border-b border-gray-100"
+    class="
+        sticky
+        top-0
+        z-30
+
+        bg-white/90
+        backdrop-blur
+
+        border-b
+        border-slate-200
+    "
 >
     <!-- Primary Navigation Menu -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="px-5 lg:px-8">
         <div class="flex justify-between items-center h-16">
             <div class="flex">
 
-                <div class="flex items-center lg:hidden">
-                    <button @click="sidebarOpen = ! sidebarOpen" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 focus:text-gray-500 transition duration-150 ease-in-out">
-                        <svg class="h-6 w-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
-                            <path :class="{'hidden': sidebarOpen, 'inline-flex': ! sidebarOpen }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                            <path :class="{'hidden': ! sidebarOpen, 'inline-flex': sidebarOpen }" class="hidden" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                <div class="flex items-center gap-4">
+
+                    <button
+                        @click="sidebarOpen = !sidebarOpen"
+                        class="
+                            lg:hidden
+
+                            w-10
+                            h-10
+
+                            rounded-xl
+
+                            border
+                            border-slate-200
+
+                            flex
+                            items-center
+                            justify-center
+
+                            hover:bg-slate-100
+                            transition
+                        "
+                    >
+                        ☰
                     </button>
+
+                    <div>
+
+                        <h2
+                            class="
+                                text-lg
+                                font-semibold
+                                text-slate-800
+                            "
+                        >
+                            
+                        </h2>
+
+                        <p
+                            id="current-datetime"
+                            class="
+                                hidden
+                                sm:block
+
+                                text-sm
+                                text-slate-500
+                            "
+                        ></p>
+
+                        <p
+                            id="current-time-mobile"
+                            class="
+                                sm:hidden
+
+                                text-xs
+                                text-slate-500
+                            "
+                        ></p>
+
+                    </div>
+
                 </div>
 
                 <div class="flex items-center">
@@ -39,7 +103,7 @@
 
                 <button
                     @click="open = !open"
-                    class="inline-flex items-center p-1"
+                    class="rounded-full transition hover:opacity-80"
                 >
                     @if(Auth::user()->hasMedia('avatar'))
                         <img
@@ -62,7 +126,22 @@
             <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
-                        <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
+                        <button
+                            class="
+                                flex
+                                items-center
+                                gap-3
+
+                                rounded-xl
+
+                                px-3
+                                py-2
+
+                                hover:bg-slate-100
+
+                                transition
+                            "
+                        >
                             @if(Auth::user()->hasMedia('avatar'))
                                 <img
                                     src="{{ Auth::user()->getFirstMediaUrl('avatar') }}"
@@ -75,7 +154,17 @@
                                 </div>
                             @endif
 
-                            <div>{{ Auth::user()->name }}</div>
+                            <div class="text-left">
+
+                                <p class="font-semibold text-slate-700">
+                                    {{ Auth::user()->name }}
+                                </p>
+
+                                <p class="text-xs text-slate-500">
+                                    {{ ucfirst(Auth::user()->roles->first()->name) }}
+                                </p>
+
+                            </div>
 
                             <div class="ms-1">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -108,7 +197,7 @@
     </div>
 
     <!-- Responsive Navigation Menu -->
-    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
+    <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden border-t border-slate-200 bg-white px-5 py-4 flex items-center">
 
         <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
