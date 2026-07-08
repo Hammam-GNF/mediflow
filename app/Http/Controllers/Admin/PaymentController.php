@@ -21,9 +21,18 @@ class PaymentController extends Controller
             abort(403);
         }
 
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $currentShift = $user
+            ->cashierShifts()
+            ->where('status', 'open')
+            ->latest()
+            ->first();
+
         return view(
             'admin.payments.create',
-            compact('invoice')
+            compact('invoice', 'currentShift')
         );
     }
 

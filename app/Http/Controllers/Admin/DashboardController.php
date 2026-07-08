@@ -10,6 +10,7 @@ use App\Models\Patient;
 use App\Models\Payment;
 use App\Models\Queue;
 use App\Models\Registration;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
@@ -27,8 +28,13 @@ class DashboardController extends Controller
                 ? round(($success / $total) * 100, 1)
                 : 0;
 
-        $currentShift = CashierShift::with('cashier')
-            ->whereNull('closed_at')
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $currentShift = $user
+            ->cashierShifts()
+            ->with('cashier')
+            ->where('status', 'open')
             ->latest()
             ->first();
                 

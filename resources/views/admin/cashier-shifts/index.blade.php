@@ -15,40 +15,28 @@
                 </div>
             @endif
 
-            @if($currentShift)
-                <div class="mb-4 flex justify-end">
-                    <div class="p-6 border-b bg-yellow-50">
+            <div class="flex items-center justify-between mb-6">
 
-                        <div class="flex items-center justify-between">
+                <div>
 
-                            <div>
+                    <h2 class="text-lg font-semibold">
+                        Cashier Shift History
+                    </h2>
 
-                                <h4 class="text-md font-semibold">
-                                    Current Shift
-                                </h4>
+                    <p class="text-sm text-gray-500">
+                        View previous cashier shifts and close active shifts.
+                    </p>
 
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Cashier: {{ $currentShift->cashier->name }} | Opened at: {{ $currentShift->opened_at->format('d M Y H:i') }}
-                                </p>
-
-                                <p class="text-sm text-gray-500 mt-1">
-                                    Opening Balance: Rp {{ number_format($currentShift->opening_balance) }} | Revenue: Rp {{ number_format($currentShift->revenue) }} | Expected Closing Balance: Rp {{ number_format($currentShift->expected_closing_balance) }}
-                                </p>
-
-                            </div>
-
-                            <x-primary-button
-                                type="button"
-                                x-on:click="$dispatch('open-modal','close-shift-{{ $currentShift->id }}')"
-                            >
-                                Close Shift
-                            </x-primary-button>
-
-                        </div>
-
-                    </div>
                 </div>
-            @endif
+
+                <a
+                    href="{{ route('admin.dashboard') }}"
+                    class="text-sm text-blue-600 hover:underline"
+                >
+                    Back to Dashboard
+                </a>
+
+            </div>
 
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
 
@@ -103,7 +91,8 @@
                     </h3>
 
                     <p class="text-sm text-gray-500 mt-1">
-                        Monitor cashier activity, revenue and shift closing.
+                        View all cashier shifts, revenue, opening balance,
+                        closing balance and reconciliation results.
                     </p>
 
                 </div>

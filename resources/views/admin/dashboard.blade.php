@@ -44,17 +44,36 @@
 
                     @if($currentShift)
 
-                        <div class="bg-white rounded shadow p-6 mt-6">
+                        <div class="bg-white rounded-lg shadow p-6 mt-6">
 
-                            <h2 class="text-xl font-bold mb-4">
-                                Current Cashier Shift
-                            </h2>
-
-                            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                            <div class="flex items-center justify-between mb-6">
 
                                 <div>
 
-                                    <p class="text-gray-500 text-sm">
+                                    <h2 class="text-lg font-semibold">
+                                        Current Cashier Shift
+                                    </h2>
+
+                                    <p class="text-sm text-gray-500">
+                                        Shift is currently active.
+                                    </p>
+
+                                </div>
+
+                                <a
+                                    href="{{ route('admin.cashier-shifts.index') }}"
+                                    class="text-sm text-blue-600 hover:underline"
+                                >
+                                    View Detail
+                                </a>
+
+                            </div>
+
+                            <div class="grid grid-cols-2 lg:grid-cols-5 gap-6">
+
+                                <div>
+
+                                    <p class="text-sm text-gray-500">
                                         Cashier
                                     </p>
 
@@ -66,8 +85,8 @@
 
                                 <div>
 
-                                    <p class="text-gray-500 text-sm">
-                                        Opened At
+                                    <p class="text-sm text-gray-500">
+                                        Opened
                                     </p>
 
                                     <p class="font-semibold">
@@ -78,7 +97,19 @@
 
                                 <div>
 
-                                    <p class="text-gray-500 text-sm">
+                                    <p class="text-sm text-gray-500">
+                                        Opening Cash
+                                    </p>
+
+                                    <p class="font-semibold">
+                                        Rp {{ number_format($currentShift->opening_balance) }}
+                                    </p>
+
+                                </div>
+
+                                <div>
+
+                                    <p class="text-sm text-gray-500">
                                         Transactions
                                     </p>
 
@@ -90,15 +121,44 @@
 
                                 <div>
 
-                                    <p class="text-gray-500 text-sm">
+                                    <p class="text-sm text-gray-500">
                                         Revenue
                                     </p>
 
-                                    <p class="font-semibold">
+                                    <p class="font-semibold text-green-600">
                                         Rp {{ number_format($currentShift->revenue) }}
                                     </p>
 
                                 </div>
+
+                            </div>
+
+                        </div>
+
+                    @else
+
+                        <div class="bg-yellow-50 border border-yellow-300 rounded-lg p-6 mt-6">
+
+                            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+
+                                <div>
+
+                                    <h2 class="font-semibold text-lg">
+                                        No Active Cashier Shift
+                                    </h2>
+
+                                    <p class="text-sm text-gray-600 mt-1">
+                                        Open today's cashier shift before processing cash payments.
+                                    </p>
+
+                                </div>
+
+                                <x-primary-button
+                                    type="button"
+                                    x-on:click="$dispatch('open-modal','open-cashier-shift')"
+                                >
+                                    Open Shift
+                                </x-primary-button>
 
                             </div>
 
@@ -353,4 +413,80 @@
             </div>
         </div>
     </div>
+
+    <x-modal
+        name="open-cashier-shift"
+        focusable
+    >
+
+        <form
+            method="POST"
+            action="{{ route('admin.cashier-shifts.open') }}"
+            class="p-6"
+        >
+
+            @csrf
+
+            <h2 class="text-lg font-semibold">
+                Open Cashier Shift
+            </h2>
+
+            <div class="mt-6 space-y-4">
+
+                <div>
+
+                    <label class="block text-sm font-medium mb-1">
+                        Opening Balance
+                    </label>
+
+                    <input
+                        type="number"
+                        name="opening_balance"
+                        step="0.01"
+                        min="0"
+                        required
+                        class="w-full rounded border-gray-300"
+                    >
+
+                    <p class="text-xs text-gray-500 mt-1">
+                        Enter the starting cash available in the cashier drawer.
+                    </p>
+
+                </div>
+
+                <div>
+
+                    <label class="block text-sm font-medium mb-1">
+                        Notes
+                    </label>
+
+                    <textarea
+                        name="notes"
+                        rows="3"
+                        class="w-full rounded border-gray-300"
+                    ></textarea>
+
+                </div>
+
+            </div>
+
+            <div class="mt-6 flex justify-end gap-2">
+
+                <x-secondary-button
+                    type="button"
+                    x-on:click="$dispatch('close')"
+                >
+                    Cancel
+                </x-secondary-button>
+
+                <x-primary-button>
+                    Open Shift
+                </x-primary-button>
+
+            </div>
+
+        </form>
+
+    </x-modal>
+
 </x-app-layout>

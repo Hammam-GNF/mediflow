@@ -41,6 +41,30 @@
 
                 @endif
 
+                @if(! $currentShift)
+
+                    <div
+                        id="cashier-warning"
+                        class="hidden mb-4 rounded border border-yellow-300 bg-yellow-100 px-4 py-3"
+                    >
+
+                        <div class="font-semibold">
+
+                            Cash payment requires an open cashier shift.
+
+                        </div>
+
+                        <a
+                            href="{{ route('admin.dashboard') }}"
+                            class="text-blue-600 underline"
+                        >
+                            Open cashier shift first
+                        </a>
+
+                    </div>
+
+                @endif
+
                 <form
                     action="{{ route('admin.payments.store', $invoice) }}"
                     method="POST"
@@ -164,7 +188,7 @@
 
                     </div>
 
-                    <x-primary-button>
+                    <x-primary-button id="submit-payment">
                         Submit Payment
                     </x-primary-button>
 
@@ -186,28 +210,57 @@
 
     <script>
 
-    function toggleTransferFields()
-    {
-        const method = document.querySelector(
-            '[name=payment_method]'
-        ).value;
+        function toggleTransferFields()
+        {
+            const method =
+                document.querySelector('[name=payment_method]').value;
 
-        document
-            .getElementById('transfer-fields')
-            .classList.toggle(
+            const transfer =
+                document.getElementById('transfer-fields');
+
+            const warning =
+                document.getElementById('cashier-warning');
+
+            const submit =
+                document.getElementById('submit-payment');
+
+            transfer.classList.toggle(
                 'hidden',
                 method === 'cash'
             );
-    }
 
-    document
+            if (warning) {
+
+                const noShift =
+                    {{ $currentShift ? 'false' : 'true' }};
+
+                if (method === 'cash' && noShift) {
+
+                    warning.classList.remove('hidden');
+
+                    submit.disabled = true;
+
+                }
+                else {
+
+                    warning.classList.add('hidden');
+
+                    submit.disabled = false;
+
+                }
+
+            }
+
+        }
+
+        document
         .querySelector('[name=payment_method]')
         .addEventListener(
-            'change',
-            toggleTransferFields
+        'change',
+        toggleTransferFields
         );
 
-    toggleTransferFields();
+        toggleTransferFields();
 
     </script>
 
