@@ -15,6 +15,11 @@ class QueueController extends Controller
     {
         $this->authorize('viewAny', Queue::class);
 
+        $queueCount = Queue::count();
+        $calledCount = Queue::where('status', 'called')->count();
+        $waitingCount = Queue::where('status', 'waiting')->count();
+        $cancelledCount = Queue::where('status', 'cancelled')->count();
+
         if ($request->ajax()) {
 
             return DataTables::of(
@@ -261,7 +266,12 @@ class QueueController extends Controller
 
         }
 
-        return view('admin.queues.index');
+        return view('admin.queues.index', compact(
+            'queueCount',
+            'calledCount',
+            'waitingCount',
+            'cancelledCount'
+        ));
     }
 
     public function call(Queue $queue)

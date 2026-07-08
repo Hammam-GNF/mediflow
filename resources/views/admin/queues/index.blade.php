@@ -36,7 +36,7 @@
                     </p>
 
                     <h3 class="mt-2 text-3xl font-bold text-slate-900">
-                        -
+                        {{ $queueCount }}
                     </h3>
 
                 </div>
@@ -48,7 +48,7 @@
                     </p>
 
                     <h3 class="mt-2 text-3xl font-bold text-blue-700">
-                        -
+                        {{ $calledCount }}
                     </h3>
 
                 </div>
@@ -60,7 +60,7 @@
                     </p>
 
                     <h3 class="mt-2 text-3xl font-bold text-amber-700">
-                        -
+                        {{ $waitingCount }}
                     </h3>
 
                 </div>
@@ -72,7 +72,7 @@
                     </p>
 
                     <h3 class="mt-2 text-3xl font-bold text-red-700">
-                        -
+                        {{ $cancelledCount }}
                     </h3>
 
                 </div>
