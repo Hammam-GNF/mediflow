@@ -13,7 +13,7 @@
 
     <div class="py-8">
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto px-6 lg:px-8">
 
             <div
                 class="
@@ -204,57 +204,57 @@
 
                 <!-- Table -->
 
-                <div class="overflow-x-auto">
+                <div class="px-6 py-5">
 
-                    <table
-                        id="users-table"
-                        class="
-                            w-full
+                    <div class="overflow-x-auto">
 
-                            text-sm
-                        "
-                    >
-
-                        <thead
-                            class="
-                                bg-slate-50
-
-                                text-slate-600
-                                uppercase
-                                tracking-wide
-                                text-xs
-                            "
+                        <table
+                            id="users-table"
+                            class="w-full min-w-full text-sm"
                         >
 
-                            <tr>
+                            <thead
+                                class="
+                                    bg-slate-50
 
-                                <th class="px-6 py-4 text-left">
-                                    No
-                                </th>
+                                    text-slate-600
+                                    uppercase
+                                    tracking-wide
+                                    text-xs
+                                "
+                            >
 
-                                <th class="px-6 py-4 text-left">
-                                    Name
-                                </th>
+                                <tr>
 
-                                <th class="px-6 py-4 text-left">
-                                    Email
-                                </th>
+                                    <th class="px-6 py-4 text-left">
+                                        No
+                                    </th>
 
-                                <th class="px-6 py-4 text-left">
-                                    Role
-                                </th>
+                                    <th class="px-6 py-4 text-left">
+                                        Name
+                                    </th>
 
-                                <th class="px-6 py-4 text-left">
-                                    Action
-                                </th>
+                                    <th class="px-6 py-4 text-left">
+                                        Email
+                                    </th>
 
-                            </tr>
+                                    <th class="px-6 py-4 text-left">
+                                        Role
+                                    </th>
 
-                        </thead>
+                                    <th class="px-6 py-4 text-left">
+                                        Action
+                                    </th>
 
-                        <tbody></tbody>
+                                </tr>
 
-                    </table>
+                            </thead>
+
+                            <tbody></tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
 
@@ -266,6 +266,28 @@
 
     @push('styles')
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+        <style>
+
+            #users-table {
+                width: 100% !important;
+            }
+
+            #users-table_wrapper {
+                width: 100%;
+            }
+
+            #users-table_wrapper .dataTables_length,
+            #users-table_wrapper .dataTables_filter {
+                margin-bottom: 1rem;
+            }
+
+            #users-table_wrapper .dataTables_info,
+            #users-table_wrapper .dataTables_paginate {
+                margin-top: 1rem;
+            }
+
+        </style>
     @endpush
 
     <x-confirm-modal
@@ -283,6 +305,9 @@
             $(function () {
 
                 let table = $('#users-table').DataTable({
+                    autoWidth: false,
+                    responsive: false,
+
                     processing: true,
                     serverSide: true,
 
@@ -323,6 +348,10 @@
 
                 $('#role-filter').change(function () {
                     table.draw();
+                });
+
+                $(window).on('resize', function () {
+                    table.columns.adjust();
                 });
             });
 
