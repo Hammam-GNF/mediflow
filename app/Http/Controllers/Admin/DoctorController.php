@@ -57,24 +57,45 @@ class DoctorController extends Controller
                 })
 
                 ->editColumn('is_active', function ($doctor) {
+
                     return $doctor->is_active
-                        ? 'Active'
-                        : 'Inactive';
+
+                        ? '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Active
+                            </span>
+                        '
+
+                        : '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Inactive
+                            </span>
+                        ';
                 })
 
                 ->addColumn('satusehat_status', function ($doctor) {
 
                     if ($doctor->satusehat_practitioner_id) {
-                        return 'Synced';
+
+                        return '
+                            <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                Synced
+                            </span>
+                        ';
                     }
 
-                    return 'Not Synced';
+                    return '
+                        <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                            Not Synced
+                        </span>
+                    ';
                 })
 
                 ->addColumn('action', function ($doctor) {
 
-                     return '
-                        <div class="flex gap-2">
+                    return '
+
+                        <div class="flex items-center gap-2 whitespace-nowrap">
 
                             <form
                                 method="POST"
@@ -84,32 +105,91 @@ class DoctorController extends Controller
 
                                 <button
                                     type="submit"
-                                    class="px-3 py-1 bg-green-600 text-white rounded"
+
+                                    class="
+                                        inline-flex
+                                        items-center
+
+                                        rounded-lg
+
+                                        bg-violet-50
+                                        px-3
+                                        py-2
+
+                                        text-xs
+                                        font-semibold
+                                        text-violet-700
+
+                                        transition
+
+                                        hover:bg-violet-100
+                                    "
                                 >
-                                    Sync SATUSEHAT
+                                    Sync
                                 </button>
+
                             </form>
 
                             <a
                                 href="'.route('admin.doctors.edit', $doctor).'"
-                                class="px-3 py-1 bg-blue-600 text-white rounded"
+
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-blue-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-blue-700
+
+                                    transition
+
+                                    hover:bg-blue-100
+                                "
                             >
                                 Edit
                             </a>
 
                             <button
                                 type="button"
-                                class="delete-doctor-btn px-3 py-1 bg-red-600 text-white rounded"
+
                                 data-url="'.route('admin.doctors.destroy', $doctor).'"
+
+                                class="
+                                    delete-doctor-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-red-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-red-700
+
+                                    transition
+
+                                    hover:bg-red-100
+                                "
                             >
                                 Delete
                             </button>
 
                         </div>
+
                     ';
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['is_active', 'satusehat_status', 'action'])
                 ->make(true);
         }
 
@@ -208,10 +288,21 @@ class DoctorController extends Controller
                     return $doctor->deleted_at->format('Y-m-d H:i:s');
                 })
 
-                ->addColumn('is_active', function ($doctor) {
+                ->editColumn('is_active', function ($doctor) {
+
                     return $doctor->is_active
-                        ? 'Active'
-                        : 'Inactive';
+
+                        ? '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Active
+                            </span>
+                        '
+
+                        : '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Inactive
+                            </span>
+                        ';
                 })
 
                 ->addColumn('action', function ($doctor) {
@@ -244,7 +335,7 @@ class DoctorController extends Controller
                     return $buttons;
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['is_active', 'action'])
                 ->make(true);
         }
 
