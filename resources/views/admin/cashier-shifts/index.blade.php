@@ -50,6 +50,50 @@
                 </div>
             @endif
 
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+
+                <div class="bg-white rounded-lg shadow p-5">
+                    <div class="text-gray-500 text-sm">
+                        Total Shifts
+                    </div>
+
+                    <div class="text-2xl font-bold mt-2">
+                        {{ $shifts->total() }}
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-5">
+                    <div class="text-gray-500 text-sm">
+                        Open Shift
+                    </div>
+
+                    <div class="text-2xl font-bold text-green-600 mt-2">
+                        {{ $shifts->where('status','open')->count() }}
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-5">
+                    <div class="text-gray-500 text-sm">
+                        Closed Shift
+                    </div>
+
+                    <div class="text-2xl font-bold mt-2">
+                        {{ $shifts->where('status','closed')->count() }}
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-5">
+                    <div class="text-gray-500 text-sm">
+                        Revenue
+                    </div>
+
+                    <div class="text-xl font-bold mt-2">
+                        Rp {{ number_format($shifts->sum('revenue')) }}
+                    </div>
+                </div>
+
+            </div>
+
             <div class="bg-white shadow rounded-lg overflow-hidden">
 
                 <div class="p-6 border-b">
@@ -217,7 +261,14 @@
 
                                     </td>
 
-                                    <td class="px-4 py-3 text-right">
+                                    <td class="px-4 py-3 text-right space-x-2">
+
+                                        <a
+                                            href="{{ route('admin.cashier-shifts.show',$shift) }}"
+                                            class="inline-flex items-center px-3 py-2 rounded-md bg-blue-600 text-white text-sm hover:bg-blue-700"
+                                        >
+                                            Detail
+                                        </a>
 
                                         @if($shift->status == 'open')
 

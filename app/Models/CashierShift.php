@@ -56,4 +56,25 @@ class CashierShift extends Model
         return $this->opening_balance + $this->revenue;
     }
 
+    public function getCashPaymentCountAttribute()
+    {
+        return $this->payments()
+            ->where('payment_method', 'cash')
+            ->count();
+    }
+
+    public function getTransferPaymentCountAttribute()
+    {
+        return $this->payments()
+            ->where('payment_method', 'transfer')
+            ->count();
+    }
+
+    public function getQrisPaymentCountAttribute()
+    {
+        return $this->payments()
+            ->where('payment_method', 'qris')
+            ->count();
+    }
+
 }

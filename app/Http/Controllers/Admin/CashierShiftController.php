@@ -144,4 +144,17 @@ class CashierShiftController extends Controller
             'Cashier shift opened successfully.'
         );
     }
+
+    public function show(CashierShift $cashierShift)
+    {
+        $cashierShift->load([
+            'cashier',
+            'payments.invoice.registration.patient',
+        ]);
+
+        return view(
+            'admin.cashier-shifts.show',
+            compact('cashierShift')
+        );
+    }
 }
