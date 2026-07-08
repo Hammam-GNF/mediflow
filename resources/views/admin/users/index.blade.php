@@ -1,64 +1,259 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            User Management
-        </h2>
+        <div class="flex flex-col gap-1">
+            <h2 class="text-2xl font-bold text-slate-800">
+                User Management
+            </h2>
+
+            <p class="text-sm text-slate-500">
+                Manage system users, roles and permissions.
+            </p>
+        </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center mb-4">
+    <div class="py-8">
 
-                <div>
-                    <select id="role-filter" name="role" class="form-select block w-full mt-1">
-                        <option value="">All Roles</option>
-                        <option value="admin">Admin</option>
-                        <option value="doctor">Doctor</option>
-                    </select>
-                </div>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 
-                <div class="flex gap-2">
-                    <a
-                        href="{{ route('admin.users.export') }}"
-                        class="inline-flex items-center px-4 py-2 bg-green-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-green-500"
-                    >
-                        Export Excel
-                    </a>
+            <div
+                class="
+                    bg-white
+                    rounded-2xl
+                    shadow-sm
+                    border
+                    border-slate-200
+                    overflow-hidden
+                "
+            >
 
-                    @can('create', App\Models\User::class)
+                <!-- Header -->
+
+                <div
+                    class="
+                        flex
+                        flex-col
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
+
+                        gap-5
+
+                        px-6
+                        py-6
+
+                        border-b
+                        border-slate-200
+                    "
+                >
+
+                    <div>
+
+                        <h3 class="text-lg font-semibold text-slate-800">
+                            Users
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            View, create and manage application users.
+                        </p>
+
+                    </div>
+
+                    <div class="flex flex-wrap gap-3">
+
                         <a
-                            href="{{ route('admin.users.create') }}"
-                            class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
-                        >
-                            Create User
-                        </a>
-                    @endcan
+                            href="{{ route('admin.users.export') }}"
+                            class="
+                                inline-flex
+                                items-center
 
-                    <a
-                        href="{{ route('admin.users.trash') }}"
-                        class="inline-flex items-center px-4 py-2 bg-red-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-700"
-                    >
-                        Trash
-                    </a>
+                                rounded-xl
+
+                                bg-emerald-600
+
+                                px-4
+                                py-2.5
+
+                                text-sm
+                                font-medium
+                                text-white
+
+                                transition
+
+                                hover:bg-emerald-700
+                            "
+                        >
+                            Export Excel
+                        </a>
+
+                        @can('create', App\Models\User::class)
+
+                            <a
+                                href="{{ route('admin.users.create') }}"
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-xl
+
+                                    bg-blue-600
+
+                                    px-4
+                                    py-2.5
+
+                                    text-sm
+                                    font-medium
+                                    text-white
+
+                                    transition
+
+                                    hover:bg-blue-700
+                                "
+                            >
+                                Create User
+                            </a>
+
+                        @endcan
+
+                        <a
+                            href="{{ route('admin.users.trash') }}"
+                            class="
+                                inline-flex
+                                items-center
+
+                                rounded-xl
+
+                                border
+                                border-red-200
+
+                                bg-red-50
+
+                                px-4
+                                py-2.5
+
+                                text-sm
+                                font-medium
+
+                                text-red-700
+
+                                transition
+
+                                hover:bg-red-100
+                            "
+                        >
+                            Trash
+                        </a>
+
+                    </div>
+
                 </div>
 
-            </div>
-            
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 overflow-x-auto">
+                <!-- Filter -->
 
-                    <table id="users-table" class="w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
+                <div
+                    class="
+                        px-6
+                        py-5
+
+                        border-b
+                        border-slate-200
+                    "
+                >
+
+                    <div class="max-w-xs">
+
+                        <label
+                            for="role-filter"
+                            class="
+                                block
+
+                                text-sm
+                                font-medium
+
+                                text-slate-700
+
+                                mb-2
+                            "
+                        >
+                            Filter by Role
+                        </label>
+
+                        <select
+                            id="role-filter"
+                            name="role"
+                            class="
+                                w-full
+
+                                rounded-xl
+
+                                border-slate-300
+
+                                shadow-sm
+
+                                focus:border-blue-500
+                                focus:ring-blue-500
+                            "
+                        >
+                            <option value="">All Roles</option>
+                            <option value="admin">Admin</option>
+                            <option value="doctor">Doctor</option>
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <!-- Table -->
+
+                <div class="overflow-x-auto">
+
+                    <table
+                        id="users-table"
+                        class="
+                            w-full
+
+                            text-sm
+                        "
+                    >
+
+                        <thead
+                            class="
+                                bg-slate-50
+
+                                text-slate-600
+                                uppercase
+                                tracking-wide
+                                text-xs
+                            "
+                        >
+
                             <tr>
-                                <th>No</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Action</th>
+
+                                <th class="px-6 py-4 text-left">
+                                    No
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+                                    Name
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+                                    Email
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+                                    Role
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+                                    Action
+                                </th>
+
                             </tr>
+
                         </thead>
 
                         <tbody></tbody>
+
                     </table>
 
                 </div>
@@ -66,6 +261,7 @@
             </div>
 
         </div>
+
     </div>
 
     @push('styles')
