@@ -11,11 +11,36 @@ MVP Version
 Roles:
 
 * Admin
+* Cashier
 * Doctor
 
-Admin handles operational activities such as patient management, registrations, queues, billing, payments, and reporting.
+### Role Responsibilities
 
-Doctor handles examinations and medical records.
+**Admin**
+
+* Manage master data
+* Manage registrations
+* Manage queues
+* Manage billing
+* Manage pharmacy
+* View reports
+* Configure application settings
+
+**Cashier**
+
+* Manage invoices
+* Process payments
+* Approve and reject payments
+* Handle refunds
+* Open and close cashier shifts
+* Perform daily cash reconciliation
+* Generate cashier reports
+
+**Doctor**
+
+* Manage examinations
+* Create medical records
+* View patient medical history
 
 ---
 
@@ -36,6 +61,7 @@ Doctor handles examinations and medical records.
 * Role-Based Access Control (RBAC)
 * Admin Role
 * Doctor Role
+* Cashier Role
 * Role Middleware
 * Laravel Policies
 
@@ -162,6 +188,8 @@ Medical Data:
 * Invoice Number Generation
 * Invoice Item Management
 * Invoice Status Management
+* Manual Discount
+* Manual Tax Calculation
 
 Invoice Status:
 
@@ -171,14 +199,49 @@ Invoice Status:
 
 ### Payment Management
 
-* Payment Recording
-* Payment Method Tracking
+* Cash Payment
+* Bank Transfer
+* QRIS Payment
+* Payment Approval Workflow
+* Payment Rejection Workflow
+* Payment Proof Upload
+* Payment Reference Number
+* Refund Management
+* Cashier Tracking
 * Automatic Invoice Settlement
+
+Payment Status:
+
+* Pending
+* Paid
+* Rejected
+* Refunded
 
 ### Receipt
 
 * Receipt View
 * PDF Receipt Export
+
+### Cashier Shift
+
+* Open Cashier Shift
+* Close Cashier Shift
+* Expected Closing Balance
+* Actual Closing Balance
+* Difference Calculation
+* Daily Cash Reconciliation
+* Cashier Shift History
+
+---
+
+## Pharmacy
+
+### Medication Management
+
+* Medication CRUD
+* Stock Adjustment
+* Stock History
+* Stock Movement Logging
 
 ---
 
@@ -211,6 +274,13 @@ Invoice Status:
 * Date Range Filtering
 * PDF Export
 
+### Cashier Shift Report
+
+* Shift Summary
+* Cash Reconciliation Report
+* Excel Export
+* Daily Closing Report
+
 ---
 
 ## Activity Logging
@@ -228,6 +298,13 @@ Examples:
 * Medical Record Created
 * Invoice Updated
 * Payment Recorded
+* Payment Approved
+* Payment Rejected
+* Payment Refunded
+* Cashier Shift Opened
+* Cashier Shift Closed
+* Medication Stock Adjusted
+* SATUSEHAT Synchronization
 
 ---
 
@@ -241,7 +318,27 @@ Examples:
 
 ## Settings
 
-* Application Settings Management
+* Application Settings
+* SATUSEHAT Configuration
+* Organization Validation
+
+---
+
+## SATUSEHAT Integration
+
+Current Foundation:
+
+* OAuth Token Management
+* Organization Validation
+* Patient Synchronization
+* Practitioner Synchronization
+
+Planned:
+
+* Encounter Integration
+* Observation Integration
+* Medication (KFA) Integration
+* Prescription Integration
 
 ---
 
@@ -354,11 +451,19 @@ Current Progress:
 * Sprint 1: Master Data ✅
 * Sprint 2: Registration & Queue ✅
 * Sprint 3: Examination & Medical Records ✅
-* Sprint 4: Billing & Payment ✅
-* Sprint 5: Reporting ✅
+* Sprint 4: Billing Foundation ✅
+* Sprint 5: Payment Workflow ✅
+* Sprint 6: Reporting ✅
+* Sprint 7: Pharmacy Foundation ✅
+* Sprint 8: Cashier Management ✅
+* Sprint 9: SATUSEHAT Foundation ✅
 
 Current Completed Modules:
 
+* Authentication
+* Authorization (RBAC)
+* Dashboard
+* Users
 * Patients
 * Doctors
 * Polyclinics
@@ -368,26 +473,38 @@ Current Completed Modules:
 * Medical Records
 * Invoices
 * Payments
+* Refunds
 * Receipts
+* Cashier Shift Management
 * Financial Reports
 * Registration Reports
 * Patient Reports
 * Medical Record Reports
+* Cashier Shift Reports
+* Medication Management
+* Activity Logs
+* Media Library
+* Application Settings
+* SATUSEHAT Foundation
 
 ---
 
 ## Planned Features
 
-### Phase 2
+### Phase 10
 
-* Dashboard Analytics
-* ICD-10 Integration
-* Pharmacy Module
-* Laboratory Module
-* SATUSEHAT Integration
+* KFA Medication Integration (Paused)
+* SATUSEHAT Encounter Integration
+* SATUSEHAT Observation Integration
+
+### Phase 11
+
+* Production Readiness
 * BPJS Integration
+* Laboratory Module
+* Dashboard Analytics
 
-### Phase 3
+### Future Roadmap
 
 * Multi Doctor Scheduling
 * Multi Branch Support
