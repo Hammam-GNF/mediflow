@@ -1,109 +1,89 @@
 <x-guest-layout>
 
-<div class="grid lg:grid-cols-2 min-h-screen">
+    <div class="w-full">
 
-    <!-- Left Side -->
-    <div class="hidden lg:flex flex-col justify-center bg-gradient-to-br from-blue-700 to-sky-600 text-white px-16">
+        <div
+            class="
+                rounded-3xl
+                bg-white
+                shadow-xl
+                border
+                border-slate-200
 
-        <span class="inline-flex items-center rounded-full bg-white/20 px-4 py-1 text-sm font-medium w-fit mb-6">
-            Clinic Management System
-        </span>
+                p-8
+                sm:p-10
+            "
+        >
 
-        <h1 class="text-5xl font-bold leading-tight">
-            Welcome to
-            <span class="text-cyan-200">
-                MediFlow
-            </span>
-        </h1>
+            <!-- Logo -->
+            <div class="text-center">
 
-        <p class="mt-6 text-lg text-blue-100 leading-8 max-w-xl">
-            Modern clinic management system that streamlines
-            patient registration, examinations, medical records,
-            billing, cashier operations, pharmacy management,
-            and SATUSEHAT integration.
-        </p>
+                <a
+                    href="{{ url('/') }}"
+                    class="
+                        inline-flex
+                        items-center
+                        justify-center
 
-        <div class="grid grid-cols-2 gap-6 mt-12">
+                        w-16
+                        h-16
 
-            <div class="rounded-2xl bg-white/10 backdrop-blur-sm p-6">
-                <div class="text-3xl font-bold">
-                    15+
-                </div>
+                        rounded-2xl
 
-                <div class="mt-2 text-blue-100">
-                    Integrated Modules
-                </div>
-            </div>
+                        bg-blue-600
 
-            <div class="rounded-2xl bg-white/10 backdrop-blur-sm p-6">
-                <div class="text-3xl font-bold">
-                    RBAC
-                </div>
+                        text-white
+                        text-2xl
+                        font-bold
 
-                <div class="mt-2 text-blue-100">
-                    Secure Role Access
-                </div>
-            </div>
-
-            <div class="rounded-2xl bg-white/10 backdrop-blur-sm p-6">
-                <div class="text-3xl font-bold">
-                    SATUSEHAT
-                </div>
-
-                <div class="mt-2 text-blue-100">
-                    Ready Foundation
-                </div>
-            </div>
-
-            <div class="rounded-2xl bg-white/10 backdrop-blur-sm p-6">
-                <div class="text-3xl font-bold">
-                    Laravel 13
-                </div>
-
-                <div class="mt-2 text-blue-100">
-                    Modern Architecture
-                </div>
-            </div>
-
-        </div>
-
-    </div>
-
-    <!-- Right Side -->
-    <div class="flex items-center justify-center bg-slate-50 px-6 py-12">
-
-        <div class="w-full max-w-md">
-
-            <div class="mb-10 text-center">
-
-                <a href="{{ url('/') }}"
-                   class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-600 text-white text-2xl font-bold shadow-lg">
+                        shadow-lg
+                    "
+                >
                     M
                 </a>
 
-                <h2 class="mt-6 text-3xl font-bold text-slate-800">
-                    Sign In
-                </h2>
+                <h1
+                    class="
+                        mt-6
 
-                <p class="mt-2 text-slate-500">
-                    Login to access your MediFlow dashboard.
+                        text-3xl
+                        font-bold
+
+                        text-slate-800
+                    "
+                >
+                    Welcome
+                </h1>
+
+                <p
+                    class="
+                        mt-2
+
+                        text-slate-500
+                    "
+                >
+                    Sign in to continue to your MediFlow dashboard.
                 </p>
 
             </div>
 
             <x-auth-session-status
-                class="mb-4"
+                class="mt-8"
                 :status="session('status')"
             />
 
             <form
+                x-data="{ loading: false }"
+                @submit="loading = true"
                 method="POST"
                 action="{{ route('login') }}"
-                class="space-y-6"
+                class="mt-8 space-y-6"
             >
+
                 @csrf
 
                 <!-- Email -->
+
                 <div>
 
                     <x-input-label
@@ -113,7 +93,7 @@
 
                     <x-text-input
                         id="email"
-                        class="block mt-2 w-full rounded-xl"
+                        class="block w-full mt-2 rounded-xl"
                         type="email"
                         name="email"
                         :value="old('email')"
@@ -130,6 +110,7 @@
                 </div>
 
                 <!-- Password -->
+
                 <div>
 
                     <x-input-label
@@ -139,7 +120,7 @@
 
                     <x-text-input
                         id="password"
-                        class="block mt-2 w-full rounded-xl"
+                        class="block w-full mt-2 rounded-xl"
                         type="password"
                         name="password"
                         required
@@ -152,7 +133,9 @@
                     />
 
                 </div>
-                <!-- Remember Me -->
+
+                <!-- Remember -->
+
                 <div class="flex items-center justify-between">
 
                     <label
@@ -169,7 +152,7 @@
                                 border-slate-300
                                 text-blue-600
                                 shadow-sm
-                                focus:ring-blue-500
+                                focus:ring-blue-600
                             "
                         >
 
@@ -179,26 +162,27 @@
 
                     </label>
 
-                    {{-- @if (Route::has('password.request'))
-
-                        <a
-                            href="{{ route('password.request') }}"
-                            class="
-                                text-sm
-                                font-medium
-                                text-blue-600
-                                hover:text-blue-700
-                            "
-                        >
-                            Forgot Password?
-                        </a>
-
-                    @endif --}}
+                    {{--
+                    <a
+                        href="{{ route('password.request') }}"
+                        class="
+                            text-sm
+                            font-medium
+                            text-blue-600
+                            hover:text-blue-700
+                        "
+                    >
+                        Forgot Password?
+                    </a>
+                    --}}
 
                 </div>
 
+                <!-- Button -->
+
                 <button
                     type="submit"
+                    :disabled="loading"
                     class="
                         w-full
 
@@ -206,71 +190,102 @@
 
                         bg-blue-600
 
-                        px-5
                         py-3
 
                         font-semibold
                         text-white
 
-                        transition
+                        transition-all
 
                         hover:bg-blue-700
+
+                        disabled:cursor-not-allowed
+                        disabled:opacity-70
                     "
                 >
-                    Sign In
+
+                    <span
+                        x-show="!loading"
+                        x-transition.opacity
+                    >
+                        Sign In
+                    </span>
+
+                    <span
+                        x-show="loading"
+                        x-transition.opacity
+                        class="flex items-center justify-center gap-3"
+                    >
+
+                        <svg
+                            class="h-5 w-5 animate-spin"
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                        >
+
+                            <circle
+                                class="opacity-25"
+                                cx="12"
+                                cy="12"
+                                r="10"
+                                stroke="currentColor"
+                                stroke-width="4"
+                            />
+
+                            <path
+                                class="opacity-75"
+                                fill="currentColor"
+                                d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+                            />
+
+                        </svg>
+
+                        Signing In...
+
+                    </span>
+
                 </button>
 
             </form>
 
-            <div class="mt-8 text-center">
+        </div>
 
-                <a
-                    href="{{ url('/') }}"
-                    class="
-                        text-sm
-                        text-slate-500
-                        hover:text-blue-600
-                        transition
-                    "
-                >
-                    ← Back to Home
-                </a>
+        <div
+            class="
+                mt-8
 
-            </div>
+                text-center
+
+                text-sm
+                text-slate-500
+            "
+        >
+
+            <a
+                href="{{ url('/') }}"
+                class="
+                    hover:text-blue-600
+                    transition
+                "
+            >
+                ← Back to Home
+            </a>
 
             <div
                 class="
-                    mt-10
+                    mt-6
 
-                    border-t
-                    border-slate-200
+                    text-xs
 
-                    pt-6
-
-                    text-center
-                    text-sm
-                    text-slate-500
+                    text-slate-400
                 "
             >
-
-                <p class="font-medium text-slate-700">
-                    MediFlow
-                </p>
-
-                <p class="mt-1">
-                    Clinic Management Information System
-                </p>
-
-                <p class="mt-4 text-xs text-slate-400">
-                    © {{ now()->year }} MediFlow. All rights reserved.
-                </p>
-
+                © {{ now()->year }} MediFlow. All rights reserved.
             </div>
 
         </div>
 
     </div>
-
-</div>
 
 </x-guest-layout>

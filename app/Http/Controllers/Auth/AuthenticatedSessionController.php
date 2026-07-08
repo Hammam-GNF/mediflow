@@ -30,18 +30,20 @@ class AuthenticatedSessionController extends Controller
 
         $user = $request->user();
 
+        $message = 'Welcome back, ' . $user->name . '!';
+
         if ($user->hasRole('admin')) {
 
-            return redirect()->intended(
-                route('admin.dashboard')
-            );
+            return redirect()
+                ->intended(route('admin.dashboard'))
+                ->with('success', $message);
         }
 
         if ($user->hasRole('doctor')) {
 
-            return redirect()->intended(
-                route('doctor.dashboard')
-            );
+            return redirect()
+                ->intended(route('doctor.dashboard'))
+                ->with('success', $message);
         }
 
         abort(403);

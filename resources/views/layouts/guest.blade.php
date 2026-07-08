@@ -38,6 +38,8 @@
 
 <body class="font-sans antialiased bg-slate-100 text-slate-800">
 
+    @include('components.flash-message')
+
     <div class="min-h-screen flex">
 
         <!-- Left Side -->
