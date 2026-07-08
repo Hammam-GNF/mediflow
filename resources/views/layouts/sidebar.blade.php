@@ -322,6 +322,18 @@
                         📋 Medical Record Report
                     </a>
 
+                    <a
+                        @click="sidebarOpen = false"
+                        href="{{ route('admin.reports.cashier-shifts') }}"
+                        class="block px-4 py-2 rounded hover:bg-gray-800
+                        {{ request()->routeIs('admin.reports.cashier-shifts*')
+                                ? 'bg-blue-600 text-white'
+                                : ''
+                        }}"
+                    >
+                        💰 Cashier Shift Report
+                    </a>
+
                 </div>
 
             </div>
