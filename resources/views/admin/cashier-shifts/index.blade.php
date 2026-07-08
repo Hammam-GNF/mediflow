@@ -250,7 +250,7 @@
 
                                     </td>
 
-                                    <td class="px-4 py-3 text-right space-x-2">
+                                    <td class="px-4 py-3 text-right space-x-2 flex gap-2">
 
                                         <a
                                             href="{{ route('admin.cashier-shifts.show',$shift) }}"

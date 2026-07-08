@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\ActivityLogController;
 use App\Http\Controllers\Admin\CashierShiftController;
+use App\Http\Controllers\Admin\CashierShiftReportController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DoctorController;
 use App\Http\Controllers\Admin\FinancialReportController;
@@ -144,6 +145,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'role:admin|cashier'
     Route::patch('cashier-shifts/{cashierShift}/close',[CashierShiftController::class, 'close'])->name('cashier-shifts.close');
     Route::post('cashier-shifts/open',[CashierShiftController::class, 'open'])->name('cashier-shifts.open');
     Route::get('cashier-shifts/{cashierShift}',[CashierShiftController::class, 'show'])->name('cashier-shifts.show');
+
+    Route::get('reports/cashier-shifts',[CashierShiftReportController::class, 'index'])->name('reports.cashier-shifts');
+    Route::get('reports/cashier-shifts/pdf',[CashierShiftReportController::class, 'pdf'])->name('reports.cashier-shifts.pdf');
+    Route::get('reports/cashier-shifts/export',[CashierShiftReportController::class, 'export'])->name('reports.cashier-shifts.export');
 
     Route::post('patients/{patient}/sync-satusehat',[PatientController::class, 'sync'])->name('patients.sync-satusehat');
     Route::post('/doctors/{doctor}/sync-satusehat',[DoctorController::class, 'sync'])->name('doctors.sync-satusehat');
