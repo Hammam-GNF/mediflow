@@ -36,85 +36,195 @@ class MedicationController extends Controller
         if ($request->ajax()) {
 
             return DataTables::of(
-                Medication::query()
-                    ->with('stock')
-            )
-            ->addIndexColumn()
-
-            ->addColumn(
-                'stock',
-                fn ($medication)
-                    => $medication->stock?->current_stock ?? 0
+                Medication::query()->with('stock')
             )
 
-            ->addColumn(
-                'status',
-                fn ($medication)
-                    => $medication->is_active
-                        ? 'Active'
-                        : 'Inactive'
-            )
+                ->addIndexColumn()
 
-            ->addColumn('action', function ($medication) {
+                ->addColumn(
+                    'stock',
+                    fn ($medication) =>
+                        $medication->stock?->current_stock ?? 0
+                )
 
-                $toggleText = $medication->is_active
-                    ? 'Deactivate'
-                    : 'Activate';
+                ->editColumn('price', function ($medication) {
 
-                $toggleClass = $medication->is_active
-                    ? 'bg-red-600'
-                    : 'bg-green-600';
+                    return 'Rp ' . number_format(
+                        $medication->price,
+                        0,
+                        ',',
+                        '.'
+                    );
 
-                return '
-                    <div class="flex flex-wrap gap-2">
+                })
 
-                        <a
-                            href="' . route(
-                                'admin.medications.adjust-stock',
-                                $medication
-                            ) . '"
-                            class="px-3 py-1 bg-blue-600 text-white rounded"
-                        >
-                            Stock
-                        </a>
+                ->addColumn('status', function ($medication) {
 
-                        <a
-                            href="' . route(
-                                'admin.medications.stock-history',
-                                $medication
-                            ) . '"
-                            class="px-3 py-1 bg-gray-600 text-white rounded"
-                        >
-                            History
-                        </a>
+                    return $medication->is_active
 
-                        <a
-                            href="' . route(
-                                'admin.medications.edit',
-                                $medication
-                            ) . '"
-                            class="px-3 py-1 bg-yellow-500 text-white rounded"
-                        >
-                            Edit
-                        </a>
+                        ? '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Active
+                            </span>
+                        '
 
-                        <button
-                            type="button"
-                            data-url="' . route(
-                                'admin.medications.destroy',
-                                $medication
-                            ) . '"
-                            class="toggle-medication-btn px-3 py-1 text-white rounded ' . $toggleClass . '"
-                        >
-                            ' . $toggleText . '
-                        </button>
+                        : '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Inactive
+                            </span>
+                        ';
 
-                    </div>
-                ';
-            })
+                })
 
-            ->rawColumns(['action'])
-            ->make(true);
+                ->addColumn('action', function ($medication) {
+
+                    $toggleText = $medication->is_active
+                        ? 'Deactivate'
+                        : 'Activate';
+
+                    $toggleClass = $medication->is_active
+
+                        ? '
+                            bg-red-50
+                            text-red-700
+                            hover:bg-red-100
+                        '
+
+                        : '
+                            bg-emerald-50
+                            text-emerald-700
+                            hover:bg-emerald-100
+                        ';
+
+                    return '
+
+                        <div class="flex items-center gap-2 whitespace-nowrap">
+
+                            <a
+                                href="'.route(
+                                    'admin.medications.adjust-stock',
+                                    $medication
+                                ).'"
+
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-sky-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-sky-700
+
+                                    transition
+
+                                    hover:bg-sky-100
+                                "
+                            >
+                                Stock
+                            </a>
+
+                            <a
+                                href="'.route(
+                                    'admin.medications.stock-history',
+                                    $medication
+                                ).'"
+
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-slate-100
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-slate-700
+
+                                    transition
+
+                                    hover:bg-slate-200
+                                "
+                            >
+                                History
+                            </a>
+
+                            <a
+                                href="'.route(
+                                    'admin.medications.edit',
+                                    $medication
+                                ).'"
+
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-blue-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-blue-700
+
+                                    transition
+
+                                    hover:bg-blue-100
+                                "
+                            >
+                                Edit
+                            </a>
+
+                            <button
+                                type="button"
+
+                                data-url="'.route(
+                                    'admin.medications.destroy',
+                                    $medication
+                                ).'"
+
+                                class="
+                                    toggle-medication-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+
+                                    transition
+
+                                    '.$toggleClass.'
+                                "
+                            >
+                                '.$toggleText.'
+                            </button>
+
+                        </div>
+
+                    ';
+                })
+
+                ->rawColumns([
+                    'status',
+                    'action',
+                ])
+
+                ->make(true);
         }
 
         return view('admin.medications.index');
