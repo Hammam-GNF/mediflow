@@ -19,6 +19,10 @@ class RegistrationReportController extends Controller
             'polyclinic',
         ])
 
+        ->whereHas('patient')
+        ->whereHas('doctor.user')
+        ->whereHas('polyclinic')
+
         ->when(
             $request->start_date,
             fn ($query) =>
@@ -64,7 +68,7 @@ class RegistrationReportController extends Controller
             'admin.reports.registrations.index',
             [
                 'registrations' => $registrations,
-                'doctors' => Doctor::with('user')->get(),
+                'doctors' => Doctor::with('user')->whereHas('user')->get(),
                 'polyclinics' => Polyclinic::all(),
                 'totalRegistrations' => $registrations->count(),
             ]
