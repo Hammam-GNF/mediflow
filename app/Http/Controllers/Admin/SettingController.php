@@ -21,6 +21,11 @@ class SettingController extends Controller
     {
         $validated = $request->validated();
 
+        // Handle Checkbox
+        $validated['registration_enabled'] = $request->boolean(
+            'registration_enabled'
+        );
+
         foreach ($validated as $key => $value) {
 
             Setting::updateOrCreate(
