@@ -1,125 +1,263 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl">
-            Medical Record Report
-        </h2>
+
+        <div class="flex flex-col gap-1">
+
+            <h2 class="text-2xl font-bold text-slate-800">
+                Medical Record Report
+            </h2>
+
+            <p class="text-sm text-slate-500">
+                View examination history and medical record statistics.
+            </p>
+
+        </div>
+
     </x-slot>
 
-    <div class="py-6">
+    <div class="py-8">
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto px-6 lg:px-8">
 
-            <div class="bg-white p-6 rounded shadow mb-6">
+            <div
+                class="
+                    bg-white
+                    rounded-2xl
+                    border
+                    border-slate-200
+                    shadow-sm
+                    p-6
+                    mb-6
+                "
+            >
 
                 <form
                     method="GET"
-                    class="grid grid-cols-1 md:grid-cols-5 gap-4"
+                    class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-5 gap-6"
                 >
 
-                    <input
-                        type="date"
-                        name="start_date"
-                        value="{{ request('start_date') }}"
-                        class="rounded border-gray-300"
-                    >
+                    <div>
 
-                    <input
-                        type="date"
-                        name="end_date"
-                        value="{{ request('end_date') }}"
-                        class="rounded border-gray-300"
-                    >
+                        <x-input-label
+                            for="start_date"
+                            value="Start Date"
+                        />
 
-                    <select
-                        name="doctor_id"
-                        class="rounded border-gray-300"
-                    >
-                        <option value="">
-                            All Doctors
-                        </option>
+                        <x-text-input
+                            id="start_date"
+                            name="start_date"
+                            type="date"
+                            value="{{ request('start_date') }}"
+                            class="mt-1 block w-full"
+                        />
 
-                        @foreach($doctors as $doctor)
+                    </div>
 
-                            <option
-                                value="{{ $doctor->id }}"
-                                @selected(
-                                    request('doctor_id')
-                                    == $doctor->id
-                                )
-                            >
-                                {{ $doctor->user->name }}
+                    <div>
+
+                        <x-input-label
+                            for="end_date"
+                            value="End Date"
+                        />
+
+                        <x-text-input
+                            id="end_date"
+                            name="end_date"
+                            type="date"
+                            value="{{ request('end_date') }}"
+                            class="mt-1 block w-full"
+                        />
+
+                    </div>
+
+                    <div>
+
+                        <x-input-label
+                            for="doctor_id"
+                            value="Doctor"
+                        />
+
+                        <select
+                            id="doctor_id"
+                            name="doctor_id"
+                            class="mt-1 w-full rounded-lg border-gray-300"
+                        >
+
+                            <option value="">
+                                All Doctors
                             </option>
 
-                        @endforeach
+                            @foreach($doctors as $doctor)
 
-                    </select>
+                                <option
+                                    value="{{ $doctor->id }}"
+                                    @selected(request('doctor_id') == $doctor->id)
+                                >
+                                    {{ $doctor->user?->name ?? 'Unknown Doctor' }}
+                                </option>
 
-                    <select
-                        name="patient_id"
-                        class="rounded border-gray-300"
-                    >
-                        <option value="">
-                            All Patients
-                        </option>
+                            @endforeach
 
-                        @foreach($patients as $patient)
+                        </select>
 
-                            <option
-                                value="{{ $patient->id }}"
-                                @selected(
-                                    request('patient_id')
-                                    == $patient->id
-                                )
-                            >
-                                {{ $patient->name }}
+                    </div>
+
+                    <div>
+
+                        <x-input-label
+                            for="patient_id"
+                            value="Patient"
+                        />
+
+                        <select
+                            id="patient_id"
+                            name="patient_id"
+                            class="mt-1 w-full rounded-lg border-gray-300"
+                        >
+
+                            <option value="">
+                                All Patients
                             </option>
 
-                        @endforeach
+                            @foreach($patients as $patient)
 
-                    </select>
+                                <option
+                                    value="{{ $patient->id }}"
+                                    @selected(request('patient_id') == $patient->id)
+                                >
+                                    {{ $patient->name }}
+                                </option>
 
-                    <button
-                        class="bg-blue-600 text-white rounded px-4"
-                    >
-                        Filter
-                    </button>
+                            @endforeach
+
+                        </select>
+
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-end gap-3">
+
+                        <x-primary-button class="justify-center w-full sm:w-auto">
+                            Filter
+                        </x-primary-button>
+
+                        <a
+                            href="{{ route('admin.reports.medical-records.pdf', request()->query()) }}"
+                            class="
+                                inline-flex
+                                justify-center
+                                items-center
+
+                                w-full
+                                sm:w-auto
+
+                                rounded-xl
+
+                                border
+                                border-red-200
+
+                                bg-red-50
+
+                                px-4
+                                py-2.5
+
+                                text-sm
+                                font-medium
+
+                                text-red-700
+
+                                transition
+
+                                hover:bg-red-100
+                            "
+                        >
+                            Export PDF
+                        </a>
+
+                    </div>
 
                 </form>
 
             </div>
 
-            <div class="bg-white p-6 rounded shadow mb-6">
+            <div
+                class="
+                    bg-white
+                    rounded-2xl
+                    border
+                    border-slate-200
+                    shadow-sm
+                    p-6
+                    mb-6
+                "
+            >
 
-                <h3 class="text-lg font-bold">
+                <p class="text-sm text-slate-500">
                     Total Medical Records
+                </p>
+
+                <h3 class="mt-2 text-3xl font-bold text-slate-800">
+                    {{ $totalMedicalRecords }}
                 </h3>
 
-                <div class="text-4xl font-bold mt-3">
-                    {{ $totalMedicalRecords }}
+            </div>
+
+            <div
+                class="
+                    bg-white
+                    rounded-2xl
+                    border
+                    border-slate-200
+                    shadow-sm
+                    overflow-hidden
+                "
+            >
+
+                <div
+                    class="
+                        flex
+                        flex-col
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
+
+                        gap-4
+
+                        px-6
+                        py-6
+
+                        border-b
+                        border-slate-200
+                    "
+                >
+
+                    <div>
+
+                        <h3 class="text-lg font-semibold text-slate-800">
+                            Medical Record History
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            View all medical records based on selected filters.
+                        </p>
+
+                    </div>
+
                 </div>
 
-            </div>
+                <div class="overflow-x-auto">
 
-            <div class="mb-4">
+                    <table class="min-w-full text-sm">
 
-                <a
-                    href="{{ route(
-                        'admin.reports.medical-records.pdf',
-                        request()->query()
-                    ) }}"
-                    class="bg-red-600 text-white px-4 py-2 rounded"
-                >
-                    Export PDF
-                </a>
-
-            </div>
-
-            <div class="bg-white rounded shadow overflow-x-auto">
-
-                <table class="min-w-full">
-
-                    <thead>
+                    <thead
+                        class="
+                            bg-slate-50
+                            text-slate-600
+                            uppercase
+                            tracking-wide
+                            text-xs
+                        "
+                    >
 
                         <tr class="border-b">
 
@@ -134,39 +272,52 @@
 
                     </thead>
 
-                    <tbody>
+                    <tbody class="divide-y divide-slate-200">
 
-                        @foreach($medicalRecords as $record)
+                        @forelse($medicalRecords as $record)
 
-                            <tr class="border-b">
+                            <tr>
 
-                                <td class="p-3">
-                                    {{ $record->registration->patient->medical_record_number }}
+                                <td class="px-6 py-4 font-medium font-mono text-slate-700">
+                                    {{ $record->registration?->patient?->medical_record_number ?? '-' }}
                                 </td>
 
-                                <td class="p-3">
-                                    {{ $record->registration->patient->name }}
+                                <td class="px-6 py-4 font-medium text-slate-700">
+                                    {{ $record->registration?->patient?->name ?? '-' }}
                                 </td>
 
-                                <td class="p-3">
-                                    {{ $record->registration->doctor->user->name }}
+                                <td class="px-6 py-4">
+                                    {{ $record->registration?->doctor?->user?->name ?? '-' }}
                                 </td>
 
-                                <td class="p-3">
+                                <td class="px-6 py-4">
                                     {{ $record->chief_complaint }}
                                 </td>
 
-                                <td class="p-3">
+                                <td class="px-6 py-4">
                                     {{ $record->diagnosis }}
                                 </td>
 
-                                <td class="p-3">
-                                    {{ $record->examined_at?->format('d-m-Y H:i') }}
+                                <td class="px-6 py-4">
+                                    {{ $record->examined_at?->format('d M Y H:i') }}
                                 </td>
 
                             </tr>
 
-                        @endforeach
+                        @empty
+
+                        <tr>
+
+                            <td
+                                colspan="6"
+                                class="px-6 py-10 text-center text-slate-500"
+                            >
+                                No medical record data available.
+                            </td>
+
+                        </tr>
+
+                        @endforelse
 
                     </tbody>
 
