@@ -15,6 +15,11 @@ class QueueController extends Controller
     {
         $this->authorize('viewAny', Queue::class);
 
+        $queueCount = Queue::count();
+        $calledCount = Queue::where('status', 'called')->count();
+        $waitingCount = Queue::where('status', 'waiting')->count();
+        $cancelledCount = Queue::where('status', 'cancelled')->count();
+
         if ($request->ajax()) {
 
             return DataTables::of(
@@ -26,94 +31,247 @@ class QueueController extends Controller
                         'registration.polyclinic',
                     ])
             )
+
                 ->addIndexColumn()
 
-                ->addColumn('queue_number', function ($queue) {
-                    return $queue->queue_number;
-                })
-
                 ->addColumn('patient_name', function ($queue) {
-                    return $queue->registration?->patient?->name;
+                    return $queue->registration?->patient?->name ?? '-';
                 })
 
                 ->addColumn('doctor_name', function ($queue) {
-                    return $queue->registration?->doctor?->user?->name;
+                    return $queue->registration?->doctor?->user?->name ?? '-';
                 })
 
                 ->addColumn('polyclinic_name', function ($queue) {
-                    return $queue->registration?->polyclinic?->name;
+                    return $queue->registration?->polyclinic?->name ?? '-';
                 })
 
                 ->editColumn('queue_date', function ($queue) {
+
                     return $queue->queue_date
                         ? $queue->queue_date->format('d-m-Y H:i')
                         : '-';
+
                 })
 
                 ->editColumn('status', function ($queue) {
-                    return $queue->status;
+
+                    return match ($queue->status) {
+
+                        'waiting' => '
+                            <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                Waiting
+                            </span>
+                        ',
+
+                        'called' => '
+                            <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                Called
+                            </span>
+                        ',
+
+                        'in_progress' => '
+                            <span class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+                                In Progress
+                            </span>
+                        ',
+
+                        'done' => '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Done
+                            </span>
+                        ',
+
+                        'cancelled' => '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Cancelled
+                            </span>
+                        ',
+
+                        default => '
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                -
+                            </span>
+                        ',
+                    };
+
                 })
 
                 ->addColumn('action', function ($queue) {
 
-                    $buttons = '<div class="flex gap-2">';
+                    $buttons = '
+                        <div class="flex items-center gap-2 whitespace-nowrap">
+                    ';
 
                     if ($queue->status === 'waiting') {
 
                         $buttons .= '
+
                             <button
                                 type="button"
-                                class="call-queue-btn px-3 py-1 bg-blue-600 text-white rounded"
-                                data-url="' . route('admin.queues.call', $queue) . '"
+
+                                data-url="'.route(
+                                    'admin.queues.call',
+                                    $queue
+                                ).'"
+
+                                class="
+                                    call-queue-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-blue-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-blue-700
+
+                                    transition
+
+                                    hover:bg-blue-100
+                                "
                             >
                                 Call
                             </button>
-                        ';
 
-                        $buttons .= '
                             <button
                                 type="button"
-                                class="cancel-queue-btn px-3 py-1 bg-yellow-600 text-white rounded"
-                                data-url="' . route('admin.queues.cancel', $queue) . '"
+
+                                data-url="'.route(
+                                    'admin.queues.cancel',
+                                    $queue
+                                ).'"
+
+                                class="
+                                    cancel-queue-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-amber-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-amber-700
+
+                                    transition
+
+                                    hover:bg-amber-100
+                                "
                             >
                                 Cancel
                             </button>
+
                         ';
+
                     }
 
                     if ($queue->status === 'called') {
 
                         $buttons .= '
+
                             <button
                                 type="button"
-                                class="cancel-queue-btn px-3 py-1 bg-yellow-600 text-white rounded"
-                                data-url="' . route('admin.queues.cancel', $queue) . '"
+
+                                data-url="'.route(
+                                    'admin.queues.cancel',
+                                    $queue
+                                ).'"
+
+                                class="
+                                    cancel-queue-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-amber-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-amber-700
+
+                                    transition
+
+                                    hover:bg-amber-100
+                                "
                             >
                                 Cancel
                             </button>
+
                         ';
+
                     }
 
                     $buttons .= '
+
                         <button
                             type="button"
-                            class="delete-queue-btn px-3 py-1 bg-red-600 text-white rounded"
-                            data-url="' . route('admin.queues.destroy', $queue) . '"
+
+                            data-url="'.route(
+                                'admin.queues.destroy',
+                                $queue
+                            ).'"
+
+                            class="
+                                delete-queue-btn
+
+                                inline-flex
+                                items-center
+
+                                rounded-lg
+
+                                bg-red-50
+                                px-3
+                                py-2
+
+                                text-xs
+                                font-semibold
+                                text-red-700
+
+                                transition
+
+                                hover:bg-red-100
+                            "
                         >
                             Delete
                         </button>
+
                     ';
 
                     $buttons .= '</div>';
 
                     return $buttons;
+
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns([
+                    'status',
+                    'action',
+                ])
+
                 ->make(true);
+
         }
 
-        return view('admin.queues.index');
+        return view('admin.queues.index', compact(
+            'queueCount',
+            'calledCount',
+            'waitingCount',
+            'cancelledCount'
+        ));
     }
 
     public function call(Queue $queue)
@@ -185,61 +343,163 @@ class QueueController extends Controller
                         'registration.polyclinic',
                     ])
             )
+
                 ->addIndexColumn()
 
-                ->addColumn('queue_number', function ($queue) {
-                    return $queue->queue_number;
-                })
-
                 ->addColumn('patient_name', function ($queue) {
-                    return $queue->registration?->patient?->name;
+                    return $queue->registration?->patient?->name ?? '-';
                 })
 
                 ->addColumn('doctor_name', function ($queue) {
-                    return $queue->registration?->doctor?->user?->name;
+                    return $queue->registration?->doctor?->user?->name ?? '-';
                 })
 
                 ->addColumn('polyclinic_name', function ($queue) {
-                    return $queue->registration?->polyclinic?->name;
+                    return $queue->registration?->polyclinic?->name ?? '-';
+                })
+
+                ->editColumn('queue_date', function ($queue) {
+
+                    return $queue->queue_date
+                        ? $queue->queue_date->format('d-m-Y H:i')
+                        : '-';
+
                 })
 
                 ->editColumn('status', function ($queue) {
-                    return $queue->status;
+
+                    return match ($queue->status) {
+
+                        'waiting' => '
+                            <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                Waiting
+                            </span>
+                        ',
+
+                        'called' => '
+                            <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                Called
+                            </span>
+                        ',
+
+                        'in_progress' => '
+                            <span class="inline-flex items-center rounded-full bg-indigo-100 px-3 py-1 text-xs font-semibold text-indigo-700">
+                                In Progress
+                            </span>
+                        ',
+
+                        'done' => '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Done
+                            </span>
+                        ',
+
+                        'cancelled' => '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Cancelled
+                            </span>
+                        ',
+
+                        default => '
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                -
+                            </span>
+                        ',
+                    };
+
                 })
 
                 ->editColumn('deleted_at', function ($queue) {
+
                     return $queue->deleted_at
                         ? $queue->deleted_at->format('d-m-Y H:i:s')
                         : '-';
+
                 })
 
                 ->addColumn('action', function ($queue) {
 
                     return '
-                        <div class="flex gap-2">
+
+                        <div class="flex items-center gap-2 whitespace-nowrap">
 
                             <button
                                 type="button"
-                                class="restore-queue-btn px-3 py-1 bg-green-600 text-white rounded"
-                                data-url="' . route('admin.queues.restore', $queue) . '"
+
+                                data-url="'.route(
+                                    'admin.queues.restore',
+                                    $queue
+                                ).'"
+
+                                class="
+                                    restore-queue-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-emerald-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-emerald-700
+
+                                    transition
+
+                                    hover:bg-emerald-100
+                                "
                             >
                                 Restore
                             </button>
 
                             <button
                                 type="button"
-                                class="force-delete-queue-btn px-3 py-1 bg-red-600 text-white rounded"
-                                data-url="' . route('admin.queues.force-delete', $queue) . '"
+
+                                data-url="'.route(
+                                    'admin.queues.force-delete',
+                                    $queue
+                                ).'"
+
+                                class="
+                                    force-delete-queue-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-red-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-red-700
+
+                                    transition
+
+                                    hover:bg-red-100
+                                "
                             >
                                 Force Delete
                             </button>
 
                         </div>
+
                     ';
+
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns([
+                    'status',
+                    'action',
+                ])
+
                 ->make(true);
+
         }
 
         return view('admin.queues.trash');

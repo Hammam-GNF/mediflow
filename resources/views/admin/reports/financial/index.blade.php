@@ -1,76 +1,135 @@
 <x-app-layout>
 
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Financial Report
-        </h2>
+
+        <div class="flex flex-col gap-1">
+
+            <h2 class="text-2xl font-bold text-slate-800">
+                Financial Report
+            </h2>
+
+            <p class="text-sm text-slate-500">
+                View revenue, payment history and financial summaries.
+            </p>
+
+        </div>
+
     </x-slot>
 
-    <div class="py-6">
+    <div class="py-8">
 
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="max-w-[90rem] mx-auto px-6 lg:px-8">
 
-            <div class="bg-white shadow rounded-lg p-6 mb-6">
+            <!-- Filter Card -->
 
+            <div
+                class="
+                    bg-white
+                    rounded-2xl
+                    border
+                    border-slate-200
+                    shadow-sm
+                    p-6
+                    mb-6
+                "
+            >
+            
                 <form
                     method="GET"
                     action="{{ route('admin.reports.financial') }}"
-                    class="grid grid-cols-1 md:grid-cols-4 gap-4"
                 >
 
-                    <div>
-                        <label class="block text-sm font-medium mb-1">
-                            Start Date
-                        </label>
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-                        <input
-                            type="date"
-                            name="start_date"
-                            value="{{ request('start_date') }}"
-                            class="w-full rounded border-gray-300"
-                        >
-                    </div>
+                        <div>
 
-                    <div>
-                        <label class="block text-sm font-medium mb-1">
-                            End Date
-                        </label>
+                            <x-input-label for="start_date" value="Start Date" />
 
-                        <input
-                            type="date"
-                            name="end_date"
-                            value="{{ request('end_date') }}"
-                            class="w-full rounded border-gray-300"
-                        >
-                    </div>
+                            <x-text-input
+                                id="start_date"
+                                name="start_date"
+                                type="date"
+                                value="{{ request('start_date') }}"
+                                class="mt-1 block w-full"
+                            />
 
-                    <div class="flex items-end">
-                        <button
-                            type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white rounded"
-                        >
-                            Filter
-                        </button>
-                    </div>
+                        </div>
 
-                    <div class="flex items-end">
-                        <a
-                            href="{{ route('admin.reports.financial.pdf', request()->query()) }}"
-                            class="px-4 py-2 bg-red-600 text-white rounded"
-                        >
-                            Export PDF
-                        </a>
+                        <div>
+
+                            <x-input-label for="end_date" value="End Date" />
+
+                            <x-text-input
+                                id="end_date"
+                                name="end_date"
+                                type="date"
+                                value="{{ request('end_date') }}"
+                                class="mt-1 block w-full"
+                            />
+
+                        </div>
+
+                        <div class="flex gap-2 items-end">
+
+                            <x-primary-button
+                                class="justify-center"
+                            >
+                                Filter
+                            </x-primary-button>
+
+                            <a
+                                href="{{ route('admin.reports.financial.pdf', request()->query()) }}"
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-xl
+
+                                    border
+                                    border-red-200
+
+                                    bg-red-50
+
+                                    px-4
+                                    py-2.5
+
+                                    text-sm
+                                    font-medium
+
+                                    text-red-700
+
+                                    transition
+
+                                    hover:bg-red-100
+                                "
+                            >
+                                Export PDF
+                            </a>
+
+                        </div>
+
                     </div>
 
                 </form>
 
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+            <!-- Summary Cards -->
 
-                <div class="bg-white shadow rounded-lg p-6">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
 
-                    <p class="text-sm text-gray-500">
+                <div
+                    class="
+                        bg-white
+                        rounded-2xl
+                        border
+                        border-slate-200
+                        shadow-sm
+                        p-6
+                    "
+                >
+
+                    <p class="text-sm text-slate-500">
                         Total Revenue
                     </p>
 
@@ -80,9 +139,18 @@
 
                 </div>
 
-                <div class="bg-white shadow rounded-lg p-6">
+                <div
+                    class="
+                        bg-white
+                        rounded-2xl
+                        border
+                        border-slate-200
+                        shadow-sm
+                        p-6
+                    "
+                >
 
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-slate-500">
                         Total Transactions
                     </p>
 
@@ -94,95 +162,147 @@
 
             </div>
 
-            <div class="bg-white shadow rounded-lg p-6 overflow-x-auto">
+            <!-- Table -->
 
-                <table class="min-w-full">
+            <div
+                class="
+                    bg-white
+                    rounded-2xl
+                    border
+                    border-slate-200
+                    shadow-sm
+                    overflow-hidden
+                "
+            >
 
-                    <thead>
+                <div
+                    class="
+                        flex
+                        flex-col
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
 
-                        <tr class="border-b">
+                        gap-4
 
-                            <th class="text-left py-3">
-                                Payment No
-                            </th>
+                        px-6
+                        py-6
 
-                            <th class="text-left py-3">
-                                Patient
-                            </th>
+                        border-b
+                        border-slate-200
+                    "
+                >
 
-                            <th class="text-left py-3">
-                                Method
-                            </th>
+                    <div>
 
-                            <th class="text-left py-3">
-                                Amount
-                            </th>
+                        <h3 class="text-lg font-semibold text-slate-800">
+                            Financial Transactions
+                        </h3>
 
-                            <th class="text-left py-3">
-                                Paid At
-                            </th>
+                        <p class="mt-1 text-sm text-slate-500">
+                            View revenue generated from completed payments.
+                        </p>
 
-                            <th class="text-left py-3">
-                                Shift
-                            </th>
+                    </div>
 
-                            <th class="text-left py-3">
-                                Cashier
-                            </th>
+                </div>
+
+                <div class="overflow-x-auto">
+
+                    <table class="min-w-full text-sm">
+
+                        <thead
+                            class="
+                                bg-slate-50
+                                text-slate-600
+                                uppercase
+                                tracking-wide
+                                text-xs
+                            "
+                        >
+
+                            <tr>
+
+                                <th class="px-6 py-4 text-left">
+                                    Payment No
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+                                    Patient
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+                                    Method
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+                                    Amount
+                                </th>
+
+                                <th class="px-6 py-4 text-left">
+                                    Paid At
+                                </th>
 
                         </tr>
 
-                    </thead>
+                        </thead>
 
-                    <tbody>
+                        <tbody class="divide-y divide-slate-200">
 
-                        @forelse($payments as $payment)
+                            @forelse($payments as $payment)
 
-                            <tr class="border-b">
+                                <tr>
 
-                                <td class="py-3">
-                                    {{ $payment->payment_number }}
-                                </td>
+                                    <td class="px-6 py-4 font-medium font-mono text-slate-700">
+                                        {{ $payment->payment_number }}
+                                    </td>
 
-                                <td class="py-3">
-                                    {{ $payment->invoice->registration->patient->name }}
-                                </td>
+                                    <td class="px-6 py-4 font-medium text-slate-700">
+                                        {{ $payment->invoice->registration->patient->name }}
+                                    </td>
 
-                                <td class="py-3">
-                                    {{ ucfirst($payment->payment_method) }}
-                                </td>
+                                    <td class="px-6 py-4">
+                                        @php
+                                            $methodStyle = match ($payment->payment_method) {
+                                                'cash' => 'bg-emerald-100 text-emerald-700',
+                                                'transfer' => 'bg-blue-100 text-blue-700',
+                                                'qris' => 'bg-purple-100 text-purple-700',
+                                                default => 'bg-slate-100 text-slate-700',
+                                            };
+                                        @endphp
 
-                                <td class="py-3">
-                                    Rp {{ number_format($payment->amount, 0, ',', '.') }}
-                                </td>
+                                        <span
+                                            class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold {{ $methodStyle }}"
+                                        >
+                                            {{ strtoupper($payment->payment_method) }}
+                                        </span>
+                                    </td>
 
-                                <td class="py-3">
-                                    {{ $payment->paid_at?->format('d-m-Y H:i') }}
-                                </td>
+                                    <td class="px-6 py-4">
+                                        Rp {{ number_format($payment->amount, 0, ',', '.') }}
+                                    </td>
 
-                                <td class="py-3">
-                                    {{ $payment->cashierShift?->name }}
-                                </td>
-
-                                <td class="py-3">
-                                    {{ $payment->cashier?->name }}
-                                </td>
+                                    <td class="px-6 py-4">
+                                        {{ $payment->paid_at?->format('d-m-Y H:i') }}
+                                    </td>
 
                             </tr>
 
-                        @empty
+                            @empty
 
                             <tr>
-                                <td colspan="7" class="text-center py-6">
+                                <td colspan="5" class="text-center py-6">
                                     No data available.
                                 </td>
                             </tr>
 
-                        @endforelse
+                            @endforelse
 
-                    </tbody>
+                        </tbody>
 
-                </table>
+                    </table>
+
+                </div>
 
             </div>
 

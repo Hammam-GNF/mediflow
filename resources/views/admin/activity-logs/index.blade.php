@@ -1,54 +1,203 @@
 <x-app-layout>
+
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Activity Logs') }}
-        </h2>
+
+        <div class="flex flex-col gap-1">
+
+            <h2 class="text-2xl font-bold text-slate-800">
+                Activity Logs
+            </h2>
+
+            <p class="text-sm text-slate-500">
+                Monitor all system activities performed by users.
+            </p>
+
+        </div>
+
     </x-slot>
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 bg-white border-b border-gray-200">
+    <div class="py-8">
 
-                    <div class="mb-4 flex gap-4">
-                        <select id="event-filter" class="border-gray-300 rounded-md shadow-sm">
-                            <option value="">All Events</option>
-                            <option value="created">Created</option>
-                            <option value="updated">Updated</option>
-                            <option value="deleted">Deleted</option>
-                        </select>
+        <div class="max-w-[90rem] mx-auto px-6 lg:px-8">
+
+            <div
+                class="
+                    bg-white
+                    rounded-2xl
+                    shadow-sm
+                    border
+                    border-slate-200
+                    overflow-hidden
+                "
+            >
+
+                <!-- Header -->
+
+                <div
+                    class="
+                        flex
+                        flex-col
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
+
+                        gap-5
+
+                        px-6
+                        py-6
+
+                        border-b
+                        border-slate-200
+                    "
+                >
+
+                    <div>
+
+                        <h3 class="text-lg font-semibold text-slate-800">
+                            Activity Logs
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            Track every important action performed inside MediFlow.
+                        </p>
+
                     </div>
 
-                    <table id="activity-table" class="min-w-full divide-y divide-gray-200">
-                        <thead>
-                            <tr>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Event</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Target</th>
-                            </tr>
-                        </thead>
+                    <div class="w-full lg:w-64">
 
-                        <tbody></tbody>
+                        <select
+                            id="event-filter"
+                            class="w-full rounded-xl border-slate-300"
+                        >
 
-                    </table>
+                            <option value="">
+                                All Events
+                            </option>
+
+                            <option value="created">
+                                Created
+                            </option>
+
+                            <option value="updated">
+                                Updated
+                            </option>
+
+                            <option value="deleted">
+                                Deleted
+                            </option>
+
+                        </select>
+
+                    </div>
+
                 </div>
+
+                <!-- Table -->
+
+                <div class="px-6 py-5">
+
+                    <div class="overflow-x-auto">
+
+                        <table
+                            id="activity-table"
+                            class="w-full min-w-full text-sm"
+                        >
+
+                            <thead
+                                class="
+                                    bg-slate-50
+                                    text-slate-600
+                                    uppercase
+                                    tracking-wide
+                                    text-xs
+                                "
+                            >
+
+                                <tr>
+
+                                    <th class="px-6 py-4 text-left">
+                                        User
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Event
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Description
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Date
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Target
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody></tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
+
     </div>
 
     @push('styles')
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+        <link
+            rel="stylesheet"
+            href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
+        >
+
+        <style>
+
+            #activity-table{
+                width:100%!important;
+            }
+
+            #activity-table_wrapper{
+                width:100%;
+            }
+
+            #activity-table_wrapper .dataTables_length,
+            #activity-table_wrapper .dataTables_filter{
+                margin-bottom:1rem;
+            }
+
+            #activity-table_wrapper .dataTables_info,
+            #activity-table_wrapper .dataTables_paginate{
+                margin-top:1rem;
+            }
+
+        </style>
+
     @endpush
 
     @push('scripts')
+
         <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
         <script src="https://cdn.datatables.net/1.13.8/js/jquery.dataTables.min.js"></script>
+
         <script>
+
             $(function () {
 
                 let table = $('#activity-table').DataTable({
+
+                    autoWidth: false,
+                    responsive: false,
 
                     processing: true,
                     serverSide: true,
@@ -84,11 +233,18 @@
                     ]
                 });
 
-                $('#event-filter').change(function () {
+                $('#event-filter').on('change', function () {
                     table.draw();
                 });
 
+                $(window).on('resize', function () {
+                    table.columns.adjust();
+                });
+
             });
-            </script>
+
+        </script>
+
     @endpush
+
 </x-app-layout>

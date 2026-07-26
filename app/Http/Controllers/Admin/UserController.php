@@ -31,24 +31,86 @@ class UserController extends Controller
                 ->addIndexColumn()
 
                 ->addColumn('role', function ($user) {
-                    return $user->roles->first()?->name ?? '-';
+
+                    $role = $user->roles->first()?->name;
+
+                    return match ($role) {
+
+                        'admin' => '
+                            <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                Admin
+                            </span>
+                        ',
+
+                        'doctor' => '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Doctor
+                            </span>
+                        ',
+
+                        default => '
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                -
+                            </span>
+                        ',
+                    };
+
                 })
 
                 ->addColumn('action', function ($user) {
+
                     $buttons = '
-                        <div class="flex gap-2">
+                        <div class="flex items-center gap-2 whitespace-nowrap">
                     ';
 
                     $buttons .= '
-                        <a href="'.route('admin.users.edit', $user).'"
-                            class="px-3 py-1 bg-blue-600 text-white rounded">
+                        <a
+                            href="'.route('admin.users.edit', $user).'"
+                            class="
+                                inline-flex
+                                items-center
+
+                                rounded-lg
+
+                                bg-blue-50
+                                px-3
+                                py-2
+
+                                text-xs
+                                font-semibold
+                                text-blue-700
+
+                                transition
+
+                                hover:bg-blue-100
+                            "
+                        >
                             Edit
                         </a>
                     ';
 
                     $buttons .= '
-                        <a href="'.route('admin.users.change-password', $user).'"
-                            class="px-3 py-1 bg-green-600 text-white rounded">
+                        <a
+                            href="'.route('admin.users.change-password', $user).'"
+                            class="
+                                inline-flex
+                                items-center
+
+                                rounded-lg
+
+                                bg-emerald-50
+                                px-3
+                                py-2
+
+                                text-xs
+                                font-semibold
+                                text-emerald-700
+
+                                transition
+
+                                hover:bg-emerald-100
+                            "
+                        >
                             Password
                         </a>
                     ';
@@ -58,8 +120,28 @@ class UserController extends Controller
                         $buttons .= '
                             <button
                                 type="button"
-                                class="delete-user-btn px-3 py-1 bg-red-600 text-white rounded"
                                 data-url="'.route('admin.users.destroy', $user).'"
+
+                                class="
+                                    delete-user-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-red-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-red-700
+
+                                    transition
+
+                                    hover:bg-red-100
+                                "
                             >
                                 Delete
                             </button>
@@ -69,9 +151,10 @@ class UserController extends Controller
                     $buttons .= '</div>';
 
                     return $buttons;
+
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns(['role', 'action'])
                 ->make(true);
         }
 
@@ -192,15 +275,36 @@ class UserController extends Controller
                 })
 
                 ->addColumn('action', function ($user) {
+
                     $buttons = '
-                        <div class="flex gap-2">
+                        <div class="flex items-center gap-2 whitespace-nowrap">
                     ';
 
                     $buttons .= '
                         <button
                             type="button"
-                            class="restore-user-btn px-3 py-1 bg-green-600 text-white rounded"
                             data-url="'.route('admin.users.restore', $user).'"
+
+                            class="
+                                restore-user-btn
+
+                                inline-flex
+                                items-center
+
+                                rounded-lg
+
+                                bg-emerald-50
+                                px-3
+                                py-2
+
+                                text-xs
+                                font-semibold
+                                text-emerald-700
+
+                                transition
+
+                                hover:bg-emerald-100
+                            "
                         >
                             Restore
                         </button>
@@ -209,8 +313,28 @@ class UserController extends Controller
                     $buttons .= '
                         <button
                             type="button"
-                            class="force-delete-btn px-3 py-1 bg-red-600 text-white rounded"
                             data-url="'.route('admin.users.force-delete', $user).'"
+
+                            class="
+                                force-delete-btn
+
+                                inline-flex
+                                items-center
+
+                                rounded-lg
+
+                                bg-red-50
+                                px-3
+                                py-2
+
+                                text-xs
+                                font-semibold
+                                text-red-700
+
+                                transition
+
+                                hover:bg-red-100
+                            "
                         >
                             Force Delete
                         </button>
@@ -219,6 +343,7 @@ class UserController extends Controller
                     $buttons .= '</div>';
 
                     return $buttons;
+
                 })
 
                 ->rawColumns(['action'])

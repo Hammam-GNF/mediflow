@@ -74,61 +74,156 @@ class RegistrationController extends Controller
                     ->with([
                         'patient',
                         'doctor.user',
-                        'polyclinic'
+                        'polyclinic',
                     ])
             )
+
                 ->addIndexColumn()
 
                 ->addColumn('patient_name', function ($registration) {
-                    return $registration->patient?->name;
+                    return $registration->patient?->name ?? '-';
                 })
 
                 ->addColumn('doctor_name', function ($registration) {
-                    return $registration->doctor?->user?->name;
+                    return $registration->doctor?->user?->name ?? '-';
                 })
 
                 ->addColumn('polyclinic_name', function ($registration) {
-                    return $registration->polyclinic?->name;
+                    return $registration->polyclinic?->name ?? '-';
                 })
 
                 ->editColumn('registration_date', function ($registration) {
+
                     return $registration->registration_date
                         ? $registration->registration_date->format('d-m-Y H:i')
                         : '-';
+
                 })
 
                 ->editColumn('status', function ($registration) {
-                    return $registration->status;
+
+                    return match ($registration->status) {
+
+                        'registered' => '
+                            <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-semibold text-blue-700">
+                                Registered
+                            </span>
+                        ',
+
+                        'completed' => '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Completed
+                            </span>
+                        ',
+
+                        'cancelled' => '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Cancelled
+                            </span>
+                        ',
+
+                        default => '
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                -
+                            </span>
+                        ',
+                    };
+
                 })
 
-                ->addColumn(
-                    'satusehat_sync_status',
-                    fn($registration)
-                        => $registration->satusehat_sync_status
-                )
+                ->addColumn('satusehat_sync_status', function ($registration) {
+
+                    return match ($registration->satusehat_sync_status) {
+
+                        'success' => '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Success
+                            </span>
+                        ',
+
+                        'failed' => '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Failed
+                            </span>
+                        ',
+
+                        'pending' => '
+                            <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                Pending
+                            </span>
+                        ',
+
+                        default => '
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                -
+                            </span>
+                        ',
+                    };
+
+                })
 
                 ->addColumn('action', function ($registration) {
 
                     $buttons = '
-                        <div class="flex gap-2">
+
+                        <div class="flex items-center gap-2 whitespace-nowrap">
 
                             <a
-                                href="' . route(
+                                href="'.route(
                                     'admin.registrations.edit',
                                     $registration
-                                ) . '"
-                                class="px-3 py-1 bg-blue-600 text-white rounded"
+                                ).'"
+
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-blue-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-blue-700
+
+                                    transition
+
+                                    hover:bg-blue-100
+                                "
                             >
                                 Edit
                             </a>
 
                             <button
                                 type="button"
-                                class="delete-registration-btn px-3 py-1 bg-red-600 text-white rounded"
-                                data-url="' . route(
+
+                                data-url="'.route(
                                     'admin.registrations.destroy',
                                     $registration
-                                ) . '"
+                                ).'"
+
+                                class="
+                                    delete-registration-btn
+
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-red-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-red-700
+
+                                    transition
+
+                                    hover:bg-red-100
+                                "
                             >
                                 Delete
                             </button>
@@ -145,16 +240,35 @@ class RegistrationController extends Controller
 
                             <form
                                 method="POST"
-                                action="' . route(
+                                action="'.route(
                                     'admin.registrations.retry-satusehat',
                                     $registration
-                                ) . '"
+                                ).'"
                             >
 
-                                ' . csrf_field() . '
+                                '.csrf_field().'
 
                                 <button
-                                    class="px-3 py-1 bg-orange-600 text-white rounded"
+                                    type="submit"
+
+                                    class="
+                                        inline-flex
+                                        items-center
+
+                                        rounded-lg
+
+                                        bg-amber-50
+                                        px-3
+                                        py-2
+
+                                        text-xs
+                                        font-semibold
+                                        text-amber-700
+
+                                        transition
+
+                                        hover:bg-amber-100
+                                    "
                                 >
                                     Retry SATUSEHAT
                                 </button>
@@ -171,7 +285,12 @@ class RegistrationController extends Controller
 
                 })
 
-                ->rawColumns(['action'])
+                ->rawColumns([
+                    'status',
+                    'satusehat_sync_status',
+                    'action',
+                ])
+
                 ->make(true);
         }
 

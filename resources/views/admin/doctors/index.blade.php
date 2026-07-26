@@ -1,63 +1,217 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Doctor Management
-        </h2>
+        <div class="flex flex-col gap-1">
+
+            <h2 class="text-2xl font-bold text-slate-800">
+                Doctor Management
+            </h2>
+
+            <p class="text-sm text-slate-500">
+                View, create and manage doctor information.
+            </p>
+
+        </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-8">
 
-            <div class="flex justify-end mb-4">
-                <div class="flex gap-2">
+        <div class="max-w-[90rem] mx-auto px-6 lg:px-8">
 
-                    <a
-                        href="{{ route('admin.doctors.create') }}"
-                        class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
-                    >
-                        Create Doctor
-                    </a>
+            <div
+                class="
+                    bg-white
+                    rounded-2xl
+                    shadow-sm
+                    border
+                    border-slate-200
+                    overflow-hidden
+                "
+            >
 
-                    <a
-                        href="{{ route('admin.doctors.trash') }}"
-                        class="inline-flex items-center px-4 py-2 bg-red-800 text-white rounded-md"
-                    >
-                        Trash
-                    </a>
+                <!-- Header -->
+
+                <div
+                    class="
+                        flex
+                        flex-col
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
+
+                        gap-5
+
+                        px-6
+                        py-6
+
+                        border-b
+                        border-slate-200
+                    "
+                >
+
+                    <div>
+
+                        <h3 class="text-lg font-semibold text-slate-800">
+                            Doctors
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            View, create and manage doctor information.
+                        </p>
+
+                    </div>
+
+                    <div class="flex flex-wrap gap-3">
+
+                        <a
+                            href="{{ route('admin.doctors.create') }}"
+                            class="
+                                inline-flex
+                                items-center
+
+                                rounded-xl
+
+                                bg-blue-600
+
+                                px-4
+                                py-2.5
+
+                                text-sm
+                                font-medium
+                                text-white
+
+                                transition
+
+                                hover:bg-blue-700
+                            "
+                        >
+                            Create Doctor
+                        </a>
+
+                        <a
+                            href="{{ route('admin.doctors.trash') }}"
+                            class="
+                                inline-flex
+                                items-center
+
+                                rounded-xl
+
+                                border
+                                border-red-200
+
+                                bg-red-50
+
+                                px-4
+                                py-2.5
+
+                                text-sm
+                                font-medium
+
+                                text-red-700
+
+                                transition
+
+                                hover:bg-red-100
+                            "
+                        >
+                            Trash
+                        </a>
+
+                    </div>
 
                 </div>
-            </div>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 overflow-x-auto">
+                <!-- Table -->
 
-                    <table id="doctors-table" class="w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th>No</th>
-                                <th>Doctor Code</th>
-                                <th>NIK</th>
-                                <th>SATUSEHAT</th>
-                                <th>Name</th>
-                                <th>Polyclinic</th>
-                                <th>User Account</th>
-                                <th>Phone</th>
-                                <th>Status</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                <div class="px-6 py-5">
 
-                        <tbody></tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+
+                        <table
+                            id="doctors-table"
+                            class="w-full min-w-full text-sm"
+                        >
+
+                            <thead
+                                class="
+                                    bg-slate-50
+                                    text-slate-600
+                                    uppercase
+                                    tracking-wide
+                                    text-xs
+                                "
+                            >
+                                <tr>
+                                    <th class="px-6 py-4 text-left">
+                                        No
+                                    </th>
+                                    <th class="px-6 py-4 text-left">
+                                        Doctor Code
+                                    </th>
+                                    <th class="px-6 py-4 text-left">
+                                        NIK
+                                    </th>
+                                    <th class="px-6 py-4 text-left">
+                                        Satusehat Status
+                                    </th>
+                                    <th class="px-6 py-4 text-left">
+                                        Name
+                                    </th>
+                                    <th class="px-6 py-4 text-left">
+                                        Polyclinic
+                                    </th>
+                                    <th class="px-6 py-4 text-left">
+                                        User Account
+                                    </th>
+                                    <th class="px-6 py-4 text-left">
+                                        Phone Number
+                                    </th>
+                                    <th class="px-6 py-4 text-left">
+                                        Active Status
+                                    </th>
+                                    <th class="px-6 py-4 text-left">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+
+                            <tbody></tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
+
             </div>
 
         </div>
+
     </div>
 
     @push('styles')
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+
+        <style>
+
+            #doctors-table{
+                width:100%!important;
+            }
+
+            #doctors-table_wrapper{
+                width:100%;
+            }
+
+            #doctors-table_wrapper .dataTables_length,
+            #doctors-table_wrapper .dataTables_filter{
+                margin-bottom:1rem;
+            }
+
+            #doctors-table_wrapper .dataTables_info,
+            #doctors-table_wrapper .dataTables_paginate{
+                margin-top:1rem;
+            }
+
+        </style>
     @endpush
 
     <x-confirm-modal
@@ -76,7 +230,10 @@
 
             $(function () {
 
-                $('#doctors-table').DataTable({
+                let table = $('#doctors-table').DataTable({
+                    autoWidth: false,
+                    responsive: false,
+
                     processing: true,
                     serverSide: true,
 
@@ -127,6 +284,10 @@
                             orderable: false
                         }
                     ]
+                });
+
+                $(window).on('resize', function () {
+                    table.columns.adjust();
                 });
 
             });

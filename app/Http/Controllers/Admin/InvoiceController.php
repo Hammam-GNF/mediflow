@@ -22,148 +22,244 @@ class InvoiceController extends Controller
                     'payment',
                 ])
             )
-            ->addIndexColumn()
 
-            ->addColumn(
-                'patient_name',
-                fn ($invoice)
-                    =>
-                    $invoice
+                ->addIndexColumn()
+
+                ->addColumn('patient_name', function ($invoice) {
+
+                    return $invoice
                         ->registration
-                        ->patient
-                        ->name
-            )
+                        ?->patient
+                        ?->name ?? '-';
 
-            ->editColumn(
-                'total_amount',
-                fn ($invoice)
-                    =>
-                    number_format(
-                        $invoice->total_amount
-                    )
-            )
+                })
 
-            ->editColumn('status', function ($invoice) {
+                ->editColumn('total_amount', function ($invoice) {
 
-                return match ($invoice->status) {
-                    'unpaid' =>
-                        '<span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded">
-                            Unpaid
-                        </span>',
+                    return 'Rp '.number_format(
+                        $invoice->total_amount,
+                        0,
+                        ',',
+                        '.'
+                    );
 
-                    'paid' =>
-                        '<span class="px-2 py-1 bg-green-100 text-green-800 rounded">
-                            Paid
-                        </span>',
+                })
 
-                    'cancelled' =>
-                        '<span class="px-2 py-1 bg-red-100 text-red-800 rounded">
-                            Cancelled
-                        </span>',
+                ->editColumn('status', function ($invoice) {
 
-                    'refunded' =>
-                        '<span class="px-2 py-1 bg-orange-100 text-orange-800 rounded">
-                            Refunded
-                        </span>',
-                };
-            })
+                    return match ($invoice->status) {
 
-            ->addColumn('payment_status', function ($invoice) {
+                        'unpaid' => '
+                            <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                Unpaid
+                            </span>
+                        ',
 
-                if (! $invoice->payment) {
-                    return '-';
-                }
+                        'paid' => '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Paid
+                            </span>
+                        ',
 
-                return match ($invoice->payment->status) {
+                        'cancelled' => '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Cancelled
+                            </span>
+                        ',
 
-                    'pending' =>
-                        '<span class="px-2 py-1 bg-yellow-100 text-yellow-800 rounded">
-                            Pending
-                        </span>',
+                        'refunded' => '
+                            <span class="inline-flex items-center rounded-full bg-orange-100 px-3 py-1 text-xs font-semibold text-orange-700">
+                                Refunded
+                            </span>
+                        ',
 
-                    'paid' =>
-                        '<span class="px-2 py-1 bg-green-100 text-green-800 rounded">
-                            Paid
-                        </span>',
+                        default => '
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                -
+                            </span>
+                        ',
+                    };
 
-                    'failed' =>
-                        '<span class="px-2 py-1 bg-red-100 text-red-800 rounded">
-                            Failed
-                        </span>',
+                })
 
-                    'cancelled' =>
-                        '<span class="px-2 py-1 bg-gray-100 text-gray-800 rounded">
-                            Cancelled
-                        </span>',
-                };
+                ->addColumn('payment_status', function ($invoice) {
 
-            })
+                    if (! $invoice->payment) {
 
-            ->addColumn('action', function ($invoice) {
+                        return '
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                -
+                            </span>
+                        ';
 
-                $buttons = '
-                    <div class="flex gap-2">
-                ';
+                    }
 
-                $buttons .= '
-                    <a
-                        href="' . route(
-                            'admin.invoices.show',
-                            $invoice
-                        ) . '"
-                        class="px-3 py-1 bg-blue-600 text-white rounded"
-                    >
-                        View
-                    </a>
-                ';
+                    return match ($invoice->payment->status) {
 
-                if ($invoice->isEditable()) {
+                        'pending' => '
+                            <span class="inline-flex items-center rounded-full bg-amber-100 px-3 py-1 text-xs font-semibold text-amber-700">
+                                Pending
+                            </span>
+                        ',
 
-                    $buttons .= '
-                        <a
-                            href="' . route(
-                                'admin.payments.create',
-                                $invoice
-                            ) . '"
-                            class="px-3 py-1 bg-green-600 text-white rounded"
-                        >
-                            Pay
-                        </a>
-                    ';
+                        'paid' => '
+                            <span class="inline-flex items-center rounded-full bg-emerald-100 px-3 py-1 text-xs font-semibold text-emerald-700">
+                                Paid
+                            </span>
+                        ',
 
-                    $buttons .= '
-                        <form
-                            action="' . route(
-                                'admin.invoices.cancel',
-                                $invoice
-                            ) . '"
-                            method="POST"
-                        >
-                            ' . csrf_field() . '
-                            ' . method_field('PATCH') . '
+                        'failed' => '
+                            <span class="inline-flex items-center rounded-full bg-red-100 px-3 py-1 text-xs font-semibold text-red-700">
+                                Failed
+                            </span>
+                        ',
 
-                            <button
-                                type="submit"
-                                class="px-3 py-1 bg-red-600 text-white rounded"
+                        'cancelled' => '
+                            <span class="inline-flex items-center rounded-full bg-slate-200 px-3 py-1 text-xs font-semibold text-slate-700">
+                                Cancelled
+                            </span>
+                        ',
+
+                        default => '
+                            <span class="inline-flex items-center rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold text-slate-600">
+                                -
+                            </span>
+                        ',
+                    };
+
+                })
+
+                ->addColumn('action', function ($invoice) {
+
+                    $buttons = '
+
+                        <div class="flex items-center gap-2 whitespace-nowrap">
+
+                            <a
+                                href="'.route(
+                                    'admin.invoices.show',
+                                    $invoice
+                                ).'"
+
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-blue-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-blue-700
+
+                                    transition
+
+                                    hover:bg-blue-100
+                                "
                             >
-                                Cancel
-                            </button>
-                        </form>
+                                View
+                            </a>
+
                     ';
-                }
 
-                $buttons .= '</div>';
+                    if ($invoice->isEditable()) {
 
-                return $buttons;
-            })
+                        $buttons .= '
 
-            ->rawColumns(['status','payment_status','action'])
-            ->make(true);
+                            <a
+                                href="'.route(
+                                    'admin.payments.create',
+                                    $invoice
+                                ).'"
+
+                                class="
+                                    inline-flex
+                                    items-center
+
+                                    rounded-lg
+
+                                    bg-emerald-50
+                                    px-3
+                                    py-2
+
+                                    text-xs
+                                    font-semibold
+                                    text-emerald-700
+
+                                    transition
+
+                                    hover:bg-emerald-100
+                                "
+                            >
+                                Pay
+                            </a>
+
+                        ';
+
+                        $buttons .= '
+
+                            <form
+                                method="POST"
+                                action="'.route(
+                                    'admin.invoices.cancel',
+                                    $invoice
+                                ).'"
+                            >
+
+                                '.csrf_field().'
+                                '.method_field('PATCH').'
+
+                                <button
+                                    type="submit"
+
+                                    class="
+                                        inline-flex
+                                        items-center
+
+                                        rounded-lg
+
+                                        bg-red-50
+                                        px-3
+                                        py-2
+
+                                        text-xs
+                                        font-semibold
+                                        text-red-700
+
+                                        transition
+
+                                        hover:bg-red-100
+                                    "
+                                >
+                                    Cancel
+                                </button>
+
+                            </form>
+
+                        ';
+
+                    }
+
+                    $buttons .= '</div>';
+
+                    return $buttons;
+
+                })
+
+                ->rawColumns([
+                    'status',
+                    'payment_status',
+                    'action',
+                ])
+
+                ->make(true);
+
         }
 
-        return view(
-            'admin.invoices.index'
-        );
+        return view('admin.invoices.index');
     }
 
     public function show(Invoice $invoice)

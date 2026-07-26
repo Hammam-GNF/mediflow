@@ -1,68 +1,229 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            Registration Management
-        </h2>
+        <div class="flex flex-col gap-1">
+            <h2 class="text-2xl font-bold text-slate-800">
+                Registration Management
+            </h2>
+
+            <p class="text-sm text-slate-500">
+                Manage patient registrations and SATUSEHAT synchronization.
+            </p>
+        </div>
     </x-slot>
 
-    <div class="py-6">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+    <div class="py-8">
 
-            <div class="flex justify-end mb-4">
-                <div class="flex gap-2">
+        <div class="max-w-[90rem] mx-auto px-6 lg:px-8">
 
-                    <a
-                        href="{{ route('admin.registrations.create') }}"
-                        class="inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700"
-                    >
-                        Create Registration
-                    </a>
+            <div
+                class="
+                    bg-white
+                    rounded-2xl
+                    shadow-sm
+                    border
+                    border-slate-200
+                    overflow-hidden
+                "
+            >
 
-                    <a
-                        href="{{ route('admin.registrations.trash') }}"
-                        class="inline-flex items-center px-4 py-2 bg-red-800 text-white rounded-md"
-                    >
-                        Trash
-                    </a>
+                <!-- Header -->
+
+                <div
+                    class="
+                        flex
+                        flex-col
+                        lg:flex-row
+                        lg:items-center
+                        lg:justify-between
+
+                        gap-5
+
+                        px-6
+                        py-6
+
+                        border-b
+                        border-slate-200
+                    "
+                >
+
+                    <div>
+
+                        <h3 class="text-lg font-semibold text-slate-800">
+                            Registrations
+                        </h3>
+
+                        <p class="mt-1 text-sm text-slate-500">
+                            View, create and manage patient registrations.
+                        </p>
+
+                    </div>
+
+                    <div class="flex flex-wrap gap-3">
+
+                        <a
+                            href="{{ route('admin.registrations.create') }}"
+                            class="
+                                inline-flex
+                                items-center
+
+                                rounded-xl
+
+                                bg-blue-600
+
+                                px-4
+                                py-2.5
+
+                                text-sm
+                                font-medium
+                                text-white
+
+                                transition
+
+                                hover:bg-blue-700
+                            "
+                        >
+                            Create Registration
+                        </a>
+
+                        <a
+                            href="{{ route('admin.registrations.trash') }}"
+                            class="
+                                inline-flex
+                                items-center
+
+                                rounded-xl
+
+                                border
+                                border-red-200
+
+                                bg-red-50
+
+                                px-4
+                                py-2.5
+
+                                text-sm
+                                font-medium
+                                text-red-700
+
+                                transition
+
+                                hover:bg-red-100
+                            "
+                        >
+                            Trash
+                        </a>
+
+                    </div>
 
                 </div>
-            </div>
 
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 overflow-x-auto">
+                <!-- Table -->
 
-                    <table
-                        id="registrations-table"
-                        class="w-full divide-y divide-gray-200"
-                    >
-                        <thead class="bg-gray-50">
-                            <tr>
-                                <th>No</th>
-                                <th>Registration No</th>
-                                <th>Patient</th>
-                                <th>Doctor</th>
-                                <th>Polyclinic</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>SATUSEHAT</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
+                <div class="px-6 py-5">
 
-                        <tbody></tbody>
-                    </table>
+                    <div class="overflow-x-auto">
+
+                        <table
+                            id="registrations-table"
+                            class="w-full min-w-full text-sm"
+                        >
+
+                            <thead
+                                class="
+                                    bg-slate-50
+
+                                    text-slate-600
+                                    uppercase
+                                    tracking-wide
+                                    text-xs
+                                "
+                            >
+
+                                <tr>
+
+                                    <th class="px-6 py-4 text-left">
+                                        No
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Registration No
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Patient
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Doctor
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Polyclinic
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Date
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Status
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        SATUSEHAT
+                                    </th>
+
+                                    <th class="px-6 py-4 text-left">
+                                        Action
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody></tbody>
+
+                        </table>
+
+                    </div>
 
                 </div>
+
             </div>
 
         </div>
+
     </div>
 
     @push('styles')
+
         <link
             rel="stylesheet"
             href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css"
         >
+
+        <style>
+
+            #registrations-table{
+                width:100%!important;
+            }
+
+            #registrations-table_wrapper{
+                width:100%;
+            }
+
+            #registrations-table_wrapper .dataTables_length,
+            #registrations-table_wrapper .dataTables_filter{
+                margin-bottom:1rem;
+            }
+
+            #registrations-table_wrapper .dataTables_info,
+            #registrations-table_wrapper .dataTables_paginate{
+                margin-top:1rem;
+            }
+
+        </style>
+
     @endpush
 
     <x-confirm-modal
@@ -83,7 +244,10 @@
 
             $(function () {
 
-                $('#registrations-table').DataTable({
+                let table = $('#registrations-table').DataTable({
+
+                    autoWidth: false,
+                    responsive: false,
 
                     processing: true,
                     serverSide: true,
@@ -119,55 +283,11 @@
                         },
                         {
                             data: 'status',
-                            name: 'status',
-                            render: function(data) {
-
-                                if (data === 'registered') {
-                                    return `
-                                        <span class="px-2 py-1 rounded bg-blue-200 text-blue-800">
-                                            Registered
-                                        </span>
-                                    `;
-                                }
-
-                                if (data === 'completed') {
-                                    return `
-                                        <span class="px-2 py-1 rounded bg-green-200 text-green-800">
-                                            Completed
-                                        </span>
-                                    `;
-                                }
-
-                                if (data === 'cancelled') {
-                                    return `
-                                        <span class="px-2 py-1 rounded bg-red-200 text-red-800">
-                                            Cancelled
-                                        </span>
-                                    `;
-                                }
-
-                                return data;
-                            }
+                            name: 'status'
                         },
                         {
                             data: 'satusehat_sync_status',
-                            name: 'satusehat_sync_status',
-                            render: function(data){
-
-                                if(data === 'success'){
-                                    return '<span class="px-2 py-1 rounded bg-green-200 text-green-800">Success</span>';
-                                }
-
-                                if(data === 'failed'){
-                                    return '<span class="px-2 py-1 rounded bg-red-200 text-red-800">Failed</span>';
-                                }
-
-                                if(data === 'pending'){
-                                    return '<span class="px-2 py-1 rounded bg-yellow-200 text-yellow-800">Pending</span>';
-                                }
-
-                                return '-';
-                            }
+                            name: 'satusehat_sync_status'
                         },
                         {
                             data: 'action',
@@ -176,6 +296,10 @@
                         }
                     ]
 
+                });
+
+                $(window).on('resize', function () {
+                    table.columns.adjust();
                 });
 
             });
